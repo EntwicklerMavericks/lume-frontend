@@ -2,7 +2,7 @@
   <!-- Header da Coleção -->
   <header class="catalog-header">
     <div class="catalog-container">
-      <span class="catalog-eyebrow">COLEÇÃO {{ storeConfig.name | uppercase }}</span>
+      <span class="catalog-eyebrow">COLEÇÃO {{ storeConfig.name }}</span>
       <h1 class="catalog-title">{{ activeCategoryName() }}</h1>
       <p class="catalog-count">{{ filteredProducts().length }} {{ filteredProducts().length === 1 ? 'peça encontrada' : 'peças encontradas' }}</p>
     </div>
