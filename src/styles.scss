@@ -4,6 +4,7 @@
   /* Colors - White-Label Theme (Sobreescrito dinamicamente pelo ThemeService via store.config.ts) */
   --primary: #ffffff;
   --primary-contrast: #000000;
+  --primary-gradient: linear-gradient(135deg, #F0DBA5 0%, #CCA45E 50%, #B38F48 100%);
   --primary-hover: #e4e4e7;
   --primary-focus: rgba(255, 255, 255, 0.1);
   --primary-light: #27272a;

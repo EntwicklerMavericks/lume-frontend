@@ -10,8 +10,8 @@
 const STORE_NAME = 'Oliveira';
 
 export const STORE_CONFIG = {
-  /** Cor primária da marca: Dourado Ouro Nobre (#D4AF37) */
-  primaryColor: '#D4AF37',
+  /** Cor primária da marca: Dourado Refinado do Logo (#CCA45E) */
+  primaryColor: '#CCA45E',
 
   /** Cor secundária/auxiliar da marca: Azul Suave / Branco (#CBD5E1) */
   secondaryColor: '#CBD5E1',

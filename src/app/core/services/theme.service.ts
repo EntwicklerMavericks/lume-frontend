@@ -37,9 +37,14 @@ export class ThemeService {
       const isLight = this.calculateLuminance(primaryRgb) > 0.5;
       const hover = this.adjustBrightness(primaryRgb, isLight ? -15 : 20);
       root.style.setProperty('--primary-hover', hover);
+
+      const lightAccent = this.adjustBrightness(primaryRgb, 14);
+      const darkAccent = this.adjustBrightness(primaryRgb, -14);
+      root.style.setProperty('--primary-gradient', `linear-gradient(135deg, ${lightAccent} 0%, ${primary} 50%, ${darkAccent} 100%)`);
     } else {
       root.style.setProperty('--primary-contrast', '#000000');
       root.style.setProperty('--primary-hover', primary);
+      root.style.setProperty('--primary-gradient', primary);
     }
 
     // 2. Cor Secundária e Derivadas

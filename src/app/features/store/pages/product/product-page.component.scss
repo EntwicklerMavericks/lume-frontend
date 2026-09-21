@@ -364,11 +364,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--primary);
-    color: var(--primary-contrast);
+    background: var(--primary-gradient, var(--primary));
+    color: #000000;
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    box-shadow: 0 4px 16px rgba(204, 164, 94, 0.25);
     transition: all 0.2s ease;
     font-family: inherit;
 
