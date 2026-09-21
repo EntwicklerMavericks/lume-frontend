@@ -37,9 +37,9 @@
       inset: 0;
       background: linear-gradient(
         to bottom,
-        rgba(9, 9, 11, 0.55) 0%,
-        rgba(9, 9, 11, 0.7) 45%,
-        rgba(9, 9, 11, 0.98) 100%
+        rgba(11, 25, 44, 0.55) 0%,
+        rgba(11, 25, 44, 0.75) 45%,
+        rgba(11, 25, 44, 0.98) 100%
       );
     }
   }
@@ -174,9 +174,9 @@
 
 /* FAIXA DE BENEFÍCIOS SUTIS */
 .perks-strip {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
   padding: 1.75rem 0;
-  background-color: #070709;
+  background-color: #0A152E;
 
   .perks-grid {
     display: flex;
@@ -207,7 +207,7 @@
 
     .perk-desc {
       font-size: 0.6875rem;
-      color: var(--text-muted);
+      color: #CBD5E1;
       letter-spacing: 0.02em;
     }
   }
@@ -283,7 +283,59 @@
   }
 }
 
-/* CATEGORIAS EM GRID EDITORIAL */
+/* CATEGORIAS EM GRID EDITORIAL & PRODUTOS (FUNDO BRANCO CLEAN) */
+.categories-section,
+.featured-section,
+.new-section {
+  background-color: #FFFFFF;
+  color: #0F172A;
+
+  .heading-subtitle {
+    color: #64748B;
+  }
+
+  .heading-title {
+    color: #0A192F;
+    font-weight: 700;
+  }
+
+  .section-header {
+    border-bottom: 1px solid #E2E8F0;
+
+    .section-link {
+      color: #0A192F;
+      font-weight: 600;
+
+      &:hover {
+        color: var(--primary);
+      }
+    }
+  }
+
+  ::ng-deep .product-card {
+    .card-name {
+      color: #0F172A;
+    }
+
+    &:hover .card-name {
+      color: var(--primary);
+    }
+
+    .card-fit {
+      color: #64748B;
+    }
+
+    .price-original {
+      color: #94A3B8;
+    }
+
+    .card-image-wrapper {
+      background-color: #F8FAFC;
+      border: 1px solid #E2E8F0;
+    }
+  }
+}
+
 .categories-section {
   .section-heading {
     margin-bottom: 2.5rem;
@@ -402,11 +454,11 @@
   }
 }
 
-/* MANIFESTO INSTITUCIONAL */
+/* MANIFESTO INSTITUCIONAL (AZUL MARINHO & DOURADO) */
 .about-section {
-  background-color: #060608;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background-color: #0A152E;
+  border-top: 1px solid rgba(212, 175, 55, 0.25);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
   text-align: center;
 
   .about-content {
@@ -421,7 +473,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.3em;
-    color: var(--text-muted);
+    color: var(--primary);
     margin-bottom: 1rem;
   }
 
@@ -429,7 +481,7 @@
     font-size: clamp(1.5rem, 4vw, 2.5rem);
     font-weight: 300;
     letter-spacing: 0.08em;
-    color: var(--primary);
+    color: #FFFFFF;
     margin: 0 0 1.5rem;
     line-height: 1.2;
   }
@@ -437,14 +489,14 @@
   .about-text {
     font-size: 0.9375rem;
     line-height: 1.85;
-    color: var(--text-secondary);
+    color: #CBD5E1;
     margin: 0 0 2.5rem;
     font-weight: 300;
   }
 
   .about-cta {
     display: inline-block;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid var(--primary);
     padding: 0.875rem 2.5rem;
     text-transform: uppercase;
     letter-spacing: 0.15em;
@@ -457,15 +509,16 @@
     &:hover {
       border-color: var(--primary);
       background: var(--primary);
-      color: var(--primary-contrast);
+      color: #000000;
     }
   }
 }
 
-/* ATENDIMENTO WHATSAPP */
+/* ATENDIMENTO WHATSAPP (AZUL MARINHO NOBRE) */
 .whatsapp-section {
   text-align: center;
-  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+  background-color: #070F1E;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
 
   .whatsapp-content {
     max-width: 640px;
@@ -480,8 +533,8 @@
     text-transform: uppercase;
     letter-spacing: 0.2em;
     padding: 0.3rem 0.75rem;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     color: var(--primary);
     border-radius: 9999px;
     margin-bottom: 1.25rem;
@@ -491,14 +544,14 @@
     font-size: clamp(1.35rem, 3vw, 2rem);
     font-weight: 300;
     letter-spacing: 0.05em;
-    color: var(--primary);
+    color: #FFFFFF;
     margin: 0 0 1rem;
     line-height: 1.3;
   }
 
   .whatsapp-text {
     font-size: 0.875rem;
-    color: var(--text-secondary);
+    color: #CBD5E1;
     line-height: 1.7;
     margin: 0 0 2.25rem;
     max-width: 520px;

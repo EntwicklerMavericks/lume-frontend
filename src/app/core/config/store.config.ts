@@ -16,8 +16,8 @@ export const STORE_CONFIG = {
   /** Cor secundária/auxiliar da marca: Azul Suave / Branco (#CBD5E1) */
   secondaryColor: '#CBD5E1',
 
-  /** Fundo premium Azul Marinho Meia-Noite (#080E1A) */
-  backgroundColor: '#080E1A',
+  /** Fundo premium Azul Marinho (#0A152E) */
+  backgroundColor: '#0A152E',
 
   /** Nome da loja exibido no site e no painel */
   name: STORE_NAME,
