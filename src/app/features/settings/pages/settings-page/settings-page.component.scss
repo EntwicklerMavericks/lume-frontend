@@ -127,9 +127,9 @@
 }
 
 .save-settings-btn {
-  background-color: #ffffff;
-  border: 1px solid #ffffff;
-  color: #000000;
+  background-color: var(--primary);
+  border: 1px solid var(--primary);
+  color: var(--primary-contrast);
   font-family: inherit;
   font-size: 0.8125rem;
   font-weight: 600;
@@ -139,7 +139,7 @@
   transition: background-color var(--transition-fast);
   
   &:hover:not(:disabled) {
-    background-color: #e4e4e7;
+    background-color: var(--primary-hover);
   }
   
   &:disabled {

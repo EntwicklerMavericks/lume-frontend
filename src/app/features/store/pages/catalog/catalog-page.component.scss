@@ -180,9 +180,9 @@
   letter-spacing: 0.05em;
 
   &.active {
-    background: white;
-    color: black;
-    border-color: white;
+    background: var(--primary);
+    color: var(--primary-contrast);
+    border-color: var(--primary);
     font-weight: 600;
   }
 
@@ -297,8 +297,8 @@
   }
 
   .empty-cta {
-    background: white;
-    color: black;
+    background: var(--primary);
+    color: var(--primary-contrast);
     border: none;
     padding: 0.875rem 2rem;
     font-size: 0.75rem;
@@ -378,8 +378,8 @@
     .filters-apply-mobile {
       display: block;
       width: 100%;
-      background: white;
-      color: black;
+      background: var(--primary);
+      color: var(--primary-contrast);
       border: none;
       padding: 1.125rem;
       font-size: 0.8125rem;

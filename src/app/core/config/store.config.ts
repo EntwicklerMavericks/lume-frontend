@@ -2,14 +2,20 @@
  * Lume — Configuração centralizada da loja (White-Label).
  *
  * PARA CONFIGURAR UMA NOVA LOJA CLIENTE:
- * 1. Altere o nome, WhatsApp e dados da loja abaixo.
+ * 1. Altere o nome, WhatsApp, dados e as CORES (primaryColor, secondaryColor) abaixo.
  * 2. Substitua o logotipo em 'public/images/logo.png'.
- * E pronto! Toda a vitrine, rodapé, sacola, SEO e links de WhatsApp serão atualizados.
+ * E pronto! Toda a vitrine, rodapé, sacola, botões, SEO e links de WhatsApp serão atualizados.
  */
 
 const STORE_NAME = 'Lume';
 
 export const STORE_CONFIG = {
+  /** Cor primária da marca (hexadecimal). Ex: '#ffffff' (branco), '#ff5500' (laranja), '#e11d48' (vermelho), etc. */
+  primaryColor: '#ffffff',
+
+  /** Cor secundária/auxiliar da marca (hexadecimal). Ex: '#a1a1aa' (cinza metálico), '#f97316', etc. */
+  secondaryColor: '#a1a1aa',
+
   /** Nome da loja exibido no site e no painel */
   name: STORE_NAME,
 

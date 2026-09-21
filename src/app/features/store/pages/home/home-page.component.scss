@@ -130,8 +130,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: white;
-      color: black;
+      background: var(--primary);
+      color: var(--primary-contrast);
       padding: 1rem 2.5rem;
       font-size: 0.75rem;
       font-weight: 600;
@@ -455,9 +455,9 @@
     transition: all 0.25s ease;
 
     &:hover {
-      border-color: white;
-      background: white;
-      color: black;
+      border-color: var(--primary);
+      background: var(--primary);
+      color: var(--primary-contrast);
     }
   }
 }
@@ -508,8 +508,8 @@
     display: inline-flex;
     align-items: center;
     gap: 0.625rem;
-    background: white;
-    color: black;
+    background: var(--primary);
+    color: var(--primary-contrast);
     padding: 1rem 2.5rem;
     font-size: 0.75rem;
     font-weight: 600;
@@ -523,7 +523,7 @@
     &:hover {
       opacity: 0.95;
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+      box-shadow: 0 6px 20px var(--primary-focus);
     }
   }
 }

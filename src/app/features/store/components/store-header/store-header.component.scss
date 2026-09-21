@@ -164,8 +164,8 @@
       gap: 0.45rem;
       padding: 0.35rem 0.75rem;
       border-radius: 6px;
-      background-color: #ffffff;
-      color: #000000;
+      background-color: var(--primary);
+      color: var(--primary-contrast);
       font-size: 0.72rem;
       font-weight: 600;
       text-transform: uppercase;
@@ -174,13 +174,13 @@
       transition: all 0.2s ease;
 
       &:hover {
-        background-color: #e4e4e7;
+        background-color: var(--primary-hover);
         transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+        box-shadow: 0 2px 8px var(--primary-focus);
       }
 
       svg {
-        stroke: #000000;
+        stroke: var(--primary-contrast);
         width: 14px;
         height: 14px;
         flex-shrink: 0;

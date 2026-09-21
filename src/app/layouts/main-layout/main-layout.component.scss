@@ -273,16 +273,16 @@
     }
 
     &.active {
-      color: #ffffff;
+      color: var(--primary);
 
       .bottom-nav-icon {
         transform: translateY(-2px);
-        color: #ffffff;
+        color: var(--primary);
       }
 
       .bottom-nav-label {
         font-weight: 700;
-        color: #ffffff;
+        color: var(--primary);
       }
 
       &::after {
@@ -291,9 +291,9 @@
         bottom: 2px;
         width: 16px;
         height: 2px;
-        background-color: #ffffff;
+        background-color: var(--primary);
         border-radius: 2px;
-        box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 8px var(--primary-focus);
       }
     }
 

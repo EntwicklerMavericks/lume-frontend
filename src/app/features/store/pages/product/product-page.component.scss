@@ -67,8 +67,8 @@
       position: absolute;
       top: 1rem;
       left: 1rem;
-      background: white;
-      color: black;
+      background: var(--primary);
+      color: var(--primary-contrast);
       font-size: 0.625rem;
       font-weight: 700;
       text-transform: uppercase;
@@ -281,9 +281,9 @@
     }
 
     &.selected {
-      background: white;
-      color: black;
-      border-color: white;
+      background: var(--primary);
+      color: var(--primary-contrast);
+      border-color: var(--primary);
       font-weight: 600;
     }
 
@@ -364,8 +364,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #ffffff;
-    color: #000000;
+    background: var(--primary);
+    color: var(--primary-contrast);
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -395,9 +395,9 @@
     }
 
     &:hover {
-      background: #f4f4f5;
+      background: var(--primary-hover);
       transform: translateY(-1px);
-      box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 14px var(--primary-focus);
     }
 
     &:active {
@@ -515,8 +515,8 @@
       width: 28px;
       height: 28px;
       border-radius: 50%;
-      background: white;
-      color: black;
+      background: var(--primary);
+      color: var(--primary-contrast);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -552,8 +552,8 @@
     .toast-btn-cart {
       flex: 1;
       text-align: center;
-      background: white;
-      color: black;
+      background: var(--primary);
+      color: var(--primary-contrast);
       padding: 0.6rem;
       font-size: 0.6875rem;
       font-weight: 600;

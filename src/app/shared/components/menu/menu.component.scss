@@ -52,12 +52,12 @@
   }
   
   &.active {
-    color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.06);
+    color: var(--primary);
+    background-color: var(--primary-focus);
     font-weight: 600;
     
     .nav-icon {
-      color: #ffffff;
+      color: var(--primary);
     }
   }
 }

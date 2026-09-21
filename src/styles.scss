@@ -1,14 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Colors - Premium Dark Mode */
+  /* Colors - White-Label Theme (Sobreescrito dinamicamente pelo ThemeService via store.config.ts) */
   --primary: #ffffff;
+  --primary-contrast: #000000;
   --primary-hover: #e4e4e7;
   --primary-focus: rgba(255, 255, 255, 0.1);
   --primary-light: #27272a;
   
   --secondary: #a1a1aa;
   --secondary-hover: #71717a;
+  
+  /* Fallback aliases */
+  --bg-surface: rgba(20, 20, 23, 0.6);
+  --border-subtle: rgba(63, 63, 70, 0.4);
   
   --background: #09090b;
   --surface: rgba(20, 20, 23, 0.6);
