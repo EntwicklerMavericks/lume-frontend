@@ -1,0 +1,50 @@
+<a [routerLink]="['/produto', product().id]" class="product-card" [attr.aria-label]="product().name">
+  <div class="card-image-wrapper">
+    <!-- Imagem Principal -->
+    <img 
+      [src]="product().images[0]" 
+      [alt]="product().name" 
+      class="card-img card-img-primary" 
+      loading="lazy"
+    >
+    <!-- Imagem Secundária (Lookbook / Ângulo alternativo no Hover) -->
+    @if (product().images.length > 1) {
+      <img 
+        [src]="product().images[1]" 
+        [alt]="product().name + ' — visual alternativo'" 
+        class="card-img card-img-secondary" 
+        loading="lazy"
+      >
+    }
+
+    <!-- Badges minimalistas de luxo -->
+    <div class="card-badges">
+      @if (product().isNew) {
+        <span class="card-badge badge-new">Novo</span>
+      }
+      @if (product().promotionalPrice) {
+        <span class="card-badge badge-sale">Exclusivo</span>
+      }
+    </div>
+
+    <!-- Quick action preview -->
+    <div class="card-overlay-action">
+      <span class="action-text">Ver Detalhes</span>
+    </div>
+  </div>
+
+  <div class="card-info">
+    @if (product().fit) {
+      <span class="card-fit">{{ product().fit }}</span>
+    }
+    <h3 class="card-name">{{ product().name }}</h3>
+    <div class="card-price">
+      @if (product().promotionalPrice) {
+        <span class="price-original">{{ product().price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+        <span class="price-current">{{ product().promotionalPrice | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+      } @else {
+        <span class="price-current">{{ product().price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+      }
+    </div>
+  </div>
+</a>

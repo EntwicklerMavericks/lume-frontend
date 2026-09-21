@@ -1,0 +1,271 @@
+<div class="categories-container animate-fade-in">
+  <div class="categories-header">
+    <div>
+      <h1>Gerenciamento de Categorias</h1>
+      <p class="subtitle">Cadastre, edite e organize as categorias do catálogo.</p>
+    </div>
+    <button class="add-btn" (click)="openAddModal()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      Nova Categoria
+    </button>
+  </div>
+
+  <!-- Feedback Banner -->
+  @if (feedbackMessage(); as msg) {
+    <div class="feedback-banner" [class.success]="msg.type === 'success'" [class.error]="msg.type === 'error'">
+      <span>{{ msg.text }}</span>
+      <button type="button" class="close-banner" (click)="feedbackMessage.set(null)">×</button>
+    </div>
+  }
+
+  <!-- Error Banner -->
+  @if (errorMessage(); as err) {
+    <div class="feedback-banner error">
+      <span>{{ err }}</span>
+      <button type="button" class="retry-btn" (click)="loadCategories()">Tentar Novamente</button>
+    </div>
+  }
+
+  <!-- Control Bar / Search -->
+  <div class="control-bar">
+    <div class="search-box">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input
+        type="text"
+        placeholder="Filtrar por nome, slug ou descrição..."
+        class="search-input"
+        [value]="searchTerm()"
+        (input)="onSearchInput($event)"
+      />
+    </div>
+  </div>
+
+  <!-- Categories Table Card (Desktop View) -->
+  <div class="table-card desktop-table-view">
+    <table class="categories-table">
+      <thead>
+        <tr>
+          <th>Categoria</th>
+          <th>Slug</th>
+          <th>Descrição</th>
+          <th class="num-col">Produtos Vinculados</th>
+          <th class="action-col">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (isLoading()) {
+          <tr>
+            <td colspan="5" class="empty-row">Carregando categorias...</td>
+          </tr>
+        } @else {
+          @for (cat of filteredCategories(); track cat.id) {
+            <tr>
+              <td>
+                <div class="item-detail">
+                  @if (cat.image) {
+                    <img [src]="cat.image" [alt]="cat.name" class="cat-thumb" />
+                  } @else {
+                    <div class="cat-thumb-placeholder">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" y1="6" x2="20" y2="6"></line>
+                        <line x1="4" y1="12" x2="20" y2="12"></line>
+                        <line x1="4" y1="18" x2="20" y2="18"></line>
+                      </svg>
+                    </div>
+                  }
+                  <span class="cat-name">{{ cat.name }}</span>
+                </div>
+              </td>
+              <td>
+                <code class="cat-slug">{{ cat.slug }}</code>
+              </td>
+              <td class="cat-desc-cell">
+                {{ cat.description || '—' }}
+              </td>
+              <td class="num-col">
+                <span class="count-badge" [class.empty-count]="!cat._count?.products">
+                  {{ cat._count?.products || 0 }} {{ (cat._count?.products === 1) ? 'produto' : 'produtos' }}
+                </span>
+              </td>
+              <td class="action-col">
+                <div class="actions-wrapper">
+                  <button type="button" class="action-btn" (click)="openEditModal(cat)" title="Editar Categoria">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+                  <button 
+                    type="button" 
+                    class="action-btn delete-btn" 
+                    (click)="deleteCategory(cat)" 
+                    [title]="(cat._count?.products && cat._count!.products > 0) ? 'Possui produtos vinculados' : 'Excluir Categoria'"
+                    [class.disabled-btn]="cat._count?.products && cat._count!.products > 0"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="empty-row">Nenhuma categoria encontrada.</td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Categories Mobile Cards View (Mobile View - NO horizontal scroll) -->
+  <div class="mobile-cards-view">
+    @if (isLoading()) {
+      <div class="mobile-empty-card">
+        <p>Carregando categorias...</p>
+      </div>
+    } @else {
+      @for (cat of filteredCategories(); track cat.id) {
+        <div class="category-mobile-card">
+          <!-- Top: Thumbnail + Name + Slug -->
+          <div class="cmc-top">
+            @if (cat.image) {
+              <img [src]="cat.image" [alt]="cat.name" class="cmc-thumb" />
+            } @else {
+              <div class="cmc-thumb-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="4" y1="6" x2="20" y2="6"></line>
+                  <line x1="4" y1="12" x2="20" y2="12"></line>
+                  <line x1="4" y1="18" x2="20" y2="18"></line>
+                </svg>
+              </div>
+            }
+            <div class="cmc-info">
+              <h3 class="cmc-name">{{ cat.name }}</h3>
+              <code class="cmc-slug">{{ cat.slug }}</code>
+            </div>
+            <span class="count-badge" [class.empty-count]="!cat._count?.products">
+              {{ cat._count?.products || 0 }} {{ (cat._count?.products === 1) ? 'prod.' : 'prods.' }}
+            </span>
+          </div>
+
+          @if (cat.description) {
+            <p class="cmc-desc">{{ cat.description }}</p>
+          }
+
+          <!-- Actions -->
+          <div class="cmc-actions">
+            <button type="button" class="cmc-btn cmc-edit-btn" (click)="openEditModal(cat)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              <span>Editar</span>
+            </button>
+            <button 
+              type="button" 
+              class="cmc-btn cmc-delete-btn" 
+              (click)="deleteCategory(cat)"
+              [class.disabled-btn]="cat._count?.products && cat._count!.products > 0"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              <span>Excluir</span>
+            </button>
+          </div>
+        </div>
+      } @empty {
+        <div class="mobile-empty-card">
+          <p>Nenhuma categoria encontrada.</p>
+        </div>
+      }
+    }
+  </div>
+</div>
+
+  <!-- Modal Criação / Edição -->
+  @if (showModal()) {
+    <div class="modal-overlay animate-fade-in">
+      <div class="modal-content animate-scale-up" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ editingCategoryId() ? 'Editar Categoria' : 'Nova Categoria' }}</h2>
+          <button type="button" class="close-btn" (click)="closeModal()">×</button>
+        </div>
+
+        <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="modal-form">
+          <div class="form-group">
+            <label for="cat-name">Nome da Categoria *</label>
+            <input
+              id="cat-name"
+              type="text"
+              formControlName="name"
+              placeholder="Ex: Camisetas, Calças, Polos..."
+              class="form-control"
+              [class.invalid]="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched"
+            />
+            @if (categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched) {
+              <span class="error-msg">O nome da categoria é obrigatório.</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="cat-slug">Slug Personalizado (Opcional)</label>
+            <input
+              id="cat-slug"
+              type="text"
+              formControlName="slug"
+              placeholder="Ex: camisetas (deixe vazio para gerar automático)"
+              class="form-control"
+            />
+            <span class="helper-text">Se deixado em branco, o sistema gerará a URL automaticamente a partir do nome.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="cat-desc">Descrição (Opcional)</label>
+            <textarea
+              id="cat-desc"
+              rows="3"
+              formControlName="description"
+              placeholder="Breve descrição da categoria exibida na loja..."
+              class="form-control"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="cat-image">URL da Imagem de Capa (Opcional)</label>
+            <input
+              id="cat-image"
+              type="url"
+              formControlName="image"
+              placeholder="https://images.unsplash.com/photo-..."
+              class="form-control"
+            />
+            @if (categoryForm.get('image')?.value) {
+              <div class="image-preview-wrapper">
+                <img [src]="categoryForm.get('image')?.value" alt="Prévia da capa" class="preview-img" />
+              </div>
+            }
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="cancel-btn" (click)="closeModal()" [disabled]="isSubmitting()">
+              Cancelar
+            </button>
+            <button type="submit" class="submit-btn" [disabled]="categoryForm.invalid || isSubmitting()">
+              {{ isSubmitting() ? 'Salvando...' : (editingCategoryId() ? 'Salvar Alterações' : 'Criar Categoria') }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }

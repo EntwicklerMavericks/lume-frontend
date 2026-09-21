@@ -1,0 +1,83 @@
+.auth-layout-container {
+  /* Scope CSS variable overrides locally for the dark premium theme */
+  --background: #09090b;
+  --surface: rgba(18, 18, 20, 0.45);
+  --surface-hover: rgba(22, 22, 26, 0.65);
+  --text-primary: #f4f4f5;
+  --text-secondary: #a1a1aa;
+  --text-muted: #52525b;
+  --border-color: rgba(63, 63, 70, 0.4);
+  --border-hover: rgba(82, 82, 91, 0.6);
+  --border-focus: #ffffff;
+  
+  --primary: #ffffff;
+  --primary-hover: #e4e4e7;
+  --primary-focus: rgba(255, 255, 255, 0.1);
+  --primary-light: #27272a;
+  
+  --error: #f43f5e;
+  --error-bg: rgba(244, 63, 94, 0.05);
+  --error-border: rgba(244, 63, 94, 0.2);
+  
+  --success: #10b981;
+  --success-bg: rgba(16, 185, 129, 0.05);
+  --success-border: rgba(16, 185, 129, 0.2);
+
+  background-color: var(--background);
+  color: var(--text-primary);
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 2.5rem 1.5rem;
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Background Glowing spheres */
+.glow-sphere {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.glow-sphere-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, rgba(168, 85, 247, 0) 70%);
+  top: -150px;
+  left: -150px;
+}
+
+.glow-sphere-2 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(251, 146, 60, 0.03) 0%, rgba(251, 146, 60, 0) 70%);
+  bottom: -200px;
+  right: -150px;
+}
+
+/* Abstract geometric dot-mesh pattern */
+.geometric-mesh {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 0),
+    radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 0);
+  background-size: 48px 48px;
+  background-position: 0 0, 24px 24px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.auth-content {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  z-index: 3;
+}

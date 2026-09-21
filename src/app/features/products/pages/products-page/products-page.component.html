@@ -1,0 +1,628 @@
+<div class="products-container animate-fade-in">
+  <div class="products-header">
+    <div>
+      <h1>Gerenciamento de Produtos</h1>
+      <p class="subtitle">Cadastre, edite e organize a vitrine da sua loja.</p>
+    </div>
+    <button class="add-btn" (click)="openAddModal()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      Novo Produto
+    </button>
+  </div>
+
+  <!-- Feedback Banner -->
+  @if (feedbackMessage(); as msg) {
+    <div class="feedback-banner" [class.success]="msg.type === 'success'" [class.error]="msg.type === 'error'">
+      <span>{{ msg.text }}</span>
+      <button type="button" class="close-banner" (click)="feedbackMessage.set(null)">×</button>
+    </div>
+  }
+
+  <!-- Error Banner -->
+  @if (errorMessage(); as err) {
+    <div class="feedback-banner error">
+      <span>{{ err }}</span>
+      <button type="button" class="retry-btn" (click)="loadData()">Tentar Novamente</button>
+    </div>
+  }
+
+  <!-- Filters -->
+  <div class="control-bar">
+    <div class="search-box">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input
+        type="text"
+        placeholder="Filtrar por nome, SKU ou categoria..."
+        class="search-input"
+        [value]="searchTerm()"
+        (input)="onSearchInput($event)"
+      />
+    </div>
+  </div>
+
+  <!-- Products List Table -->
+  <!-- Products List Table (Desktop View) -->
+  <div class="table-card desktop-table-view">
+    <table class="products-table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>SKU</th>
+          <th>Categoria</th>
+          <th class="num-col">Preço</th>
+          <th class="num-col">Preço Promo</th>
+          <th class="num-col">Estoque</th>
+          <th>Status</th>
+          <th class="action-col">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (isLoading()) {
+          <tr>
+            <td colspan="8" class="empty-row">Carregando catálogo de produtos...</td>
+          </tr>
+        } @else {
+          @for (prod of filteredProducts(); track prod.id) {
+            <tr>
+              <td>
+                <div class="item-detail">
+                  <img
+                    [src]="prod.images && prod.images.length > 0 ? prod.images[0].url : 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200'"
+                    [alt]="prod.name"
+                    class="item-thumb"
+                  />
+                  <div class="item-text">
+                    <span class="item-name">{{ prod.name }}</span>
+                    <span class="item-gender-badge">{{ prod.gender || 'Masculino' }}</span>
+                  </div>
+                </div>
+              </td>
+              <td><code class="sku-code">{{ prod.sku }}</code></td>
+              <td>
+                <span class="category-pill">{{ prod.category?.name || 'Geral' }}</span>
+              </td>
+              <td class="num-col">R$ {{ prod.price.toFixed(2) }}</td>
+              <td class="num-col">
+                @if (prod.promotionalPrice || prod.pricePromo) {
+                  <span class="text-success">R$ {{ (prod.promotionalPrice || prod.pricePromo)?.toFixed(2) }}</span>
+                } @else {
+                  <span class="text-muted">-</span>
+                }
+              </td>
+              <td class="num-col">
+                <span [class.text-danger]="prod.stock === 0" [class.text-success]="prod.stock > 10">
+                  {{ prod.stock }} un
+                </span>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="status-toggle-btn"
+                  [class.active]="prod.status"
+                  [class.inactive]="!prod.status"
+                  (click)="toggleProductStatus(prod)"
+                  title="Clique para alternar o status do produto"
+                >
+                  {{ prod.status ? 'Ativo' : 'Inativo' }}
+                </button>
+              </td>
+              <td class="action-col">
+                <div class="action-buttons">
+                  <button class="row-btn" (click)="openEditModal(prod)" aria-label="Editar" title="Editar Produto">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+                  <button class="row-btn delete-btn" (click)="deleteProduct(prod.id)" aria-label="Excluir" title="Excluir Produto">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="8" class="empty-row">
+                @if (searchTerm()) {
+                  Nenhum produto encontrado para "{{ searchTerm() }}".
+                } @else {
+                  Nenhum produto cadastrado no banco de dados. Clique em "Novo Produto" para cadastrar.
+                }
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Products Mobile Cards View (Mobile View - NO horizontal scroll) -->
+  <div class="mobile-cards-view">
+    @if (isLoading()) {
+      <div class="mobile-empty-card">
+        <p>Carregando catálogo de produtos...</p>
+      </div>
+    } @else {
+      @for (prod of filteredProducts(); track prod.id) {
+        <div class="product-mobile-card">
+          <!-- Card Top: Image + Info -->
+          <div class="pmc-top">
+            <img
+              [src]="prod.images && prod.images.length > 0 ? prod.images[0].url : 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200'"
+              [alt]="prod.name"
+              class="pmc-thumb"
+            />
+            <div class="pmc-info">
+              <h3 class="pmc-name">{{ prod.name }}</h3>
+              <div class="pmc-meta">
+                <code class="pmc-sku">{{ prod.sku }}</code>
+                <span class="pmc-category">{{ prod.category?.name || 'Geral' }}</span>
+                <span class="pmc-gender">{{ prod.gender || 'Masculino' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Metrics -->
+          <div class="pmc-details">
+            <div class="pmc-detail-item">
+              <span class="pmc-detail-label">Preço</span>
+              <span class="pmc-price">R$ {{ prod.price.toFixed(2) }}</span>
+              @if (prod.promotionalPrice || prod.pricePromo) {
+                <span class="pmc-promo">Promo: R$ {{ (prod.promotionalPrice || prod.pricePromo)?.toFixed(2) }}</span>
+              }
+            </div>
+
+            <div class="pmc-detail-item">
+              <span class="pmc-detail-label">Estoque</span>
+              <span class="pmc-stock" [class.stock-empty]="prod.stock === 0" [class.stock-ok]="prod.stock > 10">
+                {{ prod.stock }} un
+              </span>
+            </div>
+
+            <div class="pmc-detail-item">
+              <span class="pmc-detail-label">Status</span>
+              <button
+                type="button"
+                class="status-toggle-btn"
+                [class.active]="prod.status"
+                [class.inactive]="!prod.status"
+                (click)="toggleProductStatus(prod)"
+                title="Clique para alternar o status"
+              >
+                {{ prod.status ? 'Ativo' : 'Inativo' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Card Actions -->
+          <div class="pmc-actions">
+            <button type="button" class="pmc-btn pmc-edit-btn" (click)="openEditModal(prod)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              <span>Editar</span>
+            </button>
+            <button type="button" class="pmc-btn pmc-delete-btn" (click)="deleteProduct(prod.id)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              <span>Excluir</span>
+            </button>
+          </div>
+        </div>
+      } @empty {
+        <div class="mobile-empty-card">
+          @if (searchTerm()) {
+            <p>Nenhum produto encontrado para "{{ searchTerm() }}".</p>
+          } @else {
+            <p>Nenhum produto cadastrado. Toque no botão acima para cadastrar.</p>
+          }
+        </div>
+      }
+    }
+  </div>
+</div>
+
+  <!-- Add/Edit Product Modal Overlay -->
+  @if (showModal()) {
+    <div class="modal-overlay animate-fade-in">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2>{{ editingProductId() ? 'Editar Produto' : 'Cadastrar Novo Produto' }}</h2>
+          <button class="close-modal-btn" (click)="closeModal()" aria-label="Fechar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="modal-body-form" novalidate>
+          <div class="form-columns">
+            <!-- Left Side Details -->
+            <div class="form-left-col">
+              <div class="form-row">
+                <div class="form-group flex-1">
+                  <label class="form-label" for="prod-name">Nome do Produto *</label>
+                  <input id="prod-name" type="text" formControlName="name" class="form-input" placeholder="ex: Camiseta Pima Black" />
+                </div>
+                <div class="form-group flex-1">
+                  <label class="form-label" for="prod-sku">SKU *</label>
+                  <input id="prod-sku" type="text" formControlName="sku" class="form-input" placeholder="ex: BAR-CAM-001" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group flex-1">
+                  <label class="form-label" for="prod-price">Preço (R$) *</label>
+                  <input id="prod-price" type="number" formControlName="price" class="form-input" />
+                </div>
+                <div class="form-group flex-1">
+                  <label class="form-label" for="prod-promo">Preço Promocional (R$)</label>
+                  <input id="prod-promo" type="number" formControlName="pricePromo" class="form-input" placeholder="Vazio caso não tenha" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group flex-1">
+                  <label class="form-label" for="prod-stock">Qtd em Estoque *</label>
+                  <input id="prod-stock" type="number" formControlName="stock" class="form-input" />
+                </div>
+                <div class="form-group flex-1">
+                  <label class="form-label" for="prod-cat">Categoria *</label>
+                  <select id="prod-cat" formControlName="categoryId" class="form-input">
+                    <option value="" disabled>Selecione uma categoria...</option>
+                    @for (cat of categories(); track cat.id) {
+                      <option [value]="cat.id">{{ cat.name }}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group flex-1">
+                  <label class="form-label" for="prod-gender">Gênero</label>
+                  <select id="prod-gender" formControlName="gender" class="form-input">
+                    <option value="Masculino">Masculino</option>
+                    <option value="Feminino">Feminino</option>
+                    <option value="Unissex">Unissex</option>
+                  </select>
+                </div>
+                <div class="form-group flex-1">
+                  <label class="form-label" for="prod-fit">Modelagem / Fit</label>
+                  <input id="prod-fit" type="text" formControlName="fit" class="form-input" placeholder="ex: Regular Tailored, Slim, Boxy" />
+                </div>
+              </div>
+
+              <div class="form-row flags-row">
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="status" />
+                  <span>Produto Ativo</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="highlight" />
+                  <span>Destaque</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="newLaunch" />
+                  <span>Novo Lançamento</span>
+                </label>
+              </div>
+
+              <!-- Sizing Grid -->
+              <div class="form-group">
+                <div class="field-label-row">
+                  <span class="form-label">Tamanhos Disponíveis</span>
+                  <button 
+                    type="button" 
+                    class="other-toggle-link" 
+                    (click)="toggleCustomSizeInput()"
+                  >
+                    {{ showCustomSizeInput() ? 'Fechar Outros' : '+ Outros' }}
+                  </button>
+                </div>
+
+                <div class="sizes-selector-grid">
+                  @for (sz of availableSizes; track sz) {
+                    <button 
+                      type="button" 
+                      class="size-pill-btn" 
+                      [class.selected]="selectedSizes().includes(sz)"
+                      (click)="toggleSize(sz)"
+                    >
+                      {{ sz }}
+                    </button>
+                  }
+
+                  <!-- Custom added sizes as clickable pill tags -->
+                  @for (sz of customSizes(); track sz) {
+                    <button 
+                      type="button" 
+                      class="size-pill-btn custom-tag-pill" 
+                      [class.selected]="selectedSizes().includes(sz)"
+                      (click)="toggleSize(sz)"
+                    >
+                      <span>{{ sz }}</span>
+                      <span class="remove-tag-icon" (click)="removeCustomSize(sz, $event)" title="Remover tamanho">×</span>
+                    </button>
+                  }
+                </div>
+
+                <!-- Custom Size Input Bar -->
+                @if (showCustomSizeInput()) {
+                  <div class="custom-tag-input-bar animate-fade-in">
+                    <input 
+                      #customSizeInput
+                      type="text" 
+                      class="tag-inline-input"
+                      placeholder="Digite o tamanho (espaço ou Enter para adicionar)..."
+                      (keydown)="onSizeInputKeydown($event, customSizeInput)"
+                    />
+                    <button type="button" class="btn-add-tag" (click)="addCustomSizeFromInput(customSizeInput)">
+                      + Adicionar
+                    </button>
+                  </div>
+                }
+              </div>
+
+              <!-- Colors Grid -->
+              <div class="form-group">
+                <div class="field-label-row">
+                  <span class="form-label">Cores Disponíveis</span>
+                  <button 
+                    type="button" 
+                    class="other-toggle-link" 
+                    (click)="toggleCustomColorInput()"
+                  >
+                    {{ showCustomColorInput() ? 'Fechar Outras' : '+ Outras' }}
+                  </button>
+                </div>
+
+                <div class="colors-selector-grid">
+                  @for (col of availableColors; track col) {
+                    <button 
+                      type="button" 
+                      class="color-pill-btn" 
+                      [class.selected]="selectedColors().includes(col)"
+                      (click)="toggleColor(col)"
+                    >
+                      {{ col }}
+                    </button>
+                  }
+
+                  <!-- Custom added colors as clickable pill tags -->
+                  @for (col of customColors(); track col) {
+                    <button 
+                      type="button" 
+                      class="color-pill-btn custom-tag-pill" 
+                      [class.selected]="selectedColors().includes(col)"
+                      (click)="toggleColor(col)"
+                    >
+                      <span>{{ col }}</span>
+                      <span class="remove-tag-icon" (click)="removeCustomColor(col, $event)" title="Remover cor">×</span>
+                    </button>
+                  }
+                </div>
+
+                <!-- Custom Color Input Bar -->
+                @if (showCustomColorInput()) {
+                  <div class="custom-tag-input-bar animate-fade-in">
+                    <input 
+                      #customColorInput
+                      type="text" 
+                      class="tag-inline-input"
+                      placeholder="Digite a cor (espaço ou Enter para adicionar)..."
+                      (keydown)="onColorInputKeydown($event, customColorInput)"
+                    />
+                    <button type="button" class="btn-add-tag" (click)="addCustomColorFromInput(customColorInput)">
+                      + Adicionar
+                    </button>
+                  </div>
+                }
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="prod-comp">Composição do Tecido</label>
+                <input id="prod-comp" type="text" formControlName="composition" class="form-input" placeholder="ex: 100% Algodão Pima Peruano" />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="prod-desc">Descrição do Produto</label>
+                <textarea id="prod-desc" formControlName="description" rows="3" class="form-input textarea-input" placeholder="Detalhes técnicos, tecido, corte..."></textarea>
+              </div>
+            </div>
+
+            <!-- Right Side Image Dropzone -->
+            <div class="form-right-col">
+              <span class="form-label">Fotos do Produto</span>
+              
+              <!-- Hidden Inputs for Gallery / Files & Camera Capture -->
+              <input 
+                type="file" 
+                #fileInput 
+                (change)="onFileSelected($event)" 
+                multiple 
+                accept="image/*" 
+                style="display: none;" 
+              />
+              <input 
+                type="file" 
+                #cameraFallbackInput 
+                (change)="onFileSelected($event)" 
+                accept="image/*" 
+                capture="environment" 
+                style="display: none;" 
+              />
+
+              <div 
+                class="drag-drop-zone"
+                [class.drag-over]="dragOver()"
+                (dragover)="onDragOver($event)"
+                (dragleave)="onDragLeave($event)"
+                (drop)="onDrop($event)"
+                (click)="fileInput.click()"
+              >
+                <div class="upload-buttons-group">
+                  <button 
+                    type="button" 
+                    class="upload-btn upload-camera-btn" 
+                    (click)="$event.stopPropagation(); openCamera()"
+                    title="Abrir a câmera para fotografar o produto"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                      <circle cx="12" cy="13" r="4"></circle>
+                    </svg>
+                    <span>Tirar Foto (Câmera)</span>
+                  </button>
+
+                  <button 
+                    type="button" 
+                    class="upload-btn upload-gallery-btn" 
+                    (click)="$event.stopPropagation(); fileInput.click()"
+                    title="Selecionar fotos da galeria ou computador"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    <span>Galeria / Arquivo</span>
+                  </button>
+                </div>
+
+                <div class="drag-text-container">
+                  <p class="zone-text">ou arraste suas imagens para esta área</p>
+                  <span class="zone-info">PNG, JPG, WEBP • Otimização automática</span>
+                </div>
+              </div>
+
+              <!-- Uploaded Previews -->
+              <div class="previews-list">
+                @for (img of uploadedImages(); track img.url; let idx = $index) {
+                  <div class="preview-item">
+                    <img [src]="img.url" class="preview-thumb" alt="Preview" />
+                    
+                    <div class="preview-actions">
+                      <div class="action-top">
+                        @if (img.isMain) {
+                          <span class="main-badge">Capa</span>
+                        } @else {
+                          <button type="button" class="action-pill-btn" (click)="setMainImage(idx)">Definir Capa</button>
+                        }
+                      </div>
+
+                      <div class="action-bottom">
+                        <!-- Up/Down sorting buttons -->
+                        <div class="sorting-controls">
+                          <button type="button" class="sort-btn" [disabled]="idx === 0" (click)="moveImageUp(idx)" aria-label="Subir imagem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                              <polyline points="18 15 12 9 6 15"></polyline>
+                            </svg>
+                          </button>
+                          <button type="button" class="sort-btn" [disabled]="idx === uploadedImages().length - 1" (click)="moveImageDown(idx)" aria-label="Descer imagem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                              <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                          </button>
+                        </div>
+
+                        <!-- Trash remove button -->
+                        <button type="button" class="delete-img-btn-inline" (click)="removeImage(idx)" aria-label="Excluir">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="cancel-btn" (click)="closeModal()">Cancelar</button>
+            <button type="submit" class="submit-btn" [disabled]="productForm.invalid || isSubmitting()">
+              {{ isSubmitting() ? 'Salvando...' : (editingProductId() ? 'Atualizar Produto' : 'Salvar Produto') }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- Live Camera Viewfinder Modal -->
+  @if (isCameraOpen()) {
+    <div class="camera-modal-backdrop" (click)="stopCamera()">
+      <div class="camera-card" (click)="$event.stopPropagation()">
+        <div class="camera-card-header">
+          <div class="camera-title-badge">
+            <span class="live-dot"></span>
+            <span>Câmera ao Vivo</span>
+          </div>
+          <button type="button" class="camera-close-action" (click)="stopCamera()" aria-label="Fechar câmera">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="camera-viewport">
+          <video #cameraVideo autoplay playsinline muted class="camera-feed"></video>
+          
+          <div class="camera-grid-overlay">
+            <div class="grid-line horizontal-top"></div>
+            <div class="grid-line horizontal-bottom"></div>
+            <div class="grid-line vertical-left"></div>
+            <div class="grid-line vertical-right"></div>
+          </div>
+
+          @if (isCameraLoading()) {
+            <div class="camera-connecting-state">
+              <div class="camera-spinner"></div>
+              <span>Iniciando câmera...</span>
+            </div>
+          }
+        </div>
+
+        <div class="camera-toolbar">
+          <!-- Flip Camera (Front / Back on mobile) -->
+          <button type="button" class="camera-tool-btn" (click)="flipCamera()" title="Alternar câmera frontal / traseira">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+            </svg>
+            <span>Trocar</span>
+          </button>
+
+          <!-- Main Shutter Button -->
+          <button type="button" class="camera-capture-trigger" (click)="capturePhoto()" title="Fotografar">
+            <div class="capture-inner-circle"></div>
+          </button>
+
+          <!-- Native Camera / Gallery Fallback -->
+          <button type="button" class="camera-tool-btn" (click)="triggerNativeCameraFallback()" title="Abrir app de câmera ou fotos">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            <span>Arquivos</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }

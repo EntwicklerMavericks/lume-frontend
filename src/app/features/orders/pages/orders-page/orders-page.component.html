@@ -1,0 +1,140 @@
+<div class="orders-container animate-fade-in">
+  <div class="orders-header">
+    <div>
+      <h1>Gerenciamento de Pedidos</h1>
+      <p class="subtitle">Acompanhe as vendas, pagamentos e o status de envio dos pedidos da sua loja.</p>
+    </div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="control-bar">
+    <div class="search-box">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" placeholder="Filtrar por pedido ou cliente..." class="search-input" />
+    </div>
+  </div>
+
+  <!-- Orders Table -->
+  <div class="table-card">
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Cliente</th>
+          <th>Data</th>
+          <th class="num-col">Total</th>
+          <th>Status</th>
+          <th>Alterar Status</th>
+          <th class="action-col">Detalhes</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (ord of orders(); track ord.id) {
+          <tr>
+            <td><span class="order-code">{{ ord.id }}</span></td>
+            <td>
+              <div class="client-info">
+                <span class="client-name">{{ ord.client }}</span>
+                <span class="client-email">{{ ord.email }}</span>
+              </div>
+            </td>
+            <td>{{ ord.date }}</td>
+            <td class="num-col font-bold">R$ {{ ord.total.toFixed(2) }}</td>
+            <td>
+              <span class="badge" [class]="'badge-' + (ord.status === 'delivered' ? 'success' : ord.status === 'cancelled' ? 'error' : ord.status === 'pending_payment' ? 'warning' : 'info')">
+                {{ ord.statusLabel }}
+              </span>
+            </td>
+            <td>
+              <select class="status-select" [value]="ord.status" (change)="updateStatus(ord.id, $event)">
+                <option value="pending_payment">Aguardando Pagamento</option>
+                <option value="paid">Pago</option>
+                <option value="preparing">Em separação</option>
+                <option value="shipped">Enviado</option>
+                <option value="delivered">Entregue</option>
+                <option value="cancelled">Cancelado</option>
+              </select>
+            </td>
+            <td class="action-col">
+              <button class="view-btn" (click)="openDetails(ord)">
+                Visualizar
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Order Details Modal -->
+  @if (showDetailsModal() && selectedOrder()) {
+    <div class="modal-overlay animate-fade-in">
+      <div class="modal-card detail-modal">
+        <div class="modal-header">
+          <h2>Detalhes do Pedido - {{ selectedOrder()?.id }}</h2>
+          <button class="close-modal-btn" (click)="closeModal()" aria-label="Fechar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="detail-columns">
+            <!-- Client Details -->
+            <div class="detail-left">
+              <div class="detail-section">
+                <h3>Informações do Cliente</h3>
+                <p><strong>Nome:</strong> {{ selectedOrder()?.client }}</p>
+                <p><strong>E-mail:</strong> {{ selectedOrder()?.email }}</p>
+                <p><strong>Data:</strong> {{ selectedOrder()?.date }}</p>
+              </div>
+
+              <div class="detail-section">
+                <h3>Resumo do Status</h3>
+                <p>
+                  <strong>Status Atual:</strong>
+                  <span class="badge" [class]="'badge-' + (selectedOrder()?.status === 'delivered' ? 'success' : selectedOrder()?.status === 'cancelled' ? 'error' : selectedOrder()?.status === 'pending_payment' ? 'warning' : 'info')">
+                    {{ selectedOrder()?.statusLabel }}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <!-- Items Summary -->
+            <div class="detail-right">
+              <h3>Itens do Pedido</h3>
+              <div class="items-card">
+                @for (item of selectedOrder()?.items; track item.sku) {
+                  <div class="order-item-row">
+                    <div class="item-desc">
+                      <span class="item-name">{{ item.name }}</span>
+                      <span class="item-sku">SKU: {{ item.sku }}</span>
+                    </div>
+                    <div class="item-price-calc">
+                      <span>{{ item.quantity }} x R$ {{ item.price.toFixed(2) }}</span>
+                      <span class="font-bold">R$ {{ (item.quantity * item.price).toFixed(2) }}</span>
+                    </div>
+                  </div>
+                }
+                
+                <div class="order-total-row">
+                  <span>Total Pago:</span>
+                  <span class="total-price">R$ {{ selectedOrder()?.total?.toFixed(2) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="close-btn" (click)="closeModal()">Fechar</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

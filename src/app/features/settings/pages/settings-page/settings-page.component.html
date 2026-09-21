@@ -1,0 +1,74 @@
+<div class="settings-container animate-fade-in">
+  <div class="settings-header">
+    <div>
+      <h1>Configurações da Loja</h1>
+      <p class="subtitle">Gerencie os dados institucionais, logo e contatos de atendimento da loja.</p>
+    </div>
+  </div>
+
+  <div class="settings-card">
+    <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()" novalidate>
+      <!-- Save Success Banner -->
+      @if (saveSuccess()) {
+        <div class="success-banner animate-fade-in">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Configurações salvas com sucesso!
+        </div>
+      }
+
+      <div class="settings-layout">
+        <!-- Left Column: Inputs -->
+        <div class="settings-inputs">
+          <div class="form-group">
+            <label class="form-label" for="set-name">Nome da Loja</label>
+            <input id="set-name" type="text" formControlName="storeName" class="form-input" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="set-email">E-mail de Contato</label>
+            <input id="set-email" type="email" formControlName="email" class="form-input" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="set-phone">Telefone / WhatsApp</label>
+            <input id="set-phone" type="text" formControlName="phone" class="form-input" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="set-address">Endereço Comercial</label>
+            <textarea id="set-address" formControlName="address" rows="3" class="form-input textarea-input"></textarea>
+          </div>
+        </div>
+
+        <!-- Right Column: Logo Upload -->
+        <div class="settings-logo-section">
+          <span class="form-label">Logotipo da Loja</span>
+          <div class="logo-uploader-card">
+            <div class="logo-preview-wrapper">
+              <img [src]="logoPreview()" alt="Logo Preview" class="logo-image" />
+            </div>
+            <button type="button" class="upload-logo-btn" (click)="logoInput.click()">
+              Alterar Logo
+            </button>
+            <input 
+              type="file" 
+              #logoInput 
+              (change)="onLogoSelected($event)" 
+              accept="image/*" 
+              style="display: none;" 
+            />
+            <span class="logo-specs">Formato recomendado: Quadrado (512x512px). PNG com fundo transparente.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-footer">
+        <button type="submit" class="save-settings-btn" [disabled]="settingsForm.invalid">
+          Salvar Alterações
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

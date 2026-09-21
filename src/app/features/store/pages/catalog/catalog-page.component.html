@@ -1,0 +1,175 @@
+<div class="catalog-page">
+  <!-- Header da Coleção -->
+  <header class="catalog-header">
+    <div class="catalog-container">
+      <span class="catalog-eyebrow">COLEÇÃO {{ storeConfig.name | uppercase }}</span>
+      <h1 class="catalog-title">{{ activeCategoryName() }}</h1>
+      <p class="catalog-count">{{ filteredProducts().length }} {{ filteredProducts().length === 1 ? 'peça encontrada' : 'peças encontradas' }}</p>
+    </div>
+  </header>
+
+  <div class="catalog-container catalog-layout">
+    <!-- Botão de Filtros no Mobile -->
+    <button class="filter-toggle" (click)="toggleFilters()" aria-label="Abrir filtros de busca">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="4" y1="21" x2="4" y2="14"/>
+        <line x1="4" y1="10" x2="4" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="12"/>
+        <line x1="12" y1="8" x2="12" y2="3"/>
+        <line x1="20" y1="21" x2="20" y2="16"/>
+        <line x1="20" y1="12" x2="20" y2="3"/>
+      </svg>
+      <span>Filtros</span>
+      @if (activeFiltersCount() > 0) {
+        <span class="filter-count">{{ activeFiltersCount() }}</span>
+      }
+    </button>
+
+    <!-- Sidebar de Filtros (Drawer no Mobile) -->
+    <aside class="filters-sidebar" [class.open]="showFilters()" role="region" aria-label="Filtros de produtos">
+      <!-- Cabeçalho do Drawer no Mobile com Botão Fechar -->
+      <div class="drawer-filters-header">
+        <span class="drawer-filters-title">Filtros</span>
+        <button class="drawer-filters-close-btn" (click)="closeFilters()" aria-label="Fechar painel de filtros">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Campo de Busca com Ícone -->
+      <div class="filter-group">
+        <label class="filter-label" for="search-input">Buscar Peça</label>
+        <div class="search-input-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input 
+            id="search-input"
+            type="text" 
+            class="filter-input" 
+            placeholder="Ex: Camiseta Oversized, Cargo, Moletom..." 
+            [value]="searchQuery()" 
+            (input)="searchQuery.set($any($event.target).value)"
+          >
+          @if (searchQuery()) {
+            <button class="search-clear-btn" (click)="searchQuery.set('')" aria-label="Limpar busca">×</button>
+          }
+        </div>
+      </div>
+
+      <!-- Categorias -->
+      <div class="filter-group">
+        <label class="filter-label">Categorias</label>
+        <div class="filter-options">
+          <button 
+            class="filter-chip" 
+            [class.active]="selectedCategory() === null" 
+            (click)="setCategory(null)"
+          >Todas</button>
+          @for (cat of categories(); track cat.id) {
+            <button 
+              class="filter-chip" 
+              [class.active]="selectedCategory() === cat.id" 
+              (click)="setCategory(cat.id)"
+            >{{ cat.name }}</button>
+          }
+        </div>
+      </div>
+
+      <!-- Tamanhos -->
+      @if (allSizes().length > 0) {
+        <div class="filter-group">
+          <label class="filter-label">Tamanho</label>
+          <div class="filter-options">
+            <button 
+              class="filter-chip" 
+              [class.active]="selectedSize() === null" 
+              (click)="setSize(null)"
+            >Todos</button>
+            @for (size of allSizes(); track size) {
+              <button 
+                class="filter-chip" 
+                [class.active]="selectedSize() === size" 
+                (click)="setSize(size)"
+              >{{ size }}</button>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Cores -->
+      @if (allColors().length > 0) {
+        <div class="filter-group">
+          <label class="filter-label">Cor</label>
+          <div class="filter-options">
+            <button 
+              class="filter-chip" 
+              [class.active]="selectedColor() === null" 
+              (click)="setColor(null)"
+            >Todas</button>
+            @for (color of allColors(); track color.name) {
+              <button 
+                class="filter-chip color-chip" 
+                [class.active]="selectedColor() === color.name" 
+                (click)="setColor(color.name)"
+              >
+                <span class="color-dot" [style.background]="color.hex"></span>
+                {{ color.name }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Ordenação -->
+      <div class="filter-group">
+        <label class="filter-label" for="sort-select">Ordenar Por</label>
+        <div class="select-wrapper">
+          <select id="sort-select" class="filter-select" (change)="setSort($any($event.target).value)" [value]="sortBy()">
+            <option value="newest">Lançamentos mais recentes</option>
+            <option value="price-asc">Menor valor</option>
+            <option value="price-desc">Maior valor</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Limpar filtros ativos -->
+      @if (activeFiltersCount() > 0) {
+        <button class="clear-filters" (click)="clearFilters()">
+          Limpar todos os filtros ({{ activeFiltersCount() }})
+        </button>
+      }
+
+      <!-- Botão Aplicar no Mobile -->
+      <button class="filters-apply-mobile" (click)="closeFilters()">
+        Ver {{ filteredProducts().length }} Peças
+      </button>
+    </aside>
+
+    <!-- Área de Produtos -->
+    <main class="products-area">
+      @if (filteredProducts().length > 0) {
+        <div class="products-grid">
+          @for (product of filteredProducts(); track product.id) {
+            <app-product-card [product]="product"></app-product-card>
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="empty-icon">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <line x1="8" y1="11" x2="14" y2="11"/>
+          </svg>
+          <h2 class="empty-title">Nenhuma peça corresponde aos filtros</h2>
+          <p class="empty-text">Tente remover os filtros aplicados ou buscar por outro termo.</p>
+          <button class="empty-cta" (click)="clearFilters()">Limpar Filtros</button>
+        </div>
+      }
+    </main>
+  </div>
+</div>
+

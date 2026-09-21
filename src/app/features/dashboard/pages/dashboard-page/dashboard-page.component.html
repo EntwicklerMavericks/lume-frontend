@@ -1,0 +1,87 @@
+<div class="dashboard-container animate-fade-in">
+  <div class="dashboard-header">
+    <div>
+      <h1>Painel de Controle</h1>
+      <p class="subtitle">Bem-vindo de volta, <strong>{{ currentUser()?.name || 'Administrador' }}</strong>. Veja o resumo geral da sua loja.</p>
+    </div>
+  </div>
+
+  <!-- Metric Cards Grid -->
+  <div class="kpi-grid">
+    @for (stat of stats; track stat.title) {
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span class="kpi-title">{{ stat.title }}</span>
+          <span class="kpi-icon-wrapper">
+            @switch (stat.icon) {
+              @case ('products') {
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l-7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+              }
+              @case ('orders') {
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+              }
+              @case ('clients') {
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                </svg>
+              }
+            }
+          </span>
+        </div>
+        <div class="kpi-value">{{ stat.value }}</div>
+      </div>
+    }
+  </div>
+
+  <!-- Columns Grid: Latest Products and Latest Orders -->
+  <div class="dashboard-split-grid">
+    <!-- Latest Products -->
+    <div class="summary-list-card">
+      <h2>Últimos Produtos Cadastrados</h2>
+      <p class="subtitle-desc">Visualização rápida das últimas peças inseridas na vitrine.</p>
+      
+      <div class="products-list-wrapper">
+        @for (prod of latestProducts; track prod.sku) {
+          <div class="product-item-row">
+            <img [src]="prod.image" [alt]="prod.name" class="prod-thumbnail" />
+            <div class="prod-meta">
+              <span class="prod-name">{{ prod.name }}</span>
+              <span class="prod-sku">SKU: {{ prod.sku }}</span>
+            </div>
+            <div class="prod-price">R$ {{ prod.price.toFixed(2) }}</div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Latest Orders -->
+    <div class="summary-list-card">
+      <h2>Últimos Pedidos</h2>
+      <p class="subtitle-desc">Novas compras realizadas pelos clientes na loja.</p>
+      
+      <div class="orders-list-wrapper">
+        @for (ord of latestOrders; track ord.id) {
+          <div class="order-item-row">
+            <div class="order-meta">
+              <span class="order-client">{{ ord.client }}</span>
+              <span class="order-code-date">{{ ord.id }} &bull; {{ ord.date }}</span>
+            </div>
+            <div class="order-right">
+              <span class="order-price">R$ {{ ord.total.toFixed(2) }}</span>
+              <span class="badge" [class]="'badge-' + (ord.status === 'paid' ? 'success' : ord.status === 'shipped' ? 'info' : 'warning')">
+                {{ ord.statusLabel }}
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

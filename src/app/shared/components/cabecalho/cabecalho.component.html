@@ -1,0 +1,45 @@
+<div class="topbar-container">
+  <!-- Left Side: Breadcrumbs (Desktop) & Brand Badge (Mobile) -->
+  <div class="topbar-left">
+    <div class="breadcrumb-trail desktop-only">
+      <span class="breadcrumb-root">{{ storeConfig.name }}</span>
+      @for (crumb of breadcrumbs; track crumb) {
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="breadcrumb-separator">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+        <span class="breadcrumb-current">{{ crumb }}</span>
+      }
+    </div>
+
+    <div class="mobile-brand-bar">
+      <img [src]="storeConfig.logoUrl" [alt]="storeConfig.name" class="mobile-brand-img" />
+      <span class="mobile-brand-name">{{ storeConfig.name }}</span>
+      <span class="mobile-section-badge">{{ currentSection }}</span>
+    </div>
+  </div>
+
+  <!-- Right Side: Actions & Profile -->
+  <div class="topbar-right">
+    <!-- Search Bar -->
+    <div class="search-box">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" placeholder="Buscar no painel..." class="search-input" />
+    </div>
+
+    <!-- User Profile -->
+    @if (currentUser()) {
+      <div class="user-profile-wrapper">
+        <div class="avatar" title="Administrador Logado">
+          {{ getUserInitials() }}
+        </div>
+        <div class="user-details">
+          <span class="user-name">{{ currentUser()?.name }}</span>
+          <span class="user-role">Administrador</span>
+        </div>
+      </div>
+    }
+  </div>
+</div>

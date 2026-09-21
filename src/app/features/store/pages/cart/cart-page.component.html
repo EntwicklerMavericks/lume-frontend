@@ -1,0 +1,151 @@
+<div class="cart-page">
+  <div class="cart-container">
+    <header class="cart-header">
+      <span class="cart-eyebrow">{{ storeConfig.name | uppercase }}</span>
+      <h1 class="cart-title">Sacola de Compras</h1>
+    </header>
+
+    @if (isEmpty()) {
+      <div class="cart-empty" role="region" aria-label="Sacola vazia">
+        <div class="empty-icon-box">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 01-8 0"/>
+          </svg>
+        </div>
+        <h2 class="empty-title">Sua sacola está vazia</h2>
+        <p class="empty-text">Nenhuma peça foi selecionada ainda. Conheça nossos drops exclusivos e peças streetwear.</p>
+        <a routerLink="/catalogo" class="empty-cta">Explorar Drops</a>
+      </div>
+    } @else {
+      <div class="cart-layout">
+        <!-- Lista de Itens -->
+        <div class="cart-items-column">
+          <div class="cart-items-header">
+            <span>{{ totalItems() }} {{ totalItems() === 1 ? 'peça selecionada' : 'peças selecionadas' }}</span>
+            <button class="clear-all-btn" (click)="clearCart()" title="Esvaziar toda a sacola">
+              Limpar Sacola
+            </button>
+          </div>
+
+          <div class="cart-items-list" role="list" aria-label="Itens na sacola">
+            @for (item of cartItems(); track item.product.id + (item.size ?? '') + (item.color ?? '')) {
+              <div class="cart-item" role="listitem">
+                <a [routerLink]="['/produto', item.product.id]" class="item-image" [attr.aria-label]="item.product.name">
+                  <img [src]="item.product.images[0]" [alt]="item.product.name">
+                </a>
+
+                <div class="item-details">
+                  <a [routerLink]="['/produto', item.product.id]" class="item-name">{{ item.product.name }}</a>
+                  
+                  <div class="item-tags">
+                    @if (item.size) {
+                      <span class="item-tag">Tam: <strong>{{ item.size }}</strong></span>
+                    }
+                    @if (item.color) {
+                      <span class="item-tag">Cor: <strong>{{ item.color }}</strong></span>
+                    }
+                  </div>
+
+                  <div class="item-unit-price">
+                    <span>Valor unitário: </span>
+                    @if (item.product.promotionalPrice) {
+                      <span class="price-val">{{ item.product.promotionalPrice | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+                    } @else {
+                      <span class="price-val">{{ item.product.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+                    }
+                  </div>
+                </div>
+
+                <div class="item-actions">
+                  <!-- Controle de Quantidade -->
+                  <div class="quantity-control" aria-label="Controle de quantidade">
+                    <button class="qty-btn" (click)="updateQuantity(item, item.quantity - 1)" [disabled]="item.quantity <= 1" aria-label="Diminuir um">−</button>
+                    <span class="qty-value">{{ item.quantity }}</span>
+                    <button class="qty-btn" (click)="updateQuantity(item, item.quantity + 1)" aria-label="Aumentar um">+</button>
+                  </div>
+
+                  <span class="item-subtotal">{{ getItemTotal(item) | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+
+                  <button class="remove-btn" (click)="removeItem(item)" aria-label="Remover peça da sacola">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"/>
+                      <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Campo de Observações do Cliente -->
+          <div class="customer-note-box">
+            <label for="cart-note" class="note-label">Observações para o consultor (opcional)</label>
+            <input 
+              id="cart-note"
+              type="text" 
+              class="note-input" 
+              placeholder="Ex: Embalar para presente, dúvida sobre frete ou CEP..."
+              [value]="customerNote()"
+              (input)="customerNote.set($any($event.target).value)"
+            >
+          </div>
+        </div>
+
+        <!-- Coluna de Resumo e Checkout WhatsApp -->
+        <div class="cart-summary-column">
+          <div class="summary-card">
+            <h2 class="summary-title">Resumo do Pedido</h2>
+            
+            <div class="summary-row">
+              <span>Subtotal ({{ totalItems() }} {{ totalItems() === 1 ? 'peça' : 'peças' }})</span>
+              <span>{{ subtotal() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+            </div>
+
+            <div class="summary-row">
+              <span>Frete & Envio</span>
+              <span class="free-shipping-text">Calculado no WhatsApp</span>
+            </div>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-row summary-total">
+              <span>Total Estimado</span>
+              <span class="total-val">{{ subtotal() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+            </div>
+
+            <!-- Botão de Finalização pelo WhatsApp -->
+            <button class="checkout-btn" (click)="checkout()">
+              <span class="btn-content">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="btn-icon">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                </svg>
+                <span class="btn-text">Finalizar Pedido pelo WhatsApp</span>
+              </span>
+            </button>
+
+            <!-- Reafirmações de Confiança -->
+            <div class="trust-list">
+              <div class="trust-item">
+                <span class="trust-check">✓</span>
+                <span>Atendimento direto com consultor de moda</span>
+              </div>
+              <div class="trust-item">
+                <span class="trust-check">✓</span>
+                <span>Confirmação de medidas antes do envio</span>
+              </div>
+              <div class="trust-item">
+                <span class="trust-check">✓</span>
+                <span>Pagamento via PIX ou Cartão no fechamento</span>
+              </div>
+            </div>
+
+            <a routerLink="/catalogo" class="continue-shopping">← Continuar escolhendo peças</a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+

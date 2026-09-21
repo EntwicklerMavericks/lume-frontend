@@ -1,0 +1,52 @@
+<div class="gallery-container animate-fade-in">
+  <div class="gallery-header">
+    <div>
+      <h1>Galeria de Imagens</h1>
+      <p class="subtitle">Gerencie e envie todas as fotos cadastradas no sistema da sua loja.</p>
+    </div>
+    <button class="upload-btn" (click)="fileInput.click()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="17 8 12 3 7 8"></polyline>
+        <line x1="12" y1="3" x2="12" y2="15"></line>
+      </svg>
+      Enviar Novas Fotos
+    </button>
+    <input 
+      type="file" 
+      #fileInput 
+      (change)="onFileSelected($event)" 
+      multiple 
+      accept="image/*" 
+      style="display: none;" 
+    />
+  </div>
+
+  <!-- Image Grid -->
+  <div class="image-grid">
+    @for (img of images(); track img.id) {
+      <div class="image-card">
+        <div class="img-wrapper">
+          <img [src]="img.url" [alt]="img.filename" class="gallery-img" />
+          <button class="delete-btn" (click)="deleteImage(img.id)" aria-label="Remover">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="image-info">
+          <span class="img-filename" [title]="img.filename">{{ img.filename }}</span>
+          <div class="img-meta">
+            <span class="img-size">{{ img.size }}</span>
+            <span class="sku-tag">{{ img.productSku }}</span>
+          </div>
+        </div>
+      </div>
+    } @empty {
+      <div class="empty-state">
+        <p>Nenhuma imagem cadastrada na galeria.</p>
+      </div>
+    }
+  </div>
+</div>

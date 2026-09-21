@@ -1,0 +1,13 @@
+<button 
+  [type]="type"
+  [disabled]="disabled || loading"
+  class="auth-btn"
+  [class.loading]="loading"
+>
+  @if (loading) {
+    <span class="btn-spinner"></span>
+    <span class="loading-text"><ng-content select="[loading-text]">Carregando...</ng-content></span>
+  } @else {
+    <ng-content></ng-content>
+  }
+</button>

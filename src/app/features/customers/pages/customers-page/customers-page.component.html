@@ -1,0 +1,54 @@
+<div class="customers-container animate-fade-in">
+  <div class="customers-header">
+    <div>
+      <h1>Gerenciamento de Clientes</h1>
+      <p class="subtitle">Acompanhe o cadastro, histórico de compras e comportamento dos clientes.</p>
+    </div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="control-bar">
+    <div class="search-box">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" placeholder="Filtrar por nome, e-mail ou CPF..." class="search-input" />
+    </div>
+  </div>
+
+  <!-- Customers Table -->
+  <div class="table-card">
+    <table class="customers-table">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>CPF</th>
+          <th>Contato</th>
+          <th>Endereço de Entrega</th>
+          <th class="num-col">Compras</th>
+          <th class="num-col">Total Gasto</th>
+          <th>Última Compra</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of customers(); track c.id) {
+          <tr>
+            <td><span class="customer-name">{{ c.name }}</span></td>
+            <td><span class="cpf-code">{{ c.cpf }}</span></td>
+            <td>
+              <div class="contact-details">
+                <span class="email">{{ c.email }}</span>
+                <span class="phone">{{ c.phone }}</span>
+              </div>
+            </td>
+            <td><span class="address-text" [title]="c.address">{{ c.address }}</span></td>
+            <td class="num-col">{{ c.purchasesCount }} pedidos</td>
+            <td class="num-col font-bold">R$ {{ c.totalSpent.toFixed(2) }}</td>
+            <td>{{ c.lastPurchase }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
