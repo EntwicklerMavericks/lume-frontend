@@ -26,7 +26,7 @@ export const STORE_CONFIG = {
   tagline: 'MODA ESPORTIVA E CASUAL',
 
   /** Slogan / Descrição resumida da loja para SEO e rodapé */
-  description: 'Aqui tem esporte, estilo e você! Moda esportiva e casual com modelagens autênticas, cortes modernos e tecidos de alta durabilidade.',
+  description: 'Moda esportiva e casual masculina e feminina. Roupas desenvolvidas para treinos intensos na academia e passeios casuais com máximo estilo, conforto e performance.',
 
   /** Caminho do logotipo principal */
   logoUrl: '/images/oliveira-logo.png',
@@ -45,8 +45,8 @@ export const STORE_CONFIG = {
 
   /** Título e texto do manifesto / conceito na Home */
   aboutEyebrow: 'A MARCA',
-  aboutTitle: 'Esporte, Estilo e Atitude. Feita para você.',
-  aboutText: 'A Oliveira une o melhor da moda esportiva e casual, trazendo peças com caimento impecável, conforto superior e presença marcante para o seu dia a dia e treinos.',
+  aboutTitle: 'Performance no treino. Estilo nos passeios.',
+  aboutText: 'A Oliveira cria peças esportivas e casuais masculinas e femininas com tecidos inteligentes, respirabilidade e caimento impecável. Do treino pesado na academia aos momentos casuais de lazer, viva o seu melhor estilo com máxima atitude.',
 
   /** Moeda utilizada */
   currency: 'BRL',

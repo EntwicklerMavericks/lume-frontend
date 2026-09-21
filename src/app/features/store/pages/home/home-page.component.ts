@@ -27,7 +27,7 @@ export class HomePageComponent implements OnInit {
 
   ngOnInit(): void {
     this.seoService.setPageMeta(
-      'Streetwear Masculino & Drops Exclusivos',
+      'Moda Esportiva & Casual — Academia e Passeios Masculino e Feminino',
       `${STORE_CONFIG.name} — ${STORE_CONFIG.description}`
     );
   }

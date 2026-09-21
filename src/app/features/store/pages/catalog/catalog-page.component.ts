@@ -83,7 +83,7 @@ export class CatalogPageComponent implements OnInit {
       const catName = this.activeCategoryName();
       this.seoService.setPageMeta(
         catName === 'Todas as Peças' ? 'Catálogo & Coleção Completa' : `${catName} — Coleção`,
-        `Explore as peças de ${catName} da ${this.storeConfig.name}. Streetwear autêntico e modelagens exclusivas.`
+        `Explore as peças de ${catName} da ${this.storeConfig.name}. Moda Sport & Casual para academia e passeios com modelagens exclusivas.`
       );
     });
   }

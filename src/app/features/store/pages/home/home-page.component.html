@@ -1,10 +1,10 @@
 <!-- HERO EDITORIAL DE ALTO IMPACTO -->
 <section class="hero-editorial" aria-label="Campanha Principal">
   <div class="hero-backdrop">
-    <!-- Fotografia urbana streetwear com modelo estilo maloqueiro / cria de luxo -->
+    <!-- Fotografia fitness esportiva e casual com casal de atletas -->
     <img 
-      src="/images/hero-maloqueiro.jpg" 
-      [alt]="storeConfig.name + ' — Streetwear Masculino Autêntico'" 
+      src="/images/hero-couple-fitness.jpg" 
+      [alt]="storeConfig.name + ' — Moda Esportiva e Casual Masculina e Feminina'" 
       class="hero-img"
       fetchpriority="high"
     >
@@ -15,11 +15,11 @@
     <div class="hero-brand-badge">
       <img [src]="storeConfig.logoUrl" [alt]="storeConfig.name" class="hero-logo-img" />
     </div>
-    <span class="hero-eyebrow">STREETWEAR // URBAN CULTURE 2026</span>
+    <span class="hero-eyebrow">FITNESS & CASUAL // PERFORMANCE 2026</span>
     <h1 class="hero-title">{{ storeConfig.name }}</h1>
     <p class="hero-tagline">{{ storeConfig.description }}</p>
     <div class="hero-actions">
-      <a routerLink="/catalogo" class="hero-btn-primary">Ver Drops & Coleção</a>
+      <a routerLink="/catalogo" class="hero-btn-primary">Ver Coleção</a>
       <a [href]="whatsappLink" target="_blank" rel="noopener noreferrer" class="hero-btn-secondary">
         Atendimento WhatsApp
       </a>
@@ -31,18 +31,18 @@
 <section class="perks-strip" [attr.aria-label]="'Diferenciais ' + storeConfig.name">
   <div class="section-container perks-grid">
     <div class="perk-item">
-      <span class="perk-title">Heavyweight Cotton 240g</span>
-      <span class="perk-desc">Tecidos encorpados com caimento estruturado</span>
+      <span class="perk-title">Tecnologia Dry & Flex</span>
+      <span class="perk-desc">Tecidos respiráveis de alta elasticidade e conforto térmico</span>
     </div>
     <div class="perk-divider"></div>
     <div class="perk-item">
-      <span class="perk-title">Drops & Edição Limitada</span>
-      <span class="perk-desc">Modelagens Boxy e Oversized exclusivas</span>
+      <span class="perk-title">Academia & Passeios</span>
+      <span class="perk-desc">Modelagens versáteis do treino pesado ao dia a dia</span>
     </div>
     <div class="perk-divider"></div>
     <div class="perk-item">
-      <span class="perk-title">Atendimento Direto no Zap</span>
-      <span class="perk-desc">Tire dúvidas de medidas e feche na hora</span>
+      <span class="perk-title">Masculino & Feminino</span>
+      <span class="perk-desc">Linhas completas com cortes modernos e caimento perfeito</span>
     </div>
   </div>
 </section>
@@ -52,7 +52,7 @@
   <div class="section-container">
     <div class="section-heading">
       <span class="heading-subtitle">Navegue pelos Estilos</span>
-      <h2 class="heading-title">Categorias Street</h2>
+      <h2 class="heading-title">Categorias Sport & Casual</h2>
     </div>
     <div class="categories-grid">
       @for (category of categories(); track category.id) {
@@ -76,7 +76,7 @@
   <div class="section-container">
     <div class="section-header">
       <div>
-        <span class="heading-subtitle">Hype & Exclusividade</span>
+        <span class="heading-subtitle">Destaques da Coleção</span>
         <h2 class="heading-title">Peças em Destaque</h2>
       </div>
       <a routerLink="/catalogo" class="section-link">Ver todo o catálogo →</a>
@@ -95,7 +95,7 @@
     <div class="section-container">
       <div class="section-header">
         <div>
-          <span class="heading-subtitle">Novos Drops</span>
+          <span class="heading-subtitle">Novidades</span>
           <h2 class="heading-title">Lançamentos Recentes</h2>
         </div>
         <a routerLink="/catalogo" class="section-link">Ver catálogo completo →</a>
