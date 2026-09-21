@@ -7,26 +7,29 @@
  * E pronto! Toda a vitrine, rodapé, sacola, botões, SEO e links de WhatsApp serão atualizados.
  */
 
-const STORE_NAME = 'Lume';
+const STORE_NAME = 'Oliveira';
 
 export const STORE_CONFIG = {
-  /** Cor primária da marca (hexadecimal). Ex: '#ffffff' (branco), '#ff5500' (laranja), '#e11d48' (vermelho), etc. */
-  primaryColor: '#ffffff',
+  /** Cor primária da marca: Dourado Ouro Nobre (#D4AF37) */
+  primaryColor: '#D4AF37',
 
-  /** Cor secundária/auxiliar da marca (hexadecimal). Ex: '#a1a1aa' (cinza metálico), '#f97316', etc. */
-  secondaryColor: '#a1a1aa',
+  /** Cor secundária/auxiliar da marca: Azul Suave / Branco (#CBD5E1) */
+  secondaryColor: '#CBD5E1',
+
+  /** Fundo premium Azul Marinho Meia-Noite (#080E1A) */
+  backgroundColor: '#080E1A',
 
   /** Nome da loja exibido no site e no painel */
   name: STORE_NAME,
 
-  /** Subtítulo / Tagline da marca no header (ex: 'IMPORTS', 'STORE', 'CLOTHING', ou '' se não quiser) */
-  tagline: 'IMPORTS',
+  /** Subtítulo / Tagline da marca no header */
+  tagline: 'MODA ESPORTIVA E CASUAL',
 
   /** Slogan / Descrição resumida da loja para SEO e rodapé */
-  description: 'Streetwear autêntico, modelagens oversized e tecidos heavyweight desenvolvidos para a nova geração. Estilo que dita o ritmo das ruas.',
+  description: 'Aqui tem esporte, estilo e você! Moda esportiva e casual com modelagens autênticas, cortes modernos e tecidos de alta durabilidade.',
 
   /** Caminho do logotipo principal */
-  logoUrl: '/images/logo.png',
+  logoUrl: '/images/oliveira-logo.png',
 
   /** Número do WhatsApp do vendedor (com código do país e DDD, sem + ou espaços) */
   whatsappNumber: '5511963041542',
@@ -35,15 +38,15 @@ export const STORE_CONFIG = {
   whatsappFormatted: '+55 11 96304-1542',
 
   /** E-mail oficial de contato */
-  email: 'contato@lume.com.br',
+  email: 'contato@oliveiramoda.com.br',
 
   /** Horário de atendimento exibido no rodapé */
-  businessHours: 'Segunda a Sábado — 09h às 20h',
+  businessHours: 'Segunda a Sábado — 09:00 às 12:00 e 14:00 às 19:00',
 
   /** Título e texto do manifesto / conceito na Home */
-  aboutEyebrow: 'O CONCEITO',
-  aboutTitle: 'Nascida nas ruas. Feita para se destacar.',
-  aboutText: 'Criamos peças com cortes boxy marcantes, tecidos pesados de alta durabilidade e caimento impecável para jovens que ditam suas próprias regras, sem concessões.',
+  aboutEyebrow: 'A MARCA',
+  aboutTitle: 'Esporte, Estilo e Atitude. Feita para você.',
+  aboutText: 'A Oliveira une o melhor da moda esportiva e casual, trazendo peças com caimento impecável, conforto superior e presença marcante para o seu dia a dia e treinos.',
 
   /** Moeda utilizada */
   currency: 'BRL',

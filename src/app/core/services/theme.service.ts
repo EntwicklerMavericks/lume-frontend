@@ -8,15 +8,20 @@ export class ThemeService {
   /**
    * Aplica o tema configurado em STORE_CONFIG (ou overrides) diretamente nas CSS custom properties do documento.
    */
-  applyTheme(overrides?: { primaryColor?: string; secondaryColor?: string }): void {
+  applyTheme(overrides?: { primaryColor?: string; secondaryColor?: string; backgroundColor?: string }): void {
     if (typeof document === 'undefined' || !document.documentElement) {
       return;
     }
 
     const primary = overrides?.primaryColor || STORE_CONFIG.primaryColor || '#ffffff';
     const secondary = overrides?.secondaryColor || STORE_CONFIG.secondaryColor || '#a1a1aa';
+    const background = overrides?.backgroundColor || (STORE_CONFIG as any).backgroundColor;
 
     const root = document.documentElement;
+
+    if (background) {
+      root.style.setProperty('--background', background);
+    }
 
     // 1. Cor Primária e Derivadas
     root.style.setProperty('--primary', primary);
