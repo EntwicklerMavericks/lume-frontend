@@ -28,8 +28,14 @@ export const STORE_CONFIG = {
   /** Slogan / Descrição resumida da loja para SEO e rodapé */
   description: 'Moda esportiva e casual masculina e feminina. Roupas desenvolvidas para treinos intensos na academia e passeios casuais com máximo estilo, conforto e performance.',
 
-  /** Caminho do logotipo principal */
-  logoUrl: '/images/oliveira-logo.png',
+  /** Caminho do logotipo/monograma principal (fundo transparente) */
+  logoUrl: '/images/oliveira-icon.png',
+
+  /** Logotipo completo com tipografia e monograma (fundo transparente) */
+  fullLogoUrl: '/images/oliveira-logo.png',
+
+  /** Logotipo original com fundo azul marinho */
+  originalLogoUrl: '/images/oliveira-logo.jpg',
 
   /** Número do WhatsApp do vendedor (com código do país e DDD, sem + ou espaços) */
   whatsappNumber: '5511963041542',
