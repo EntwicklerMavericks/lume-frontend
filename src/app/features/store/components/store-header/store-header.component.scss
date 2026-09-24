@@ -2,11 +2,13 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: rgba(11, 25, 44, 0.98);
+  background-color: var(--header-bg, rgba(11, 25, 44, 0.98));
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  border-bottom: 1px solid var(--header-border, rgba(212, 175, 55, 0.2));
   height: 64px;
+  width: 100%;
+  max-width: 100%;
   display: flex;
   align-items: center;
 
@@ -19,6 +21,10 @@
     justify-content: space-between;
     align-items: center;
     position: relative;
+
+    @media (max-width: 768px) {
+      padding: 0 1rem;
+    }
   }
 
   .mobile-menu-btn {
@@ -54,6 +60,8 @@
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
+      max-width: calc(100% - 110px);
+      overflow: hidden;
     }
 
     .store-logo-img {
@@ -64,33 +72,58 @@
       border-radius: 0;
       box-shadow: none;
       background: transparent;
-      transition: transform 0.25s ease;
+      filter: drop-shadow(0 0 8px rgba(13, 245, 164, 0.35));
+      transition: transform 0.25s ease, filter 0.25s ease;
+      flex-shrink: 0;
+
+      @media (max-width: 480px) {
+        width: 32px;
+        height: 32px;
+      }
     }
 
     &:hover .store-logo-img {
-      transform: scale(1.06);
+      transform: scale(1.08);
+      filter: drop-shadow(0 0 12px rgba(13, 245, 164, 0.6));
     }
 
     .logo-text {
       display: flex;
       flex-direction: column;
       line-height: 1.1;
+      min-width: 0;
+      overflow: hidden;
     }
 
     .logo-main {
       font-weight: 700;
       font-size: 1.1rem;
       text-transform: uppercase;
-      letter-spacing: 0.22em;
+      letter-spacing: 0.18em;
       color: var(--primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      @media (max-width: 480px) {
+        font-size: 0.95rem;
+        letter-spacing: 0.08em;
+      }
     }
 
     .logo-sub {
       font-weight: 600;
       font-size: 0.58rem;
       text-transform: uppercase;
-      letter-spacing: 0.25em;
+      letter-spacing: 0.2em;
       color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      @media (max-width: 480px) {
+        display: none;
+      }
     }
   }
 
@@ -140,6 +173,10 @@
     align-items: center;
     gap: 1.5rem;
 
+    @media (max-width: 768px) {
+      gap: 0.65rem;
+    }
+
     .header-contact-link {
       display: none;
       font-size: 0.75rem;
@@ -172,6 +209,15 @@
       letter-spacing: 0.08em;
       text-decoration: none;
       transition: all 0.2s ease;
+
+      @media (max-width: 640px) {
+        padding: 0.45rem;
+        border-radius: 50%;
+
+        span {
+          display: none;
+        }
+      }
 
       &:hover {
         background-color: var(--primary-hover);

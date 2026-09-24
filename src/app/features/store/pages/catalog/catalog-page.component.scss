@@ -1,31 +1,39 @@
 .catalog-page {
   min-height: 100vh;
   padding-bottom: 6rem;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .catalog-header {
-  padding: 5rem 0 2.5rem;
+  padding: 5rem 1rem 2.5rem;
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem;
+  width: 100%;
+  box-sizing: border-box;
 
   .catalog-eyebrow {
     display: block;
     font-size: 0.6875rem;
     text-transform: uppercase;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.2em;
     color: var(--primary);
     font-weight: 600;
     margin-bottom: 0.5rem;
+    word-break: break-word;
   }
 
   .catalog-title {
-    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-size: clamp(1.5rem, 4vw, 2.75rem);
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.12em;
     font-weight: 400;
     color: #FFFFFF;
     margin: 0;
+    word-break: break-word;
   }
 
   .catalog-count {
@@ -37,9 +45,15 @@
 }
 
 .catalog-container {
+  width: 100%;
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 1.5rem;
+  box-sizing: border-box;
+
+  @media (max-width: 640px) {
+    padding: 0 1rem;
+  }
 }
 
 .catalog-layout {

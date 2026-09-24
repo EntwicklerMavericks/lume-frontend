@@ -1,12 +1,22 @@
 .product-page {
   padding-top: 3rem;
   padding-bottom: 6rem;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .product-container {
+  width: 100%;
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 1.5rem;
+  box-sizing: border-box;
+
+  @media (max-width: 640px) {
+    padding: 0 1rem;
+  }
 }
 
 .breadcrumb {
@@ -504,7 +514,10 @@
   @media (max-width: 640px) {
     left: 1rem;
     right: 1rem;
+    max-width: calc(100vw - 2rem);
+    box-sizing: border-box;
     bottom: 5.5rem; /* Acima da barra fixa do mobile */
+    animation: fadeIn 0.25s ease forwards;
   }
 
   .toast-content {
