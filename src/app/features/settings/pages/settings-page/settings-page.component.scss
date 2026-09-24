@@ -10,7 +10,7 @@
     font-size: 1.85rem;
     font-weight: 700;
     letter-spacing: -0.03em;
-    color: #ffffff;
+    color: var(--text-primary);
     margin-bottom: 0.5rem;
   }
   
@@ -81,7 +81,7 @@
   height: 120px;
   border-radius: var(--radius-xl);
   border: 1px solid var(--border-color);
-  background-color: #18181b;
+  background-color: var(--surface-hover);
   overflow: hidden;
   display: flex;
   align-items: center;

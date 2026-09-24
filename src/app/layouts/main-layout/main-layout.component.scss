@@ -18,8 +18,8 @@
     .toggle-sidebar-btn {
       position: absolute;
       right: -12px;
-      background-color: #18181b;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background-color: var(--surface-hover);
+      border: 1px solid var(--border-color);
       border-radius: 50%;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
       
@@ -42,7 +42,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #09090b;
+  background-color: var(--sidebar-bg, var(--surface));
   border-right: 1px solid var(--border-color);
   position: relative;
   z-index: 20;
@@ -56,13 +56,14 @@
   padding: 0 1.5rem;
   border-bottom: 1px solid var(--border-color);
   position: relative;
+  background-color: var(--sidebar-bg, var(--surface));
 }
 
 .brand-logo {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: #ffffff;
+  color: var(--text-primary);
   
   .admin-brand-img {
     width: 32px;
@@ -84,7 +85,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
+  color: var(--text-primary);
   
   .admin-brand-img-collapsed {
     width: 28px;
@@ -128,6 +129,7 @@
   border-top: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
+  background-color: var(--sidebar-bg, var(--surface));
 }
 
 .logout-btn {
@@ -163,7 +165,7 @@
   flex: 1;
   overflow-y: auto;
   padding: 2rem;
-  background-color: #000000;
+  background-color: var(--background);
 }
 
 .content-limiter {
@@ -220,10 +222,10 @@
     left: 0;
     right: 0;
     height: 60px;
-    background: rgba(10, 10, 13, 0.94);
+    background: var(--header-bg, var(--surface));
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--border-color);
     z-index: 1000;
     justify-content: space-around;
     align-items: center;
@@ -238,7 +240,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.2rem;
-    color: #71717a;
+    color: var(--text-muted);
     text-decoration: none;
     font-size: 0.6875rem;
     font-weight: 500;
