@@ -156,6 +156,13 @@ export class ProductPageComponent implements OnInit {
     const p = this.product();
     if (!p) return;
 
+    this.cartService.addItem(
+      p,
+      this.quantity(),
+      this.selectedSize() || undefined,
+      this.selectedColor() || undefined
+    );
+
     this.whatsappService.sendProductOrder(
       p, 
       this.quantity(), 
