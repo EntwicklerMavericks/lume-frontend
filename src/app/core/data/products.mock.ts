@@ -15,8 +15,7 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'Camiseta masculina de alta performance em microfibra dry com elastano. Respirabilidade máxima, secagem ultrarrápida e proteção UV50+. Ideal para treinos intensos e passeios casuais.',
     price: 139.90,
     images: [
-      'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=1000&q=85',
-      'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=1000&q=85',
+      '/images/products/oliveira/oli-1.jpg',
     ],
     categoryId: 'cat-1',
     sizes: ['P', 'M', 'G', 'GG'],
@@ -41,8 +40,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 119.90,
     promotionalPrice: 99.90,
     images: [
-      'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1000&q=85',
-      'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1000&q=85',
+      '/images/products/oliveira/oli-2.jpg',
     ],
     categoryId: 'cat-1',
     sizes: ['P', 'M', 'G'],
@@ -65,8 +63,7 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'Legging feminina de alta elasticidade com cós anatômico duplo que não desce durante os agachamentos. Tecido blackout com zero transparência, toque suave e costuras planas antifricção.',
     price: 219.90,
     images: [
-      'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=1000&q=85',
-      'https://images.unsplash.com/photo-1538805060514-97d9cc17730c?w=1000&q=85',
+      '/images/products/oliveira/oli-3.jpg',
     ],
     categoryId: 'cat-2',
     sizes: ['P', 'M', 'G', 'GG'],
@@ -91,8 +88,7 @@ export const MOCK_PRODUCTS: Product[] = [
     price: 349.90,
     promotionalPrice: 299.90,
     images: [
-      'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=1000&q=85',
-      'https://images.unsplash.com/photo-1520975954732-35dd22299614?w=1000&q=85',
+      '/images/products/oliveira/oli-5.jpg',
     ],
     categoryId: 'cat-3',
     sizes: ['P', 'M', 'G', 'GG'],
@@ -115,8 +111,7 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'Bermuda masculina de treino com short interno de compressão integrado e bolso interno para celular. Aberturas laterais para máxima amplitude de movimento e cós elástico com cordão.',
     price: 159.90,
     images: [
-      'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=1000&q=85',
-      'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1000&q=85',
+      '/images/products/oliveira/oli-4.jpg',
     ],
     categoryId: 'cat-4',
     sizes: ['P', 'M', 'G', 'GG'],
@@ -137,8 +132,7 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'Calça unissex com modelagem jogger afunilada, bolsos laterais com zíper oculto e tecido elástico de alta tecnologia. Conforto extremo para a academia, viagens e passeios de fim de semana.',
     price: 239.90,
     images: [
-      'https://images.unsplash.com/photo-1542272604-787c3835535d?w=1000&q=85',
-      'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=1000&q=85',
+      '/images/products/oliveira/oli-3.jpg',
     ],
     categoryId: 'cat-2',
     sizes: ['P', 'M', 'G', 'GG'],
@@ -161,8 +155,7 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'Moletom premium flanelado leve com abertura frontal em zíper, capuz forrado e acabamento minimalista. Aquecimento térmico equilibrado para os dias frescos após o treino ou passeios casuais.',
     price: 279.90,
     images: [
-      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=1000&q=85',
-      'https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=1000&q=85',
+      '/images/products/oliveira/oli-6.jpg',
     ],
     categoryId: 'cat-3',
     sizes: ['P', 'M', 'G', 'GG'],
