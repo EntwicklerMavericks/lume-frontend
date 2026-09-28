@@ -2,7 +2,7 @@
   <div class="orders-header">
     <div>
       <h1>Gerenciamento de Pedidos</h1>
-      <p class="subtitle">Acompanhe as vendas, pagamentos e o status de envio dos pedidos da sua loja.</p>
+      <p class="subtitle">Acompanhe as vendas, pagamentos e o status de envio dos pedidos da sua loja processados via Asaas.</p>
     </div>
   </div>
 
@@ -25,6 +25,7 @@
           <th>Código</th>
           <th>Cliente</th>
           <th>Data</th>
+          <th>Pagamento</th>
           <th class="num-col">Total</th>
           <th>Status</th>
           <th>Alterar Status</th>
@@ -42,9 +43,14 @@
               </div>
             </td>
             <td>{{ ord.date }}</td>
+            <td>
+              <span class="badge badge-neutral">
+                {{ ord.paymentMethod || 'PIX Asaas' }}
+              </span>
+            </td>
             <td class="num-col font-bold">R$ {{ ord.total.toFixed(2) }}</td>
             <td>
-              <span class="badge" [class]="'badge-' + (ord.status === 'delivered' ? 'success' : ord.status === 'cancelled' ? 'error' : ord.status === 'pending_payment' ? 'warning' : 'info')">
+              <span class="badge" [class]="'badge-' + (ord.status === 'delivered' || ord.status === 'paid' ? 'success' : ord.status === 'cancelled' ? 'error' : ord.status === 'pending_payment' ? 'warning' : 'info')">
                 {{ ord.statusLabel }}
               </span>
             </td>
@@ -91,14 +97,21 @@
                 <h3>Informações do Cliente</h3>
                 <p><strong>Nome:</strong> {{ selectedOrder()?.client }}</p>
                 <p><strong>E-mail:</strong> {{ selectedOrder()?.email }}</p>
+                @if (selectedOrder()?.phone) {
+                  <p><strong>Telefone:</strong> {{ selectedOrder()?.phone }}</p>
+                }
+                @if (selectedOrder()?.address) {
+                  <p><strong>Entrega:</strong> {{ selectedOrder()?.address }}</p>
+                }
                 <p><strong>Data:</strong> {{ selectedOrder()?.date }}</p>
               </div>
 
               <div class="detail-section">
-                <h3>Resumo do Status</h3>
+                <h3>Forma de Pagamento</h3>
+                <p><strong>Método:</strong> {{ selectedOrder()?.paymentMethod || 'PIX Asaas' }}</p>
                 <p>
                   <strong>Status Atual:</strong>
-                  <span class="badge" [class]="'badge-' + (selectedOrder()?.status === 'delivered' ? 'success' : selectedOrder()?.status === 'cancelled' ? 'error' : selectedOrder()?.status === 'pending_payment' ? 'warning' : 'info')">
+                  <span class="badge" [class]="'badge-' + (selectedOrder()?.status === 'delivered' || selectedOrder()?.status === 'paid' ? 'success' : selectedOrder()?.status === 'cancelled' ? 'error' : selectedOrder()?.status === 'pending_payment' ? 'warning' : 'info')">
                     {{ selectedOrder()?.statusLabel }}
                   </span>
                 </p>

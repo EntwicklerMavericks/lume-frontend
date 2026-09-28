@@ -8,6 +8,8 @@ import { HomePageComponent } from './features/store/pages/home/home-page.compone
 import { CatalogPageComponent } from './features/store/pages/catalog/catalog-page.component';
 import { ProductPageComponent } from './features/store/pages/product/product-page.component';
 import { CartPageComponent } from './features/store/pages/cart/cart-page.component';
+import { CheckoutPageComponent } from './features/store/pages/checkout/checkout-page.component';
+import { OrderConfirmationPageComponent } from './features/store/pages/order-confirmation/order-confirmation-page.component';
 
 import { LoginPageComponent } from './features/auth/pages/login-page/login-page.component';
 import { RegisterPageComponent } from './features/auth/pages/register-page/register-page.component';
@@ -32,7 +34,9 @@ export const routes: Routes = [
       { path: '', component: HomePageComponent },
       { path: 'catalogo', component: CatalogPageComponent },
       { path: 'produto/:id', component: ProductPageComponent },
-      { path: 'carrinho', component: CartPageComponent }
+      { path: 'carrinho', component: CartPageComponent },
+      { path: 'checkout', component: CheckoutPageComponent },
+      { path: 'pedido-confirmado/:id', component: OrderConfirmationPageComponent },
     ]
   },
   {

@@ -1,0 +1,488 @@
+<div class="checkout-page">
+  <div class="checkout-container">
+    <!-- Header & Breadcrumbs -->
+    <header class="checkout-header">
+      <div class="checkout-breadcrumbs">
+        <a routerLink="/carrinho" class="crumb-link">Sacola</a>
+        <span class="crumb-sep">/</span>
+        <span class="crumb-current">Checkout Seguro</span>
+      </div>
+      <h1 class="checkout-title">Finalizar Pedido</h1>
+      <p class="checkout-subtitle">Pagamento transparente criptografado e seguro processado via Asaas</p>
+    </header>
+
+    @if (errorMessage()) {
+      <div class="checkout-alert error-alert" role="alert">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <div class="checkout-grid">
+      <!-- Coluna Principal: Formulários -->
+      <div class="checkout-main">
+        <!-- 1. Identificação -->
+        <section class="checkout-section">
+          <div class="section-header">
+            <span class="step-badge">1</span>
+            <h2 class="section-title">Dados Pessoais</h2>
+          </div>
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label for="name">Nome Completo</label>
+              <input
+                id="name"
+                type="text"
+                class="form-control"
+                placeholder="Ex: João da Silva"
+                [value]="customerName()"
+                (input)="customerName.set($any($event.target).value)"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="email">E-mail</label>
+              <input
+                id="email"
+                type="email"
+                class="form-control"
+                placeholder="seu.email@exemplo.com"
+                [value]="customerEmail()"
+                (input)="customerEmail.set($any($event.target).value)"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="cpf">CPF</label>
+              <input
+                id="cpf"
+                type="text"
+                class="form-control"
+                placeholder="000.000.000-00"
+                [value]="customerCpf()"
+                (input)="onCpfInput($event)"
+              >
+            </div>
+
+            <div class="form-group full-width">
+              <label for="phone">Telefone / WhatsApp</label>
+              <input
+                id="phone"
+                type="text"
+                class="form-control"
+                placeholder="(11) 98765-4321"
+                [value]="customerPhone()"
+                (input)="onPhoneInput($event)"
+              >
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. Endereço de Entrega -->
+        <section class="checkout-section">
+          <div class="section-header">
+            <span class="step-badge">2</span>
+            <h2 class="section-title">Endereço de Entrega</h2>
+          </div>
+          <div class="form-grid">
+            <div class="form-group cep-group">
+              <label for="cep">CEP</label>
+              <div class="input-with-loader">
+                <input
+                  id="cep"
+                  type="text"
+                  class="form-control"
+                  placeholder="00000-000"
+                  [value]="postalCode()"
+                  (input)="onCepInput($event)"
+                >
+                @if (isLoadingCep()) {
+                  <span class="cep-spinner"></span>
+                }
+              </div>
+            </div>
+
+            <div class="form-group street-group">
+              <label for="street">Logradouro / Rua</label>
+              <input
+                id="street"
+                type="text"
+                class="form-control"
+                placeholder="Nome da rua ou avenida"
+                [value]="street()"
+                (input)="street.set($any($event.target).value)"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="number">Número</label>
+              <input
+                id="number"
+                type="text"
+                class="form-control"
+                placeholder="Ex: 120"
+                [value]="number()"
+                (input)="number.set($any($event.target).value)"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="complement">Complemento (opcional)</label>
+              <input
+                id="complement"
+                type="text"
+                class="form-control"
+                placeholder="Apto, Bloco..."
+                [value]="complement()"
+                (input)="complement.set($any($event.target).value)"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="neighborhood">Bairro</label>
+              <input
+                id="neighborhood"
+                type="text"
+                class="form-control"
+                placeholder="Bairro"
+                [value]="neighborhood()"
+                (input)="neighborhood.set($any($event.target).value)"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="city">Cidade</label>
+              <input
+                id="city"
+                type="text"
+                class="form-control"
+                placeholder="Cidade"
+                [value]="city()"
+                (input)="city.set($any($event.target).value)"
+              >
+            </div>
+
+            <div class="form-group state-group">
+              <label for="state">UF</label>
+              <input
+                id="state"
+                type="text"
+                class="form-control"
+                placeholder="SP"
+                maxlength="2"
+                [value]="state()"
+                (input)="state.set($any($event.target).value.toUpperCase())"
+              >
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. Pagamento Transparente -->
+        <section class="checkout-section">
+          <div class="section-header">
+            <span class="step-badge">3</span>
+            <h2 class="section-title">Forma de Pagamento</h2>
+          </div>
+
+          <!-- Métodos Selecionáveis -->
+          <div class="payment-tabs">
+            <button
+              type="button"
+              class="payment-tab-btn"
+              [class.active]="paymentMethod() === 'PIX'"
+              (click)="paymentMethod.set('PIX')"
+            >
+              <div class="tab-icon-box pix-icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+              </div>
+              <div class="tab-info">
+                <span class="tab-name">PIX Instantâneo</span>
+                <span class="tab-desc">Aprovação imediata 24/7</span>
+              </div>
+              <span class="tab-badge">Mais Rápido</span>
+            </button>
+
+            <button
+              type="button"
+              class="payment-tab-btn"
+              [class.active]="paymentMethod() === 'CREDIT_CARD'"
+              (click)="paymentMethod.set('CREDIT_CARD')"
+            >
+              <div class="tab-icon-box card-icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="5" width="20" height="14" rx="2"/>
+                  <line x1="2" y1="10" x2="22" y2="10"/>
+                </svg>
+              </div>
+              <div class="tab-info">
+                <span class="tab-name">Cartão de Crédito</span>
+                <span class="tab-desc">Até 12x sem juros</span>
+              </div>
+            </button>
+          </div>
+
+          <!-- Conteúdo: PIX -->
+          @if (paymentMethod() === 'PIX') {
+            <div class="payment-content pix-content">
+              <div class="pix-banner">
+                <div class="pix-banner-icon">⚡</div>
+                <div class="pix-banner-text">
+                  <strong>Pague via PIX com confirmação em segundos</strong>
+                  <p>Após clicar em <em>Gerar Pagamento PIX</em>, o QR Code e o código Copia e Cola serão exibidos na sua tela. A confirmação é automática sem necessidade de enviar comprovante.</p>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- Conteúdo: Cartão de Crédito -->
+          @if (paymentMethod() === 'CREDIT_CARD') {
+            <div class="payment-content card-content">
+              <div class="form-grid">
+                <div class="form-group full-width">
+                  <label for="cardNumber">Número do Cartão</label>
+                  <div class="card-input-wrapper">
+                    <input
+                      id="cardNumber"
+                      type="text"
+                      class="form-control"
+                      placeholder="0000 0000 0000 0000"
+                      [value]="cardNumber()"
+                      (input)="onCardNumberInput($event)"
+                    >
+                    <div class="card-brands">
+                      <span>Visa</span>
+                      <span>Master</span>
+                      <span>Elo</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group full-width">
+                  <label for="cardHolder">Nome Impresso no Cartão</label>
+                  <input
+                    id="cardHolder"
+                    type="text"
+                    class="form-control"
+                    placeholder="Como está no cartão"
+                    [value]="cardHolderName()"
+                    (input)="cardHolderName.set($any($event.target).value.toUpperCase())"
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="cardExpiry">Validade</label>
+                  <input
+                    id="cardExpiry"
+                    type="text"
+                    class="form-control"
+                    placeholder="MM/AA"
+                    [value]="cardExpiry()"
+                    (input)="onCardExpiryInput($event)"
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="cardCvv">CVV / Cód. Segurança</label>
+                  <input
+                    id="cardCvv"
+                    type="password"
+                    class="form-control"
+                    placeholder="123"
+                    maxlength="4"
+                    [value]="cardCvv()"
+                    (input)="onCvvInput($event)"
+                  >
+                </div>
+
+                <div class="form-group full-width">
+                  <label for="installments">Opções de Parcelamento</label>
+                  <select
+                    id="installments"
+                    class="form-control"
+                    [value]="installments()"
+                    (change)="installments.set(+$any($event.target).value)"
+                  >
+                    @for (opt of installmentOptions(); track opt.count) {
+                      <option [value]="opt.count">{{ opt.label }}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+            </div>
+          }
+        </section>
+
+        <!-- 4. Observações Opcionais -->
+        <section class="checkout-section">
+          <div class="section-header">
+            <span class="step-badge">4</span>
+            <h2 class="section-title">Instruções para a Entrega (Opcional)</h2>
+          </div>
+          <div class="form-group full-width">
+            <textarea
+              class="form-control textarea-control"
+              placeholder="Ex: Deixar na portaria, ponto de referência..."
+              rows="2"
+              [value]="customerNotes()"
+              (input)="customerNotes.set($any($event.target).value)"
+            ></textarea>
+          </div>
+        </section>
+      </div>
+
+      <!-- Coluna Lateral: Resumo do Pedido -->
+      <aside class="checkout-sidebar">
+        <div class="order-summary-card">
+          <h2 class="summary-card-title">Resumo da Compra</h2>
+
+          <!-- Lista de Peças -->
+          <div class="summary-items-list">
+            @for (item of cartItems(); track item.product.id + (item.size ?? '') + (item.color ?? '')) {
+              <div class="summary-item">
+                <div class="item-thumb">
+                  <img [src]="item.product.images[0]" [alt]="item.product.name">
+                  <span class="item-qty-badge">{{ item.quantity }}</span>
+                </div>
+                <div class="item-info">
+                  <span class="item-name">{{ item.product.name }}</span>
+                  <div class="item-meta">
+                    @if (item.size) { <span>Tam: {{ item.size }}</span> }
+                    @if (item.color) { <span>Cor: {{ item.color }}</span> }
+                  </div>
+                </div>
+                <span class="item-price">
+                  {{ ((item.product.promotionalPrice ?? item.product.price) * item.quantity) | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                </span>
+              </div>
+            }
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <!-- Totais -->
+          <div class="summary-line">
+            <span>Subtotal</span>
+            <span>{{ subtotal() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+          </div>
+
+          <div class="summary-line">
+            <span>Frete Especial</span>
+            <span class="free-badge">Grátis</span>
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-line summary-total">
+            <span>Total</span>
+            <span class="total-amount">{{ total() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+          </div>
+
+          <!-- Botão de Finalização -->
+          <button
+            type="button"
+            class="checkout-submit-btn"
+            [disabled]="isSubmitting()"
+            (click)="submitOrder()"
+          >
+            @if (isSubmitting()) {
+              <span class="btn-spinner"></span>
+              <span>Processando...</span>
+            } @else if (paymentMethod() === 'PIX') {
+              <span>Gerar Pagamento PIX ⚡</span>
+            } @else {
+              <span>Finalizar e Pagar {{ total() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+            }
+          </button>
+
+          <!-- Selos de Segurança -->
+          <div class="security-badges">
+            <div class="badge-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span>Ambiente Seguro 256-bit Asaas</span>
+            </div>
+            <div class="badge-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>Garantia de Satisfação & Troca</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- MODAL / POPUP PIX INTERATIVO COM POLLING EM TEMPO REAL -->
+  @if (showPixModal() && pixData()) {
+    <div class="pix-modal-backdrop" role="dialog" aria-modal="true">
+      <div class="pix-modal-card">
+        <button class="pix-modal-close" (click)="closePixModal()" aria-label="Fechar">✕</button>
+
+        @if (pixApproved()) {
+          <!-- Sucesso no PIX -->
+          <div class="pix-success-view">
+            <div class="success-icon-pulse">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6L9 17l-5-5"/>
+              </svg>
+            </div>
+            <h2 class="pix-modal-title">Pagamento Confirmado!</h2>
+            <p class="pix-modal-subtitle">Identificamos o seu PIX com sucesso. Redirecionando para seu pedido...</p>
+          </div>
+        } @else {
+          <!-- Aguardando PIX -->
+          <div class="pix-waiting-view">
+            <div class="pix-modal-header">
+              <span class="pix-badge">PIX Gerado</span>
+              <h2 class="pix-modal-title">Pague com o QR Code</h2>
+              <p class="pix-modal-subtitle">Pedido <strong>#{{ pixData()?.orderNumber }}</strong> • Total: <strong>{{ total() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong></p>
+            </div>
+
+            <!-- Imagem do QR Code -->
+            <div class="qr-code-box">
+              <img [src]="pixData()?.qrCodeImage" alt="QR Code PIX Asaas" class="qr-code-img">
+            </div>
+
+            <!-- Status do Polling -->
+            <div class="pix-polling-status">
+              <span class="status-pulse-dot"></span>
+              <span>Aguardando confirmação do seu banco em tempo real...</span>
+            </div>
+
+            <!-- Copia e Cola -->
+            <div class="copia-cola-box">
+              <label class="copia-cola-label">Ou copie a chave PIX Copia e Cola:</label>
+              <div class="copia-cola-input-group">
+                <input type="text" readonly [value]="pixData()?.copiaECola" class="copia-cola-input">
+                <button type="button" class="copy-btn" (click)="copyPixCode()">
+                  @if (pixCopied()) {
+                    <span>Copiado! ✓</span>
+                  } @else {
+                    <span>Copiar Chave</span>
+                  }
+                </button>
+              </div>
+            </div>
+
+            <!-- Botão de Teste no Simulador -->
+            <div class="simulator-test-box">
+              <p class="sim-label">Área de Testes / Sandbox:</p>
+              <button type="button" class="sim-btn" (click)="simulatePixPayment()">
+                ⚡ Simular Pagamento Aprovado Instantaneamente
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

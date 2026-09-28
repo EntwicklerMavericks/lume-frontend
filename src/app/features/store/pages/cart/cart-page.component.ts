@@ -48,7 +48,7 @@ export class CartPageComponent implements OnInit {
     this.cartService.clearCart();
   }
 
-  checkout() {
+  checkoutWhatsApp() {
     if (this.isEmpty()) return;
     this.whatsappService.sendCartOrder(this.cartItems(), this.subtotal(), this.customerNote());
   }
