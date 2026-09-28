@@ -274,3 +274,17 @@ a {
   display: inline-block;
   width: 100%;
 }
+
+/* Global Form Elements Dark Theme */
+html, body {
+  color-scheme: dark;
+}
+
+select {
+  color-scheme: dark;
+
+  option {
+    background-color: #18181b;
+    color: #f4f4f5;
+  }
+}
