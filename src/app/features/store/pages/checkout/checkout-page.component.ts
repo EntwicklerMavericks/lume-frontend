@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal, computed, HostListener } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -89,6 +89,31 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     }
     return options;
   });
+
+  isInstallmentsOpen = signal<boolean>(false);
+
+  selectedInstallment = computed(() => {
+    return (
+      this.installmentOptions().find((opt) => opt.count === this.installments()) ||
+      this.installmentOptions()[0]
+    );
+  });
+
+  toggleInstallments(event: MouseEvent) {
+    event.stopPropagation();
+    this.isInstallmentsOpen.update((open) => !open);
+  }
+
+  selectInstallment(count: number, event: MouseEvent) {
+    event.stopPropagation();
+    this.installments.set(count);
+    this.isInstallmentsOpen.set(false);
+  }
+
+  @HostListener('document:click')
+  closeDropdowns() {
+    this.isInstallmentsOpen.set(false);
+  }
 
   ngOnInit(): void {
     this.seoService.setPageMeta(
