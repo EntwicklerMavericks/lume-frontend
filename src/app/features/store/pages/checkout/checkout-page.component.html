@@ -90,19 +90,38 @@
           </div>
           <div class="form-grid">
             <div class="form-group cep-group">
-              <label for="cep">CEP</label>
-              <div class="input-with-loader">
-                <input
-                  id="cep"
-                  type="text"
-                  class="form-control"
-                  placeholder="00000-000"
-                  [value]="postalCode()"
-                  (input)="onCepInput($event)"
+              <label for="cep" class="cep-label-wrapper">
+                <span>CEP</span>
+                <span class="cep-badge">Calcula Frete & Endereço</span>
+              </label>
+              <div class="cep-input-action-row">
+                <div class="input-with-loader">
+                  <input
+                    id="cep"
+                    type="text"
+                    class="form-control"
+                    placeholder="00000-000"
+                    maxlength="9"
+                    [value]="postalCode()"
+                    (input)="onCepInput($event)"
+                    (keydown.enter)="triggerManualCepCalculate()"
+                  >
+                  @if (isLoadingCep() || isCalculatingShipping()) {
+                    <span class="cep-spinner"></span>
+                  }
+                </div>
+                <button 
+                  type="button" 
+                  class="btn-calc-cep" 
+                  (click)="triggerManualCepCalculate()"
+                  [disabled]="isLoadingCep() || isCalculatingShipping()"
                 >
-                @if (isLoadingCep()) {
-                  <span class="cep-spinner"></span>
-                }
+                  @if (isCalculatingShipping()) {
+                    <span>Calculando...</span>
+                  } @else {
+                    <span>Calcular Frete</span>
+                  }
+                </button>
               </div>
             </div>
 
@@ -482,7 +501,9 @@
                 <span class="shipping-fee-val">+ {{ shippingCost() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
               }
             } @else {
-              <span class="pending-fee-text">Informe o CEP</span>
+              <button type="button" class="btn-sidebar-calc-frete" (click)="scrollToCepSection()" title="Preencher CEP para calcular frete">
+                Calcular no CEP ↗
+              </button>
             }
           </div>
 

@@ -5,6 +5,7 @@ import { StoreService } from '../../../../core/services/store.service';
 import { CartService } from '../../../../core/services/cart.service';
 import { WhatsappService } from '../../../../core/services/whatsapp.service';
 import { SeoService } from '../../../../core/services/seo.service';
+import { ShippingOption, ShippingService } from '../../../../core/services/shipping.service';
 import { Product, ProductColor } from '../../../../core/models/store.models';
 import { STORE_CONFIG } from '../../../../core/config/store.config';
 
@@ -22,6 +23,7 @@ export class ProductPageComponent implements OnInit {
   private cartService = inject(CartService);
   private whatsappService = inject(WhatsappService);
   private seoService = inject(SeoService);
+  shippingService = inject(ShippingService);
 
   storeConfig = STORE_CONFIG;
 
@@ -30,6 +32,13 @@ export class ProductPageComponent implements OnInit {
   selectedSize = signal<string | null>(null);
   selectedColor = signal<string | null>(null);
   quantity = signal(1);
+
+  // Frete no Produto
+  shippingCep = signal('');
+  shippingError = signal<string | null>(null);
+  isCalculatingShipping = this.shippingService.isCalculating;
+  shippingResult = this.shippingService.lastResult;
+  selectedShipping = this.shippingService.selectedOption;
 
   // Estados de UX e Feedback
   attemptedSubmit = signal(false);
@@ -91,6 +100,40 @@ export class ProductPageComponent implements OnInit {
         }
       });
     });
+
+    // Pré-carrega CEP se já houver cotação anterior
+    const saved = this.shippingService.currentCep();
+    if (saved) {
+      const fmt = saved.length === 8 ? `${saved.slice(0, 5)}-${saved.slice(5)}` : saved;
+      this.shippingCep.set(fmt);
+    }
+  }
+
+  onShippingCepInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let v = input.value.replace(/\D/g, '').slice(0, 8);
+    if (v.length > 5) v = v.replace(/(\d{5})(\d{1,3})/, '$1-$2');
+    this.shippingCep.set(v);
+    this.shippingError.set(null);
+  }
+
+  calculateShipping(): void {
+    const clean = this.shippingCep().replace(/\D/g, '');
+    if (clean.length !== 8) {
+      this.shippingError.set('Por favor, informe um CEP válido com 8 dígitos.');
+      return;
+    }
+    this.shippingError.set(null);
+    const price = this.currentPrice() * this.quantity();
+    this.shippingService.calculate(clean, price).subscribe({
+      error: (err) => {
+        this.shippingError.set(err?.error?.message || 'Não foi possível cotar o frete para este CEP.');
+      }
+    });
+  }
+
+  selectShipping(opt: ShippingOption): void {
+    this.shippingService.selectOption(opt);
   }
 
   selectImage(index: number) {

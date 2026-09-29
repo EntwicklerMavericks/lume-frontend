@@ -190,6 +190,25 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     this.shippingService.selectOption(option);
   }
 
+  triggerManualCepCalculate(): void {
+    const clean = this.postalCode().replace(/\D/g, '');
+    if (clean.length === 8) {
+      this.errorMessage.set(null);
+      this.searchCep(clean);
+      this.calculateShipping(clean);
+    } else {
+      this.errorMessage.set('Por favor, digite os 8 dígitos do seu CEP para calcular o frete.');
+    }
+  }
+
+  scrollToCepSection(): void {
+    const el = document.getElementById('cep');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.focus();
+    }
+  }
+
   onCardNumberInput(event: Event) {
     const input = event.target as HTMLInputElement;
     let v = input.value.replace(/\D/g, '').slice(0, 16);

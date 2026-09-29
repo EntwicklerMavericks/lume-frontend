@@ -186,6 +186,84 @@
             </button>
           </div>
 
+          <!-- Bloco de Cálculo de Frete e Prazos no Produto -->
+          <div class="product-shipping-calc">
+            <div class="psc-header">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="truck-icon">
+                <rect x="1" y="3" width="15" height="13"></rect>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+              </svg>
+              <span>Calcular Frete e Prazos de Entrega</span>
+            </div>
+
+            <div class="psc-input-row">
+              <input 
+                type="text" 
+                class="psc-input" 
+                placeholder="Informe seu CEP (00000-000)" 
+                maxlength="9"
+                [value]="shippingCep()"
+                (input)="onShippingCepInput($event)"
+                (keydown.enter)="calculateShipping()"
+              />
+              <button 
+                type="button" 
+                class="psc-btn" 
+                (click)="calculateShipping()"
+                [disabled]="isCalculatingShipping()"
+              >
+                @if (isCalculatingShipping()) {
+                  <span>Calculando...</span>
+                } @else {
+                  <span>Calcular Frete</span>
+                }
+              </button>
+            </div>
+
+            @if (shippingError()) {
+              <div class="psc-error animate-fade-in">{{ shippingError() }}</div>
+            }
+
+            @if (shippingResult()) {
+              <div class="psc-results animate-fade-in">
+                <div class="psc-origin-hint">
+                  Envio saindo de <strong>{{ shippingResult()?.origin?.city }}/{{ shippingResult()?.origin?.state }}</strong> para <strong>{{ shippingResult()?.destination?.city }}/{{ shippingResult()?.destination?.state }}</strong>
+                </div>
+
+                @if (shippingResult()?.freeShippingQualified) {
+                  <div class="psc-free-tag">
+                    ✨ Parabéns! Este produto qualifica para <strong>Frete Grátis</strong>!
+                  </div>
+                }
+
+                <div class="psc-options-list">
+                  @for (opt of shippingResult()?.options; track opt.id) {
+                    <div 
+                      class="psc-option-card" 
+                      [class.selected]="selectedShipping()?.id === opt.id"
+                      (click)="selectShipping(opt)"
+                    >
+                      <div class="psc-opt-info">
+                        <span class="psc-opt-name">{{ opt.name }}</span>
+                        <span class="psc-opt-deadline">Previsão: {{ opt.deadline }}</span>
+                      </div>
+                      <div class="psc-opt-price">
+                        @if (opt.isFree) {
+                          <span class="free-badge">GRÁTIS</span>
+                          <span class="crossed-badge">{{ opt.originalPrice | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+                        } @else {
+                          <span class="price-val">{{ opt.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+
           <!-- Accordions Informativos de Caimento Street & Cuidados -->
           <div class="product-accordions">
             <!-- Composição e Detalhes -->
@@ -228,7 +306,7 @@
               </button>
               @if (activeAccordion() === 'shipping') {
                 <div class="accordion-body">
-                  <p>A {{ storeConfig.name }} não realiza cobranças automatizadas. Ao adicionar itens à sacola ou comprar direto, você envia seu pedido para o WhatsApp do nosso consultor, que confirma seu tamanho ideal, endereço e opções de pagamento (PIX ou Cartão) de forma segura e personalizada.</p>
+                  <p>Finalize suas compras de forma prática e 100% segura através do nosso checkout transparente com PIX instantâneo ou Cartão de Crédito em até 12x. Também oferecemos atendimento exclusivo via WhatsApp caso prefira assistência pessoal de um consultor de estilo.</p>
                 </div>
               }
             </div>

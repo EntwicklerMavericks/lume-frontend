@@ -152,6 +152,61 @@
 
   .cep-group {
     grid-column: span 1;
+
+    .cep-label-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.2rem;
+
+      .cep-badge {
+        font-size: 0.68rem;
+        color: var(--primary);
+        background: rgba(204, 164, 94, 0.1);
+        border: 1px solid rgba(204, 164, 94, 0.25);
+        padding: 0.15rem 0.45rem;
+        border-radius: 4px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+    }
+
+    .cep-input-action-row {
+      display: flex;
+      gap: 0.5rem;
+
+      .input-with-loader {
+        flex: 1;
+        position: relative;
+      }
+
+      .btn-calc-cep {
+        height: 44px;
+        padding: 0 1.15rem;
+        background: var(--primary-gradient, var(--primary));
+        color: var(--primary-contrast, #000);
+        border: none;
+        border-radius: var(--radius-md);
+        font-size: 0.8125rem;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+        font-family: inherit;
+
+        &:hover:not(:disabled) {
+          filter: brightness(1.1);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(204, 164, 94, 0.3);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+    }
   }
 
   .street-group {
@@ -1078,4 +1133,23 @@
 .pending-fee-text {
   color: var(--text-muted);
   font-size: 0.75rem;
+}
+
+.btn-sidebar-calc-frete {
+  background: rgba(204, 164, 94, 0.08);
+  border: 1px dashed var(--primary);
+  color: var(--primary);
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+
+  &:hover {
+    background: rgba(204, 164, 94, 0.18);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(204, 164, 94, 0.2);
+  }
 }

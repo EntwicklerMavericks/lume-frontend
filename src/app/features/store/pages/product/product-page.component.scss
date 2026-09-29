@@ -494,6 +494,187 @@
   }
 }
 
+/* CÁLCULO DE FRETE NO PRODUTO */
+.product-shipping-calc {
+  margin-bottom: 2.25rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+
+  .psc-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.85rem;
+
+    .truck-icon {
+      color: var(--primary);
+    }
+  }
+
+  .psc-input-row {
+    display: flex;
+    gap: 0.5rem;
+
+    .psc-input {
+      flex: 1;
+      height: 44px;
+      padding: 0 1rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s ease;
+
+      &:focus {
+        border-color: var(--primary);
+        background: rgba(255, 255, 255, 0.07);
+      }
+
+      &::placeholder {
+        color: var(--text-muted);
+      }
+    }
+
+    .psc-btn {
+      height: 44px;
+      padding: 0 1.25rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--primary);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      font-family: inherit;
+
+      &:hover:not(:disabled) {
+        background: var(--primary);
+        color: var(--primary-contrast, #000);
+        border-color: var(--primary);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .psc-error {
+    margin-top: 0.6rem;
+    font-size: 0.75rem;
+    color: #ef4444;
+  }
+
+  .psc-results {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+    .psc-origin-hint {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.6rem;
+
+      strong {
+        color: var(--text-primary);
+      }
+    }
+
+    .psc-free-tag {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #10b981;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+    }
+
+    .psc-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .psc-option-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 0.9rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+
+      .psc-opt-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+
+        .psc-opt-name {
+          font-size: 0.8125rem;
+          font-weight: 600;
+          color: var(--text-primary);
+        }
+
+        .psc-opt-deadline {
+          font-size: 0.72rem;
+          color: var(--text-secondary);
+        }
+      }
+
+      .psc-opt-price {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.1rem;
+
+        .free-badge {
+          color: #10b981;
+          font-weight: 700;
+          font-size: 0.8125rem;
+        }
+
+        .crossed-badge {
+          font-size: 0.68rem;
+          color: var(--text-muted);
+          text-decoration: line-through;
+        }
+
+        .price-val {
+          color: var(--primary);
+          font-weight: 700;
+          font-size: 0.875rem;
+        }
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(204, 164, 94, 0.4);
+      }
+
+      &.selected {
+        background: rgba(204, 164, 94, 0.08);
+        border-color: var(--primary);
+        box-shadow: 0 0 10px rgba(204, 164, 94, 0.15);
+      }
+    }
+  }
+}
+
 /* ACCORDIONS INFORMATIVOS */
 .product-accordions {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
