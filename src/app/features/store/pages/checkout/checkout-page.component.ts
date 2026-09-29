@@ -133,17 +133,6 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
       this.router.navigate(['/carrinho']);
       return;
     }
-
-    // Se já houver um CEP cotado previamente na sacola, pré-carrega
-    const savedCep = this.shippingService.currentCep();
-    if (savedCep) {
-      const fmt = savedCep.length === 8 ? `${savedCep.slice(0, 5)}-${savedCep.slice(5)}` : savedCep;
-      this.postalCode.set(fmt);
-      this.searchCep(savedCep);
-      if (!this.shippingResult()) {
-        this.calculateShipping(savedCep);
-      }
-    }
   }
 
   ngOnDestroy(): void {

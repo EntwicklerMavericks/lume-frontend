@@ -47,12 +47,6 @@ export class CartPageComponent implements OnInit {
       'Sacola de Compras',
       `Confira os itens selecionados na sua sacola de compras da ${STORE_CONFIG.name} com cálculo de frete e envio rápido.`
     );
-
-    const savedCep = this.shippingService.currentCep();
-    if (savedCep) {
-      const formatted = savedCep.length === 8 ? `${savedCep.slice(0, 5)}-${savedCep.slice(5)}` : savedCep;
-      this.shippingCep.set(formatted);
-    }
   }
 
   onCepInput(event: Event): void {

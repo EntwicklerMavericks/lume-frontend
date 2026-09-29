@@ -100,13 +100,6 @@ export class ProductPageComponent implements OnInit {
         }
       });
     });
-
-    // Pré-carrega CEP se já houver cotação anterior
-    const saved = this.shippingService.currentCep();
-    if (saved) {
-      const fmt = saved.length === 8 ? `${saved.slice(0, 5)}-${saved.slice(5)}` : saved;
-      this.shippingCep.set(fmt);
-    }
   }
 
   onShippingCepInput(event: Event): void {

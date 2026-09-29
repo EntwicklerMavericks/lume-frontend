@@ -27,14 +27,14 @@ export class SettingsPageComponent implements OnInit {
     email: [STORE_CONFIG.email, [Validators.required, Validators.email]],
     phone: [STORE_CONFIG.whatsappFormatted, Validators.required],
     
-    // Endereço de Origem (Base de Cálculo de Frete)
-    postalCode: ['01310-100', Validators.required],
-    street: ['Avenida Paulista', Validators.required],
-    number: ['1000', Validators.required],
-    complement: ['Andar 10'],
-    neighborhood: ['Bela Vista', Validators.required],
-    city: ['São Paulo', Validators.required],
-    state: ['SP', [Validators.required, Validators.maxLength(2)]],
+    // Endereço de Origem (Apenas o endereço fica vazio se não configurado)
+    postalCode: ['', Validators.required],
+    street: ['', Validators.required],
+    number: ['', Validators.required],
+    complement: [''],
+    neighborhood: ['', Validators.required],
+    city: ['', Validators.required],
+    state: ['', [Validators.required, Validators.maxLength(2)]],
 
     // Parâmetros de Frete
     pacBaseRate: [19.90, [Validators.required, Validators.min(0)]],
@@ -52,25 +52,32 @@ export class SettingsPageComponent implements OnInit {
       next: (data) => {
         this.isLoading.set(false);
         if (data) {
-          const formattedCep = data.postalCode && data.postalCode.length === 8
-            ? `${data.postalCode.slice(0, 5)}-${data.postalCode.slice(5)}`
-            : data.postalCode;
-
+          // Preenche os dados institucionais da loja e parâmetros
           this.settingsForm.patchValue({
             storeName: data.storeName || STORE_CONFIG.name,
             email: data.email || STORE_CONFIG.email,
             phone: data.phone || STORE_CONFIG.whatsappFormatted,
-            postalCode: formattedCep,
-            street: data.street,
-            number: data.number,
-            complement: data.complement || '',
-            neighborhood: data.neighborhood,
-            city: data.city,
-            state: data.state,
             pacBaseRate: Number(data.pacBaseRate) || 19.90,
             sedexBaseRate: Number(data.sedexBaseRate) || 32.90,
             freeShippingMin: Number(data.freeShippingMin) || 299.00,
           });
+
+          // Apenas preenche o bloco de endereço se houver um endereço real configurado
+          if (data.postalCode && data.postalCode.trim() !== '' && data.postalCode !== '01310-100' && data.street !== 'Avenida Paulista') {
+            const formattedCep = data.postalCode.length === 8
+              ? `${data.postalCode.slice(0, 5)}-${data.postalCode.slice(5)}`
+              : data.postalCode;
+
+            this.settingsForm.patchValue({
+              postalCode: formattedCep,
+              street: data.street || '',
+              number: data.number || '',
+              complement: data.complement || '',
+              neighborhood: data.neighborhood || '',
+              city: data.city || '',
+              state: data.state || '',
+            });
+          }
         }
       },
       error: () => {
