@@ -11,6 +11,7 @@ interface OrderItem {
 
 interface Order {
   id: string;
+  backendId?: string;
   client: string;
   email: string;
   phone?: string;
@@ -21,6 +22,9 @@ interface Order {
   paymentMethod?: string;
   status: 'pending_payment' | 'paid' | 'preparing' | 'shipped' | 'delivered' | 'cancelled';
   statusLabel: string;
+  trackingCode?: string;
+  shippedAt?: string;
+  deliveredAt?: string;
 }
 
 @Component({
@@ -38,6 +42,10 @@ export class OrdersPageComponent implements OnInit {
   selectedOrder = signal<Order | null>(null);
   searchTerm = signal<string>('');
   isLoading = signal<boolean>(true);
+
+  trackingInput = signal<string>('');
+  isSavingTracking = signal<boolean>(false);
+  saveTrackingSuccess = signal<boolean>(false);
 
   // List of orders
   orders = signal<Order[]>([
@@ -101,6 +109,7 @@ export class OrdersPageComponent implements OnInit {
             const addressStr = o.street ? `${o.street}, ${o.number} - ${o.neighborhood}, ${o.city}/${o.state}` : '';
             return {
               id: o.orderNumber || o.id,
+              backendId: o.id,
               client: o.customerName,
               email: o.customerEmail,
               phone: o.customerPhone,
@@ -110,6 +119,9 @@ export class OrdersPageComponent implements OnInit {
               paymentMethod: o.paymentMethod === 'PIX' ? 'PIX Asaas' : 'Cartão de Crédito Asaas',
               status: statusKey,
               statusLabel: this.getStatusLabel(statusKey),
+              trackingCode: o.trackingCode || '',
+              shippedAt: o.shippedAt ? new Date(o.shippedAt).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : undefined,
+              deliveredAt: o.deliveredAt ? new Date(o.deliveredAt).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : undefined,
               items: (o.items || []).map((it: any) => ({
                 name: it.name,
                 sku: it.sku || 'N/A',
@@ -156,12 +168,63 @@ export class OrdersPageComponent implements OnInit {
 
   openDetails(order: Order): void {
     this.selectedOrder.set(order);
+    this.trackingInput.set(order.trackingCode || '');
+    this.saveTrackingSuccess.set(false);
     this.showDetailsModal.set(true);
   }
 
   closeModal(): void {
     this.showDetailsModal.set(false);
     this.selectedOrder.set(null);
+  }
+
+  onTrackingInput(event: Event): void {
+    const val = (event.target as HTMLInputElement).value;
+    this.trackingInput.set(val);
+  }
+
+  saveTracking(order: Order): void {
+    const code = this.trackingInput().trim();
+    const orderKey = order.backendId || order.id;
+    this.isSavingTracking.set(true);
+    this.saveTrackingSuccess.set(false);
+
+    const backendStatus = this.mapToBackendStatus(order.status);
+
+    this.http.patch<any>(`${this.apiUrl}/orders/${orderKey}/status`, {
+      status: backendStatus,
+      trackingCode: code
+    }).subscribe({
+      next: () => {
+        this.isSavingTracking.set(false);
+        this.saveTrackingSuccess.set(true);
+        setTimeout(() => this.saveTrackingSuccess.set(false), 3000);
+
+        // Atualiza na listagem
+        this.orders.update(list => list.map(ord => {
+          if (ord.id === order.id || ord.backendId === orderKey) {
+            return { ...ord, trackingCode: code };
+          }
+          return ord;
+        }));
+
+        // Atualiza no pedido selecionado
+        this.selectedOrder.update(curr => {
+          if (curr) {
+            return { ...curr, trackingCode: code };
+          }
+          return null;
+        });
+      },
+      error: () => {
+        this.isSavingTracking.set(false);
+      }
+    });
+  }
+
+  getCorreiosUrl(code?: string): string {
+    if (!code) return 'https://rastreamento.correios.com.br';
+    return `https://rastreamento.correios.com.br/app/index.php?codigo=${encodeURIComponent(code.trim())}`;
   }
 
   updateStatus(orderId: string, event: Event): void {
@@ -190,7 +253,13 @@ export class OrdersPageComponent implements OnInit {
 
     // Persiste no backend se for um ID real
     const backendStatus = this.mapToBackendStatus(newStatus);
-    this.http.patch(`${this.apiUrl}/orders/${orderId}/status`, { status: backendStatus }).subscribe({
+    const orderObj = this.orders().find(o => o.id === orderId);
+    const trackingCodeToSend = orderObj?.trackingCode;
+
+    this.http.patch(`${this.apiUrl}/orders/${orderId}/status`, {
+      status: backendStatus,
+      ...(trackingCodeToSend ? { trackingCode: trackingCodeToSend } : {})
+    }).subscribe({
       error: () => {}
     });
   }

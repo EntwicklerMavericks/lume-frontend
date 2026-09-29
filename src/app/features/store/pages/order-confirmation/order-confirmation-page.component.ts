@@ -62,6 +62,38 @@ export class OrderConfirmationPageComponent implements OnInit {
     });
   }
 
+  codeCopied = signal<boolean>(false);
+
+  getOrderStep(): number {
+    const status = this.order()?.status;
+    switch (status) {
+      case 'DELIVERED':
+        return 5;
+      case 'SHIPPED':
+        return 4;
+      case 'PREPARING':
+        return 3;
+      case 'PAID':
+        return 2;
+      case 'PENDING_PAYMENT':
+      default:
+        return 1;
+    }
+  }
+
+  getCorreiosTrackingUrl(code: string): string {
+    const cleanCode = encodeURIComponent((code || '').trim());
+    return `https://rastreamento.correios.com.br/app/index.php?codigo=${cleanCode}`;
+  }
+
+  copyTrackingCode(code: string): void {
+    if (!code) return;
+    navigator.clipboard.writeText(code).then(() => {
+      this.codeCopied.set(true);
+      setTimeout(() => this.codeCopied.set(false), 2500);
+    });
+  }
+
   getWhatsAppSupportUrl(): string {
     const num = this.order()?.orderNumber || this.orderId();
     const phone = STORE_CONFIG.whatsappNumber || '5511999999999';

@@ -46,7 +46,14 @@
         } @else {
           @for (ord of filteredOrders(); track ord.id) {
             <tr>
-              <td><span class="order-code">{{ ord.id }}</span></td>
+              <td>
+                <span class="order-code">{{ ord.id }}</span>
+                @if (ord.trackingCode) {
+                  <div class="tracking-pill" title="Rastreio Correios: {{ ord.trackingCode }}">
+                    📦 {{ ord.trackingCode }}
+                  </div>
+                }
+              </td>
               <td>
                 <div class="client-info">
                   <span class="client-name">{{ ord.client }}</span>
@@ -115,6 +122,11 @@
             <div class="omc-code-box">
               <span class="omc-code">{{ ord.id }}</span>
               <span class="omc-date">{{ ord.date }}</span>
+              @if (ord.trackingCode) {
+                <span class="tracking-pill" title="Rastreio Correios: {{ ord.trackingCode }}">
+                  📦 {{ ord.trackingCode }}
+                </span>
+              }
             </div>
             <span class="badge" [class]="'badge-' + (ord.status === 'delivered' || ord.status === 'paid' ? 'success' : ord.status === 'cancelled' ? 'error' : ord.status === 'pending_payment' ? 'warning' : 'info')">
               {{ ord.statusLabel }}
@@ -230,6 +242,44 @@
                     {{ selectedOrder()?.statusLabel }}
                   </span>
                 </p>
+              </div>
+
+              <!-- Rastreamento Correios -->
+              <div class="detail-section tracking-admin-section">
+                <h3>Rastreamento de Envio (Correios)</h3>
+                <div class="tracking-input-group">
+                  <input 
+                    type="text" 
+                    class="tracking-admin-input" 
+                    placeholder="Ex: AA123456789BR"
+                    [value]="trackingInput()"
+                    (input)="onTrackingInput($event)"
+                  />
+                  <button 
+                    type="button" 
+                    class="btn-save-tracking"
+                    [disabled]="isSavingTracking()"
+                    (click)="saveTracking(selectedOrder()!)"
+                  >
+                    @if (isSavingTracking()) {
+                      <span>Salvando...</span>
+                    } @else {
+                      <span>Salvar Rastreio</span>
+                    }
+                  </button>
+                </div>
+                @if (saveTrackingSuccess()) {
+                  <div class="tracking-success-alert animate-fade-in">
+                    ✓ Código de rastreamento salvo com sucesso!
+                  </div>
+                }
+                @if (selectedOrder()?.trackingCode) {
+                  <div class="tracking-external-link">
+                    <a [href]="getCorreiosUrl(selectedOrder()?.trackingCode)" target="_blank" rel="noopener noreferrer">
+                      <span>Testar código nos Correios ↗</span>
+                    </a>
+                  </div>
+                }
               </div>
             </div>
 
