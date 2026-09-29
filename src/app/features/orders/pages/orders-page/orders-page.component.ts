@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
 
@@ -36,6 +36,8 @@ export class OrdersPageComponent implements OnInit {
 
   showDetailsModal = signal<boolean>(false);
   selectedOrder = signal<Order | null>(null);
+  searchTerm = signal<string>('');
+  isLoading = signal<boolean>(true);
 
   // List of orders
   orders = signal<Order[]>([
@@ -67,13 +69,32 @@ export class OrdersPageComponent implements OnInit {
     }
   ]);
 
+  filteredOrders = computed(() => {
+    const term = this.searchTerm().toLowerCase().trim();
+    if (!term) return this.orders();
+    return this.orders().filter(ord =>
+      ord.id.toLowerCase().includes(term) ||
+      ord.client.toLowerCase().includes(term) ||
+      ord.email.toLowerCase().includes(term) ||
+      ord.statusLabel.toLowerCase().includes(term) ||
+      (ord.paymentMethod && ord.paymentMethod.toLowerCase().includes(term))
+    );
+  });
+
+  onSearchInput(event: Event): void {
+    const val = (event.target as HTMLInputElement).value;
+    this.searchTerm.set(val);
+  }
+
   ngOnInit(): void {
     this.fetchOrders();
   }
 
   fetchOrders(): void {
+    this.isLoading.set(true);
     this.http.get<any>(`${this.apiUrl}/orders`).subscribe({
       next: (res) => {
+        this.isLoading.set(false);
         if (res && res.orders && res.orders.length > 0) {
           const mapped: Order[] = res.orders.map((o: any) => {
             const statusKey = this.mapBackendStatus(o.status);
@@ -102,6 +123,7 @@ export class OrdersPageComponent implements OnInit {
         }
       },
       error: () => {
+        this.isLoading.set(false);
         // Mantém pedidos locais em caso de indisponibilidade
       }
     });

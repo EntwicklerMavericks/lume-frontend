@@ -13,12 +13,18 @@
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
-      <input type="text" placeholder="Filtrar por pedido ou cliente..." class="search-input" />
+      <input 
+        type="text" 
+        placeholder="Filtrar por pedido, cliente ou e-mail..." 
+        class="search-input" 
+        [value]="searchTerm()"
+        (input)="onSearchInput($event)"
+      />
     </div>
   </div>
 
-  <!-- Orders Table -->
-  <div class="table-card">
+  <!-- Orders List Table (Desktop View) -->
+  <div class="table-card desktop-table-view">
     <table class="orders-table">
       <thead>
         <tr>
@@ -29,50 +35,159 @@
           <th class="num-col">Total</th>
           <th>Status</th>
           <th>Alterar Status</th>
-          <th class="action-col">Detalhes</th>
+          <th class="action-col">Ações</th>
         </tr>
       </thead>
       <tbody>
-        @for (ord of orders(); track ord.id) {
+        @if (isLoading()) {
           <tr>
-            <td><span class="order-code">{{ ord.id }}</span></td>
-            <td>
-              <div class="client-info">
-                <span class="client-name">{{ ord.client }}</span>
-                <span class="client-email">{{ ord.email }}</span>
-              </div>
-            </td>
-            <td>{{ ord.date }}</td>
-            <td>
-              <span class="badge badge-neutral">
-                {{ ord.paymentMethod || 'PIX Asaas' }}
-              </span>
-            </td>
-            <td class="num-col font-bold">R$ {{ ord.total.toFixed(2) }}</td>
-            <td>
-              <span class="badge" [class]="'badge-' + (ord.status === 'delivered' || ord.status === 'paid' ? 'success' : ord.status === 'cancelled' ? 'error' : ord.status === 'pending_payment' ? 'warning' : 'info')">
-                {{ ord.statusLabel }}
-              </span>
-            </td>
-            <td>
-              <select class="status-select" [value]="ord.status" (change)="updateStatus(ord.id, $event)">
-                <option value="pending_payment">Aguardando Pagamento</option>
-                <option value="paid">Pago</option>
-                <option value="preparing">Em separação</option>
-                <option value="shipped">Enviado</option>
-                <option value="delivered">Entregue</option>
-                <option value="cancelled">Cancelado</option>
-              </select>
-            </td>
-            <td class="action-col">
-              <button class="view-btn" (click)="openDetails(ord)">
-                Visualizar
-              </button>
-            </td>
+            <td colspan="8" class="empty-row">Carregando pedidos da loja...</td>
           </tr>
+        } @else {
+          @for (ord of filteredOrders(); track ord.id) {
+            <tr>
+              <td><span class="order-code">{{ ord.id }}</span></td>
+              <td>
+                <div class="client-info">
+                  <span class="client-name">{{ ord.client }}</span>
+                  <span class="client-email">{{ ord.email }}</span>
+                </div>
+              </td>
+              <td>{{ ord.date }}</td>
+              <td>
+                <span class="badge badge-neutral">
+                  {{ ord.paymentMethod || 'PIX Asaas' }}
+                </span>
+              </td>
+              <td class="num-col font-bold">R$ {{ ord.total.toFixed(2) }}</td>
+              <td>
+                <span class="badge" [class]="'badge-' + (ord.status === 'delivered' || ord.status === 'paid' ? 'success' : ord.status === 'cancelled' ? 'error' : ord.status === 'pending_payment' ? 'warning' : 'info')">
+                  {{ ord.statusLabel }}
+                </span>
+              </td>
+              <td>
+                <select class="status-select" [value]="ord.status" (change)="updateStatus(ord.id, $event)">
+                  <option value="pending_payment">Aguardando Pagamento</option>
+                  <option value="paid">Pago</option>
+                  <option value="preparing">Em separação</option>
+                  <option value="shipped">Enviado</option>
+                  <option value="delivered">Entregue</option>
+                  <option value="cancelled">Cancelado</option>
+                </select>
+              </td>
+              <td class="action-col">
+                <button type="button" class="view-btn" (click)="openDetails(ord)" title="Ver Detalhes do Pedido">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  <span>Detalhes</span>
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="8" class="empty-row">
+                @if (searchTerm()) {
+                  Nenhum pedido encontrado para "{{ searchTerm() }}".
+                } @else {
+                  Nenhum pedido registrado ainda na loja.
+                }
+              </td>
+            </tr>
+          }
         }
       </tbody>
     </table>
+  </div>
+
+  <!-- Orders Mobile Cards View (Mobile View - NO horizontal scroll) -->
+  <div class="mobile-cards-view">
+    @if (isLoading()) {
+      <div class="mobile-empty-card">
+        <p>Carregando pedidos da loja...</p>
+      </div>
+    } @else {
+      @for (ord of filteredOrders(); track ord.id) {
+        <div class="order-mobile-card">
+          <!-- Card Header: Code + Status Badge -->
+          <div class="omc-header">
+            <div class="omc-code-box">
+              <span class="omc-code">{{ ord.id }}</span>
+              <span class="omc-date">{{ ord.date }}</span>
+            </div>
+            <span class="badge" [class]="'badge-' + (ord.status === 'delivered' || ord.status === 'paid' ? 'success' : ord.status === 'cancelled' ? 'error' : ord.status === 'pending_payment' ? 'warning' : 'info')">
+              {{ ord.statusLabel }}
+            </span>
+          </div>
+
+          <!-- Client Info -->
+          <div class="omc-client-section">
+            <div class="omc-client-name-row">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="omc-client-icon">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <strong class="omc-client-name">{{ ord.client }}</strong>
+            </div>
+            <span class="omc-client-email">{{ ord.email }}</span>
+            @if (ord.phone) {
+              <span class="omc-client-phone">{{ ord.phone }}</span>
+            }
+          </div>
+
+          <!-- Key Metrics: Total & Payment & Items -->
+          <div class="omc-details-grid">
+            <div class="omc-detail-item">
+              <span class="omc-detail-label">Valor Total</span>
+              <span class="omc-total">R$ {{ ord.total.toFixed(2) }}</span>
+            </div>
+            <div class="omc-detail-item">
+              <span class="omc-detail-label">Pagamento</span>
+              <span class="omc-payment">{{ ord.paymentMethod || 'PIX Asaas' }}</span>
+            </div>
+            <div class="omc-detail-item">
+              <span class="omc-detail-label">Itens</span>
+              <span class="omc-items-badge">{{ ord.items.length }} {{ ord.items.length === 1 ? 'item' : 'itens' }}</span>
+            </div>
+          </div>
+
+          <!-- Status Selector Row -->
+          <div class="omc-status-row">
+            <label class="omc-status-label" [for]="'status-' + ord.id">Atualizar Status:</label>
+            <select [id]="'status-' + ord.id" class="status-select omc-select" [value]="ord.status" (change)="updateStatus(ord.id, $event)">
+              <option value="pending_payment">Aguardando Pagamento</option>
+              <option value="paid">Pago</option>
+              <option value="preparing">Em separação</option>
+              <option value="shipped">Enviado</option>
+              <option value="delivered">Entregue</option>
+              <option value="cancelled">Cancelado</option>
+            </select>
+          </div>
+
+          <!-- Actions -->
+          <div class="omc-actions">
+            <button type="button" class="omc-btn omc-details-btn" (click)="openDetails(ord)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <span>Ver Detalhes do Pedido</span>
+            </button>
+          </div>
+        </div>
+      } @empty {
+        <div class="mobile-empty-card">
+          <p>
+            @if (searchTerm()) {
+              Nenhum pedido encontrado para "{{ searchTerm() }}".
+            } @else {
+              Nenhum pedido registrado ainda na loja.
+            }
+          </p>
+        </div>
+      }
+    }
   </div>
 
   <!-- Order Details Modal -->

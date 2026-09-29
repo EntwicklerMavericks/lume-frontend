@@ -67,6 +67,15 @@
   border-radius: var(--radius-xl);
   overflow: hidden;
   box-shadow: var(--shadow-md);
+
+  &.desktop-table-view {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+.mobile-cards-view {
+  display: none;
 }
 
 .orders-table {
@@ -97,11 +106,25 @@
   tr:hover td {
     background-color: rgba(255, 255, 255, 0.015);
   }
+
+  .empty-row {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
 }
 
 .order-code {
-  font-weight: 600;
-  color: var(--text-primary);
+  font-family: monospace;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: inline-block;
 }
 
 .client-info {
@@ -152,6 +175,9 @@
 }
 
 .view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   background-color: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
@@ -162,11 +188,12 @@
   border-radius: var(--radius-md);
   cursor: pointer;
   outline: none;
-  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
   
   &:hover {
     background-color: rgba(255, 255, 255, 0.08);
     border-color: var(--border-hover);
+    color: #ffffff;
   }
 }
 
@@ -370,14 +397,232 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .orders-container {
+    gap: 1.25rem;
+    padding: 0.5rem 0;
+  }
+
+  .orders-header {
+    h1 {
+      font-size: 1.45rem;
+      letter-spacing: -0.02em;
+    }
+    .subtitle {
+      font-size: 0.8125rem;
+    }
+  }
+
+  .control-bar {
+    .search-box {
+      width: 100%;
+    }
+  }
+
+  /* Completely hide wide table on mobile to eliminate horizontal scroll */
+  .desktop-table-view {
+    display: none !important;
+  }
+
+  /* Show native mobile cards view */
+  .mobile-cards-view {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0.875rem;
+    width: 100%;
+  }
+
+  .order-mobile-card {
+    background-color: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    box-shadow: var(--shadow-sm);
+    transition: border-color var(--transition-fast), background-color var(--transition-fast);
+
+    &:active {
+      border-color: var(--border-hover);
+    }
+  }
+
+  .omc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .omc-code-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .omc-code {
+    font-family: monospace;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: inline-block;
+    width: fit-content;
+  }
+
+  .omc-date {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+
+  .omc-client-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .omc-client-name-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .omc-client-icon {
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .omc-client-name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .omc-client-email,
+  .omc-client-phone {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    padding-left: 1.25rem;
+  }
+
+  .omc-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: var(--radius-md);
+  }
+
+  .omc-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .omc-detail-label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+
+  .omc-total {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--primary, #CCA45E);
+  }
+
+  .omc-payment {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .omc-items-badge {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .omc-status-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .omc-status-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .omc-select {
+    width: 100%;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.8125rem;
+  }
+
+  .omc-actions {
+    margin-top: 0.25rem;
+  }
+
+  .omc-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .omc-details-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+
+    &:hover,
+    &:active {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--border-hover);
+      color: #ffffff;
+    }
+  }
+
+  .mobile-empty-card {
+    background: var(--surface);
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+
   .detail-columns {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
+
   .modal-overlay {
     padding: 1rem;
   }
+
   .modal-card {
     max-height: 100vh;
   }
