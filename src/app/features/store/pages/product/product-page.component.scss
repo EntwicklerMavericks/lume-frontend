@@ -463,6 +463,35 @@
       transform: translateY(0) scale(0.99);
     }
   }
+
+  .btn-whatsapp-consult {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary, #94a3b8);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: var(--radius-md, 8px);
+    transition: all 0.2s ease;
+    margin-top: 0.25rem;
+    font-family: inherit;
+
+    .whatsapp-icon {
+      color: #25d366;
+      flex-shrink: 0;
+    }
+
+    &:hover {
+      color: var(--text-primary, #ffffff);
+      background: rgba(255, 255, 255, 0.04);
+    }
+  }
 }
 
 /* ACCORDIONS INFORMATIVOS */
