@@ -13,6 +13,7 @@ export class MenuComponent {
 
   // Visible menu items for Lume
   menuItems = [
+    { label: 'Pedidos', route: '/admin/orders', icon: 'orders' },
     { label: 'Produtos', route: '/admin/products', icon: 'products' },
     { label: 'Categorias', route: '/admin/categories', icon: 'categories' },
   ];
@@ -21,7 +22,6 @@ export class MenuComponent {
   hiddenMenuItems = [
     { label: 'Dashboard', route: '/admin/dashboard', icon: 'dashboard' },
     { label: 'Galeria', route: '/admin/gallery', icon: 'gallery' },
-    { label: 'Pedidos', route: '/admin/orders', icon: 'orders' },
     { label: 'Estoque', route: '/admin/stock', icon: 'stock' },
     { label: 'Clientes', route: '/admin/customers', icon: 'customers' },
     { label: 'Configurações', route: '/admin/settings', icon: 'settings' }
