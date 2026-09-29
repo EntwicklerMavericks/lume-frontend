@@ -7,6 +7,8 @@ import { CheckoutService, CheckoutPayload } from '../../../../core/services/chec
 import { SeoService } from '../../../../core/services/seo.service';
 import { STORE_CONFIG } from '../../../../core/config/store.config';
 
+import { ShippingOption, ShippingService } from '../../../../core/services/shipping.service';
+
 @Component({
   selector: 'app-checkout-page',
   standalone: true,
@@ -19,6 +21,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
   private checkoutService = inject(CheckoutService);
   private seoService = inject(SeoService);
   private router = inject(Router);
+  shippingService = inject(ShippingService);
 
   storeConfig = STORE_CONFIG;
 
@@ -26,8 +29,12 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
   cartItems = this.cartService.cartItems;
   subtotal = this.cartService.subtotal;
   isEmpty = this.cartService.isEmpty;
-  shippingCost = signal(0); // Frete promocional gratuito
-  total = computed(() => this.subtotal() + this.shippingCost());
+
+  selectedShipping = this.shippingService.selectedOption;
+  shippingResult = this.shippingService.lastResult;
+  isCalculatingShipping = this.shippingService.isCalculating;
+  shippingCost = computed(() => this.shippingService.shippingCost());
+  total = computed(() => Math.round((this.subtotal() + this.shippingCost()) * 100) / 100);
 
   // Payment method
   paymentMethod = signal<'PIX' | 'CREDIT_CARD'>('PIX');
@@ -124,6 +131,18 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     // Redireciona se a sacola estiver vazia
     if (this.isEmpty()) {
       this.router.navigate(['/carrinho']);
+      return;
+    }
+
+    // Se já houver um CEP cotado previamente na sacola, pré-carrega
+    const savedCep = this.shippingService.currentCep();
+    if (savedCep) {
+      const fmt = savedCep.length === 8 ? `${savedCep.slice(0, 5)}-${savedCep.slice(5)}` : savedCep;
+      this.postalCode.set(fmt);
+      this.searchCep(savedCep);
+      if (!this.shippingResult()) {
+        this.calculateShipping(savedCep);
+      }
     }
   }
 
@@ -156,9 +175,19 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     if (v.length > 5) v = v.replace(/(\d{5})(\d{1,3})/, '$1-$2');
     this.postalCode.set(v);
 
-    if (v.replace(/\D/g, '').length === 8) {
-      this.searchCep(v.replace(/\D/g, ''));
+    const clean = v.replace(/\D/g, '');
+    if (clean.length === 8) {
+      this.searchCep(clean);
+      this.calculateShipping(clean);
     }
+  }
+
+  calculateShipping(cep: string): void {
+    this.shippingService.calculate(cep, this.subtotal()).subscribe({ error: () => {} });
+  }
+
+  selectShipping(option: ShippingOption): void {
+    this.shippingService.selectOption(option);
   }
 
   onCardNumberInput(event: Event) {
@@ -274,6 +303,8 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
         price: item.product.promotionalPrice ?? item.product.price,
         quantity: item.quantity,
       })),
+      shippingCost: this.shippingCost(),
+      shippingMethod: this.selectedShipping()?.name || (this.shippingCost() > 0 ? 'Correios' : 'Frete Grátis'),
       paymentMethod: this.paymentMethod(),
       customerNotes: this.customerNotes() || undefined,
     };
@@ -315,6 +346,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
         } else {
           // Cartão de Crédito aprovado
           this.cartService.clearCart();
+          this.shippingService.clearShipping();
           this.router.navigate(['/pedido-confirmado', res.orderId]);
         }
       },
@@ -337,6 +369,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
             this.stopPixPolling();
             this.pixApproved.set(true);
             this.cartService.clearCart();
+            this.shippingService.clearShipping();
             setTimeout(() => {
               this.router.navigate(['/pedido-confirmado', orderId]);
             }, 1800);

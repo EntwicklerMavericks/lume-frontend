@@ -86,10 +86,99 @@
               id="cart-note"
               type="text" 
               class="note-input" 
-              placeholder="Ex: Embalar para presente, dúvida sobre frete ou CEP..."
+              placeholder="Ex: Embalar para presente, instrução de entrega..."
               [value]="customerNote()"
               (input)="customerNote.set($any($event.target).value)"
             >
+          </div>
+
+          <!-- Seção de Cálculo de Frete e Prazo -->
+          <div class="cart-shipping-box">
+            <div class="cs-header">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cs-icon">
+                <rect x="1" y="3" width="15" height="13"></rect>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+              </svg>
+              <span>Calcular Frete e Prazo de Entrega</span>
+            </div>
+
+            <div class="cs-input-group">
+              <input 
+                type="text" 
+                class="cs-input" 
+                placeholder="Informe seu CEP (00000-000)" 
+                maxlength="9"
+                [value]="shippingCep()"
+                (input)="onCepInput($event)"
+                (keydown.enter)="calculateShipping()"
+              />
+              <button 
+                type="button" 
+                class="cs-btn" 
+                (click)="calculateShipping()" 
+                [disabled]="isCalculatingShipping()"
+              >
+                @if (isCalculatingShipping()) {
+                  <span>Calculando...</span>
+                } @else {
+                  <span>Calcular Frete</span>
+                }
+              </button>
+            </div>
+
+            @if (shippingError()) {
+              <div class="cs-error animate-fade-in">
+                {{ shippingError() }}
+              </div>
+            }
+
+            @if (shippingResult()) {
+              <div class="cs-results animate-fade-in">
+                <div class="cs-origin-hint">
+                  Envio saindo de <strong>{{ shippingResult()?.origin?.city }}/{{ shippingResult()?.origin?.state }}</strong> para <strong>{{ shippingResult()?.destination?.city }}/{{ shippingResult()?.destination?.state }}</strong>
+                </div>
+
+                @if (shippingResult()?.freeShippingQualified) {
+                  <div class="free-shipping-tag">
+                    ✨ Parabéns! Sua compra atingiu o valor mínimo e ganhou <strong>Frete Grátis</strong>!
+                  </div>
+                }
+
+                <div class="shipping-options-list">
+                  @for (opt of shippingResult()?.options; track opt.id) {
+                    <div 
+                      class="shipping-option-card" 
+                      [class.selected]="selectedShipping()?.id === opt.id"
+                      (click)="selectShipping(opt)"
+                    >
+                      <input 
+                        type="radio" 
+                        name="cartShipping" 
+                        [id]="'opt-' + opt.id" 
+                        [checked]="selectedShipping()?.id === opt.id"
+                        (change)="selectShipping(opt)"
+                      />
+                      <label [for]="'opt-' + opt.id" class="opt-label">
+                        <div class="opt-desc">
+                          <span class="opt-name">{{ opt.name }}</span>
+                          <span class="opt-deadline">Previsão: {{ opt.deadline }}</span>
+                        </div>
+                        <div class="opt-val">
+                          @if (opt.isFree) {
+                            <span class="free-val">GRÁTIS</span>
+                            <span class="crossed-val">{{ opt.originalPrice | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+                          } @else {
+                            <span class="price-val">{{ opt.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+                          }
+                        </div>
+                      </label>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
           </div>
         </div>
 
@@ -105,14 +194,22 @@
 
             <div class="summary-row">
               <span>Frete & Envio</span>
-              <span class="free-shipping-text">Calculado no WhatsApp</span>
+              @if (selectedShipping()) {
+                @if (selectedShipping()?.isFree) {
+                  <span class="free-shipping-text">Grátis ({{ selectedShipping()?.service }})</span>
+                } @else {
+                  <span class="shipping-price-text">+ {{ shippingCost() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }} ({{ selectedShipping()?.service }})</span>
+                }
+              } @else {
+                <span class="pending-shipping-text">Informe o CEP ao lado</span>
+              }
             </div>
 
             <div class="summary-divider"></div>
 
             <div class="summary-row summary-total">
-              <span>Total Estimado</span>
-              <span class="total-val">{{ subtotal() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+              <span>Total Final</span>
+              <span class="total-val">{{ totalWithShipping() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
             </div>
 
             <!-- Botão Principal: Checkout Transparente (PIX & Cartão) -->

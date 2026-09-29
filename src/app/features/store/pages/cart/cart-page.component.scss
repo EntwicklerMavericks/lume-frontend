@@ -317,6 +317,196 @@
   }
 }
 
+.cart-shipping-box {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+
+  .cs-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+
+    .cs-icon {
+      color: var(--primary);
+    }
+  }
+
+  .cs-input-group {
+    display: flex;
+    gap: 0.75rem;
+
+    @media (max-width: 500px) {
+      flex-direction: column;
+    }
+
+    .cs-input {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      padding: 0.65rem 1rem;
+      font-size: 0.875rem;
+      font-family: monospace;
+      letter-spacing: 0.05em;
+      outline: none;
+      transition: border-color 0.2s;
+
+      &:focus {
+        border-color: var(--primary);
+      }
+    }
+
+    .cs-btn {
+      background: rgba(204, 164, 94, 0.15);
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.8125rem;
+      padding: 0.65rem 1.25rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+
+      &:hover:not(:disabled) {
+        background: var(--primary);
+        color: var(--primary-contrast, #0a152e);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .cs-error {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: #ef4444;
+  }
+
+  .cs-results {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .cs-origin-hint {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+
+      strong {
+        color: var(--text-primary);
+      }
+    }
+
+    .free-shipping-tag {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #10b981;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.78rem;
+    }
+
+    .shipping-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .shipping-option-card {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.85rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+
+      input[type="radio"] {
+        accent-color: var(--primary);
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+      }
+
+      .opt-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex: 1;
+        cursor: pointer;
+      }
+
+      .opt-desc {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+
+        .opt-name {
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: var(--text-primary);
+        }
+
+        .opt-deadline {
+          font-size: 0.72rem;
+          color: var(--text-secondary);
+        }
+      }
+
+      .opt-val {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.1rem;
+
+        .free-val {
+          color: #10b981;
+          font-weight: 700;
+          font-size: 0.875rem;
+        }
+
+        .crossed-val {
+          font-size: 0.7rem;
+          color: var(--text-muted);
+          text-decoration: line-through;
+        }
+
+        .price-val {
+          color: var(--primary);
+          font-weight: 600;
+          font-size: 0.9rem;
+        }
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(204, 164, 94, 0.4);
+      }
+
+      &.selected {
+        background: rgba(204, 164, 94, 0.08);
+        border-color: var(--primary);
+      }
+    }
+  }
+}
+
 /* RESUMO DO PEDIDO */
 .summary-card {
   position: sticky;
@@ -345,7 +535,19 @@
     margin-bottom: 0.875rem;
 
     .free-shipping-text {
-      color: #94A3B8;
+      color: #10b981;
+      font-weight: 600;
+      font-size: 0.78rem;
+    }
+
+    .shipping-price-text {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.8125rem;
+    }
+
+    .pending-shipping-text {
+      color: var(--text-muted);
       font-size: 0.75rem;
     }
   }

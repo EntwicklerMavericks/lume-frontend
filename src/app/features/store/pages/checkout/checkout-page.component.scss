@@ -904,3 +904,178 @@
   from { transform: scale(0.5); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+
+.checkout-shipping-block {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+
+  .shipping-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+
+    .shipping-block-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+
+      .truck-icon {
+        color: var(--primary);
+      }
+    }
+
+    .shipping-origin-tag {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+    }
+  }
+
+  .shipping-loading-box {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+  }
+
+  .checkout-free-shipping-tag {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10b981;
+    padding: 0.6rem 0.85rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .shipping-options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
+
+    .checkout-shipping-card {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.9rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+
+      input[type="radio"] {
+        accent-color: var(--primary);
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+      }
+
+      .co-shipping-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex: 1;
+        cursor: pointer;
+        gap: 0.5rem;
+      }
+
+      .co-shipping-desc {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+
+        .co-shipping-name {
+          font-size: 0.875rem;
+          color: var(--text-primary);
+        }
+
+        .co-shipping-deadline {
+          font-size: 0.72rem;
+          color: var(--text-secondary);
+        }
+      }
+
+      .co-shipping-price {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.1rem;
+
+        .co-free-badge {
+          color: #10b981;
+          font-weight: 700;
+          font-size: 0.875rem;
+        }
+
+        .co-crossed-price {
+          font-size: 0.7rem;
+          color: var(--text-muted);
+          text-decoration: line-through;
+        }
+
+        .co-price {
+          color: var(--primary);
+          font-weight: 700;
+          font-size: 0.95rem;
+        }
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(204, 164, 94, 0.4);
+      }
+
+      &.selected {
+        background: rgba(204, 164, 94, 0.08);
+        border-color: var(--primary);
+        box-shadow: 0 0 12px rgba(204, 164, 94, 0.15);
+      }
+    }
+  }
+
+  .shipping-prompt-box {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+
+    svg {
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+  }
+}
+
+.shipping-fee-val {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.pending-fee-text {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}

@@ -179,6 +179,81 @@
               >
             </div>
           </div>
+
+          <!-- Opções de Envio e Frete -->
+          <div class="checkout-shipping-block">
+            <div class="shipping-block-header">
+              <label class="shipping-block-label">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="truck-icon">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+                <span>Opções de Envio para o seu Endereço (Correios)</span>
+              </label>
+
+              @if (shippingResult()?.origin) {
+                <span class="shipping-origin-tag">
+                  Saindo de {{ shippingResult()?.origin?.city }}/{{ shippingResult()?.origin?.state }}
+                </span>
+              }
+            </div>
+
+            @if (isCalculatingShipping()) {
+              <div class="shipping-loading-box">
+                <span class="cep-spinner"></span>
+                <span>Calculando opções de frete e prazos para o CEP...</span>
+              </div>
+            } @else if (shippingResult() && shippingResult()!.options.length > 0) {
+              @if (shippingResult()?.freeShippingQualified) {
+                <div class="checkout-free-shipping-tag animate-fade-in">
+                  ✨ <strong>Frete Grátis Qualificado!</strong> O benefício de frete gratuito foi aplicado à sua compra.
+                </div>
+              }
+
+              <div class="shipping-options-grid">
+                @for (opt of shippingResult()?.options; track opt.id) {
+                  <div 
+                    class="checkout-shipping-card" 
+                    [class.selected]="selectedShipping()?.id === opt.id"
+                    (click)="selectShipping(opt)"
+                  >
+                    <input 
+                      type="radio" 
+                      name="checkoutShipping" 
+                      [id]="'co-opt-' + opt.id" 
+                      [checked]="selectedShipping()?.id === opt.id"
+                      (change)="selectShipping(opt)"
+                    />
+                    <label [for]="'co-opt-' + opt.id" class="co-shipping-label">
+                      <div class="co-shipping-desc">
+                        <strong class="co-shipping-name">{{ opt.name }}</strong>
+                        <span class="co-shipping-deadline">Previsão: {{ opt.deadline }}</span>
+                      </div>
+                      <div class="co-shipping-price">
+                        @if (opt.isFree) {
+                          <span class="co-free-badge">GRÁTIS</span>
+                          <span class="co-crossed-price">{{ opt.originalPrice | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+                        } @else {
+                          <span class="co-price">{{ opt.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+                        }
+                      </div>
+                    </label>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="shipping-prompt-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <span>Informe o CEP no campo acima para calcularmos os prazos e tarifas dos Correios em tempo real.</span>
+              </div>
+            }
+          </div>
         </section>
 
         <!-- 3. Pagamento Transparente -->
@@ -399,8 +474,16 @@
           </div>
 
           <div class="summary-line">
-            <span>Frete Especial</span>
-            <span class="free-badge">Grátis</span>
+            <span>Frete ({{ selectedShipping()?.service || 'Correios' }})</span>
+            @if (selectedShipping()) {
+              @if (selectedShipping()?.isFree) {
+                <span class="free-badge">Grátis</span>
+              } @else {
+                <span class="shipping-fee-val">+ {{ shippingCost() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+              }
+            } @else {
+              <span class="pending-fee-text">Informe o CEP</span>
+            }
           </div>
 
           <div class="summary-divider"></div>

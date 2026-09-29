@@ -228,8 +228,12 @@
                 <span>{{ (order()?.subtotal || order()?.total) | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
               </div>
               <div class="fin-row">
-                <span>Frete Especial</span>
-                <span class="free-text">Grátis</span>
+                <span>Frete ({{ order()?.shippingMethod || 'Correios' }})</span>
+                @if (order()?.shippingCost > 0) {
+                  <span>{{ order()?.shippingCost | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+                } @else {
+                  <span class="free-text">Grátis</span>
+                }
               </div>
               <div class="fin-divider"></div>
               <div class="fin-row total-row">

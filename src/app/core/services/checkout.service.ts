@@ -53,6 +53,8 @@ export interface CheckoutPayload {
   creditCard?: CreditCardData;
   creditCardHolder?: CreditCardHolderInfo;
   installments?: number;
+  shippingCost?: number;
+  shippingMethod?: string;
   customerNotes?: string;
 }
 
