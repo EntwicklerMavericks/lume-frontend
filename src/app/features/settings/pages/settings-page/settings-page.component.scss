@@ -191,6 +191,41 @@
     }
   }
 
+  .cep-input-row {
+    display: flex;
+    gap: 0.5rem;
+
+    .form-input {
+      flex: 1;
+    }
+
+    .btn-search-cep {
+      height: 38px;
+      padding: 0 1.1rem;
+      background: var(--primary);
+      color: var(--primary-contrast, #000);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      font-family: inherit;
+
+      &:hover:not(:disabled) {
+        filter: brightness(1.1);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(204, 164, 94, 0.3);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+
   .field-hint {
     font-size: 0.72rem;
     color: var(--text-muted, #71717a);

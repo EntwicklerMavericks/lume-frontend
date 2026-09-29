@@ -87,6 +87,14 @@ export class SettingsPageComponent implements OnInit {
 
     const cleanCep = v.replace(/\D/g, '');
     if (cleanCep.length === 8) {
+      this.triggerCepSearch();
+    }
+  }
+
+  triggerCepSearch(): void {
+    const raw = this.settingsForm.get('postalCode')?.value || '';
+    const cleanCep = raw.replace(/\D/g, '');
+    if (cleanCep.length === 8) {
       this.isLoadingCep.set(true);
       this.checkoutService.lookupCep(cleanCep).subscribe({
         next: (res) => {

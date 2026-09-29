@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface CheckoutAddress {
@@ -125,6 +125,10 @@ export class CheckoutService {
 
   lookupCep(cep: string): Observable<ViaCepResult> {
     const cleanCep = cep.replace(/\D/g, '');
-    return this.http.get<ViaCepResult>(`https://viacep.com.br/ws/${cleanCep}/json/`);
+    return this.http.get<ViaCepResult>(`${this.apiUrl}/shipping/cep/${cleanCep}`).pipe(
+      catchError(() => {
+        return this.http.get<ViaCepResult>(`https://viacep.com.br/ws/${cleanCep}/json/`);
+      })
+    );
   }
 }
