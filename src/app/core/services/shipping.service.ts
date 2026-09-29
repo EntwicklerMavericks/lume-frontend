@@ -1,6 +1,6 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, catchError, of } from 'rxjs';
+import { Observable, tap, catchError, of, switchMap, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface ShippingOption {
@@ -77,51 +77,70 @@ export class ShippingService {
     this.isCalculating.set(true);
     const cleanCep = destinationCep.replace(/\D/g, '');
 
-    return this.http.post<ShippingResult>(`${this.apiUrl}/shipping/calculate`, {
-      destinationCep: cleanCep,
-      subtotal,
-    }).pipe(
-      catchError(() => {
-        // Fallback inteligente se o backend não estiver em execução
-        const isFree = subtotal >= 299;
-        const fallback: ShippingResult = {
-          origin: {
-            postalCode: '01310-100',
-            street: 'Avenida Paulista',
-            city: 'São Paulo',
-            state: 'SP',
-          },
-          destination: {
-            postalCode: `${cleanCep.slice(0, 5)}-${cleanCep.slice(5)}`,
-            city: 'Destino',
-            state: 'BR',
-          },
-          freeShippingQualified: isFree,
-          freeShippingThreshold: 299,
-          options: [
-            {
-              id: 'pac',
-              name: 'PAC Correios (Econômico)',
-              carrier: 'Correios Brasil',
-              service: 'PAC',
-              deadline: '4 a 6 dias úteis',
-              price: isFree ? 0 : 19.90,
-              originalPrice: 19.90,
-              isFree,
-            },
-            {
-              id: 'sedex',
-              name: 'SEDEX Correios (Expresso)',
-              carrier: 'Correios Brasil',
-              service: 'SEDEX',
-              deadline: '1 a 3 dias úteis',
-              price: 32.90,
-              originalPrice: 32.90,
-              isFree: false,
-            },
-          ],
-        };
-        return of(fallback);
+    // Consulta ViaCEP diretamente para obter a localidade exata do comprador (ex: Barueri, Sorocaba, Salvador)
+    return this.http.get<any>(`https://viacep.com.br/ws/${cleanCep}/json/`).pipe(
+      catchError(() => of(null)),
+      switchMap((viaData) => {
+        const destCity = viaData && !viaData.erro && viaData.localidade ? viaData.localidade : undefined;
+        const destState = viaData && !viaData.erro && viaData.uf ? viaData.uf : undefined;
+
+        return this.http.post<ShippingResult>(`${this.apiUrl}/shipping/calculate`, {
+          destinationCep: cleanCep,
+          subtotal,
+          destinationCity: destCity,
+          destinationState: destState,
+        }).pipe(
+          map((res) => {
+            // Garante que a cidade real de entrega é exibida com precisão
+            if (destCity) {
+              res.destination.city = destCity;
+              if (destState) res.destination.state = destState;
+            }
+            return res;
+          }),
+          catchError(() => {
+            // Fallback inteligente se o backend não estiver em execução
+            const isFree = subtotal >= 299;
+            const fallback: ShippingResult = {
+              origin: {
+                postalCode: '',
+                street: '',
+                city: 'Loja',
+                state: 'Origem',
+              },
+              destination: {
+                postalCode: `${cleanCep.slice(0, 5)}-${cleanCep.slice(5)}`,
+                city: destCity || 'Destino',
+                state: destState || 'BR',
+              },
+              freeShippingQualified: isFree,
+              freeShippingThreshold: 299,
+              options: [
+                {
+                  id: 'pac',
+                  name: 'PAC Correios (Econômico)',
+                  carrier: 'Correios Brasil',
+                  service: 'PAC',
+                  deadline: '3 a 5 dias úteis',
+                  price: isFree ? 0 : 19.90,
+                  originalPrice: 19.90,
+                  isFree,
+                },
+                {
+                  id: 'sedex',
+                  name: 'SEDEX Correios (Expresso)',
+                  carrier: 'Correios Brasil',
+                  service: 'SEDEX',
+                  deadline: '1 a 2 dias úteis',
+                  price: 32.90,
+                  originalPrice: 32.90,
+                  isFree: false,
+                },
+              ],
+            };
+            return of(fallback);
+          })
+        );
       }),
       tap({
         next: (res) => {
