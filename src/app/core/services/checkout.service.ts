@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError } from 'rxjs';
+import { Observable, catchError, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface CheckoutAddress {
@@ -125,9 +125,25 @@ export class CheckoutService {
 
   lookupCep(cep: string): Observable<ViaCepResult> {
     const cleanCep = cep.replace(/\D/g, '');
-    return this.http.get<ViaCepResult>(`${this.apiUrl}/shipping/cep/${cleanCep}`).pipe(
+    // 1. Consulta o ViaCEP diretamente pelo navegador (rápido, não requer backend rodando)
+    return this.http.get<ViaCepResult>(`https://viacep.com.br/ws/${cleanCep}/json/`).pipe(
       catchError(() => {
-        return this.http.get<ViaCepResult>(`https://viacep.com.br/ws/${cleanCep}/json/`);
+        // 2. Se o ViaCEP falhar, tenta BrasilAPI
+        return this.http.get<any>(`https://brasilapi.com.br/api/cep/v1/${cleanCep}`).pipe(
+          map((data) => ({
+            cep: data.cep || cleanCep,
+            logradouro: data.street || '',
+            complemento: '',
+            bairro: data.neighborhood || '',
+            localidade: data.city || '',
+            uf: data.state || '',
+            erro: false,
+          })),
+          catchError(() => {
+            // 3. Fallback para API do backend se estiver ativo
+            return this.http.get<ViaCepResult>(`${this.apiUrl}/shipping/cep/${cleanCep}`);
+          })
+        );
       })
     );
   }
