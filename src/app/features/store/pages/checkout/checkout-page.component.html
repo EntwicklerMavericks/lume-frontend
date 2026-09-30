@@ -455,6 +455,57 @@
             ></textarea>
           </div>
         </section>
+
+        <!-- Ação Final de Compra no Fim do Formulário (Evita que o usuário precise rolar a tela até o topo) -->
+        <div class="checkout-bottom-action">
+          <div class="bottom-action-header">
+            <div class="bottom-summary-left">
+              <span class="bottom-summary-label">Total a Pagar:</span>
+              <span class="bottom-summary-amount">{{ total() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+            </div>
+            <div class="bottom-payment-pill">
+              @if (paymentMethod() === 'PIX') {
+                <span class="pill-badge pix-pill">⚡ PIX Instantâneo</span>
+              } @else {
+                <span class="pill-badge card-pill">💳 Cartão em {{ installments() }}x</span>
+              }
+            </div>
+          </div>
+
+          <!-- Botão de Finalização Inferior -->
+          <button
+            type="button"
+            class="checkout-submit-btn btn-bottom-checkout"
+            [disabled]="isSubmitting()"
+            (click)="submitOrder()"
+          >
+            @if (isSubmitting()) {
+              <span class="btn-spinner"></span>
+              <span>Processando...</span>
+            } @else if (paymentMethod() === 'PIX') {
+              <span>Gerar Pagamento PIX ⚡</span>
+            } @else {
+              <span>Finalizar e Pagar {{ total() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+            }
+          </button>
+
+          <!-- Selos de Segurança Inferiores -->
+          <div class="bottom-security-info">
+            <div class="sec-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span>Ambiente Seguro 256-bit Asaas</span>
+            </div>
+            <div class="sec-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span>Garantia de Satisfação & Troca</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Coluna Lateral: Resumo do Pedido -->
