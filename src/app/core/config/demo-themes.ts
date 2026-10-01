@@ -421,24 +421,24 @@ export const DEMO_THEMES: Record<string, DemoThemeConfig> = {
   },
 
   // =========================================================================
-  // 3. BARONE IMPORTS — STREETWEAR & URBAN CULTURE
+  // 3. VORTEX STREETWEAR — STREETWEAR & URBAN CULTURE
   // =========================================================================
-  barone: {
-    id: 'barone',
-    name: 'Barone Imports',
+  vortex: {
+    id: 'vortex',
+    name: 'Vortex Streetwear',
     segment: 'Streetwear & Urban Culture',
     badge: 'CULTURA URBANA',
     tagline: 'HEAVYWEIGHT STREETWEAR',
     description: 'Moda de rua autêntica, modelagens oversized e tecidos heavyweight 260g/m² desenvolvidos para o homem contemporâneo. Estilo que dita as regras nas ruas.',
     aboutEyebrow: 'MANIFESTO STREET',
     aboutTitle: 'Do asfalto para o mundo. Atitude heavyweight.',
-    aboutText: 'A Barone Imports traduz a cultura urbana com tecidos encorpados de alta gramatura, caimento boxy oversized e estética minimalista de impacto visual.',
+    aboutText: 'A Vortex Streetwear traduz a cultura urbana com tecidos encorpados de alta gramatura, caimento boxy oversized e estética minimalista de impacto visual.',
     heroImage: '/images/hero-streetwear.jpg',
-    logoUrl: '/images/barone-logo.png',
-    fullLogoUrl: '/images/barone-logo.png',
+    logoUrl: '/images/logo.png',
+    fullLogoUrl: '/images/logo.png',
     whatsappNumber: '5511999990001',
     whatsappFormatted: '+55 11 99999-0001',
-    email: 'drops@baronestore.com.br',
+    email: 'drops@vortexstreetwear.com.br',
     businessHours: 'Segunda a Sábado — 10:00 às 20:00',
     primaryColor: '#FFFFFF',
     primaryContrast: '#000000',
@@ -457,28 +457,28 @@ export const DEMO_THEMES: Record<string, DemoThemeConfig> = {
         name: 'Camisetas Heavyweight & Boxy',
         slug: 'camisetas-oversized',
         description: 'Tees de alta gramatura com caimento boxy e gola canelada 3cm.',
-        image: '/images/products/barone/bar-1.jpg'
+        image: '/images/products/streetwear/bar-1.jpg'
       },
       {
         id: 'cat-st-2',
         name: 'Hoodies & Moletons 420g',
         slug: 'hoodies-agasalhos',
         description: 'Moletons 3 cabos pesados flanelados com capuz duplo estruturado.',
-        image: '/images/products/barone/bar-2.jpg'
+        image: '/images/products/streetwear/bar-2.jpg'
       },
       {
         id: 'cat-st-3',
         name: 'Calças Cargo & Skate Pants',
         slug: 'calcas-cargo',
         description: 'Calças utilitárias com bolsos fole e ajuste anatômico nos tornozelos.',
-        image: '/images/products/barone/bar-3.jpg'
+        image: '/images/products/streetwear/bar-3.jpg'
       },
       {
         id: 'cat-st-4',
         name: 'Jaquetas Varsity & Workwear',
         slug: 'jaquetas-varsity',
         description: 'Jaquetas college de feltro, sarja encorpada e casacos streetwear.',
-        image: '/images/products/barone/bar-5.jpg'
+        image: '/images/products/streetwear/bar-5.jpg'
       }
     ],
     products: [
@@ -490,7 +490,7 @@ export const DEMO_THEMES: Record<string, DemoThemeConfig> = {
         description: 'Camiseta oversized confeccionada em malha premium 100% algodão penteado 260g. Gola canelada 3cm anti-esgarçamento e caimento boxy imponente.',
         price: 159.90,
         promotionalPrice: 139.90,
-        images: ['/images/products/barone/bar-1.jpg'],
+        images: ['/images/products/streetwear/bar-1.jpg'],
         categoryId: 'cat-st-1',
         sizes: ['P', 'M', 'G', 'GG'],
         colors: [{ name: 'Preto Intenso', hex: '#080809' }, { name: 'Off-White Acid', hex: '#e4e4e7' }],
@@ -508,7 +508,7 @@ export const DEMO_THEMES: Record<string, DemoThemeConfig> = {
         slug: 'hoodie-acid-wash-heavyweight-420g',
         description: 'Moletom 3 cabos 420g com lavagem estonada acid wash exclusiva. Capuz estruturado sem cordão e bolso canguru embutido.',
         price: 289.90,
-        images: ['/images/products/barone/bar-2.jpg'],
+        images: ['/images/products/streetwear/bar-2.jpg'],
         categoryId: 'cat-st-2',
         sizes: ['M', 'G', 'GG'],
         colors: [{ name: 'Cinza Grafite Acid', hex: '#27272a' }, { name: 'Preto Vintage', hex: '#18181b' }],
@@ -526,7 +526,7 @@ export const DEMO_THEMES: Record<string, DemoThemeConfig> = {
         slug: 'calca-cargo-utilitaria-tatica-ripstop',
         description: 'Calça cargo em sarja ripstop militar com 6 bolsos amplos com fole, cordão de ajuste no tornozelo e reforço de costura dupla nos joelhos.',
         price: 249.90,
-        images: ['/images/products/barone/bar-3.jpg'],
+        images: ['/images/products/streetwear/bar-3.jpg'],
         categoryId: 'cat-st-3',
         sizes: ['38', '40', '42', '44'],
         colors: [{ name: 'All Black', hex: '#080809' }, { name: 'Verde Oliva Militar', hex: '#3f4238' }],
@@ -545,7 +545,7 @@ export const DEMO_THEMES: Record<string, DemoThemeConfig> = {
         description: 'Camiseta oversized 260g em puro algodão com estampa serigráfica em relevo nas costas com tema metrópole contemporânea. Costura reforçada ombro a ombro.',
         price: 169.90,
         promotionalPrice: 149.90,
-        images: ['/images/products/barone/bar-4.jpg'],
+        images: ['/images/products/streetwear/bar-4.jpg'],
         categoryId: 'cat-st-1',
         sizes: ['P', 'M', 'G', 'GG'],
         colors: [{ name: 'Off-White Craquelado', hex: '#f4f4f5' }, { name: 'Preto Carbono', hex: '#09090b' }],
@@ -558,13 +558,13 @@ export const DEMO_THEMES: Record<string, DemoThemeConfig> = {
       },
       {
         id: 'bar-5',
-        sku: 'BAR-VAR-005',
-        name: 'Jaqueta Varsity College Streetwear Barone',
-        slug: 'jaqueta-varsity-college-streetwear-barone',
+        sku: 'VTX-VAR-005',
+        name: 'Jaqueta Varsity College Streetwear Heavyweight',
+        slug: 'jaqueta-varsity-college-streetwear-heavyweight',
         description: 'Jaqueta college clássica streetwear com mangas contrastantes, corpo em feltro encorpado, patches bordados em chenille e botões de pressão metálicos esmaltados.',
         price: 369.90,
         promotionalPrice: 329.90,
-        images: ['/images/products/barone/bar-5.jpg'],
+        images: ['/images/products/streetwear/bar-5.jpg'],
         categoryId: 'cat-st-4',
         sizes: ['P', 'M', 'G', 'GG'],
         colors: [{ name: 'Preto & Branco', hex: '#09090b' }, { name: 'Verde Vintage & Creme', hex: '#1b3b22' }],
@@ -582,7 +582,7 @@ export const DEMO_THEMES: Record<string, DemoThemeConfig> = {
         slug: 'calca-denim-skate-loose-fit-14oz',
         description: 'Jeans 100% algodão 14oz com lavagem clara estonada vintage, perna ampla loose fit skate e costuras pespontadas duplas para resistir à lixa e ao asfalto.',
         price: 269.90,
-        images: ['/images/products/barone/bar-6.jpg'],
+        images: ['/images/products/streetwear/bar-6.jpg'],
         categoryId: 'cat-st-3',
         sizes: ['38', '40', '42', '44'],
         colors: [{ name: 'Azul Claro Vintage', hex: '#64748b' }, { name: 'Preto Envelhecido', hex: '#27272a' }],
@@ -600,7 +600,7 @@ export const DEMO_THEMES: Record<string, DemoThemeConfig> = {
         slug: 'bermuda-sweatpants-heavy-oversized-380g',
         description: 'Bermuda de moletom felpado 380g com corte desestruturado acima do joelho, bolsos laterais fundos e cordão grosso de algodão cru com ponteiras de metal.',
         price: 179.90,
-        images: ['/images/products/barone/bar-7.jpg'],
+        images: ['/images/products/streetwear/bar-7.jpg'],
         categoryId: 'cat-st-3',
         sizes: ['P', 'M', 'G', 'GG'],
         colors: [{ name: 'Cinza Mescla Ash', hex: '#d4d4d8' }, { name: 'Preto Intenso', hex: '#09090b' }],
@@ -1198,3 +1198,6 @@ export const DEMO_THEMES: Record<string, DemoThemeConfig> = {
     ]
   }
 };
+
+// Retrocompatibilidade para clientes com chave legada salva no localStorage
+DEMO_THEMES['barone'] = DEMO_THEMES['vortex'];

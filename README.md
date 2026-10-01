@@ -1,9 +1,9 @@
 <div align="center">
 
-  <img src="public/images/logo.png" alt="Lume Logo" width="120" />
+  <img src="public/images/lume-logo.png" alt="Lume Logo" width="140" />
 
-  # ⚡ LUME
-  ### *Streetwear Autêntico & E-Commerce Premium*
+  # ⚡ LUME — STOREFRONT & GESTÃO
+  ### *Plataforma White-Label de E-Commerce de Alta Conversão para o Varejo de Moda*
 
   [![Angular](https://img.shields.io/badge/Angular-20.0-DD0031?style=for-the-badge&logo=angular&logoColor=white)](https://angular.dev/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -11,23 +11,24 @@
   [![NestJS](https://img.shields.io/badge/Backend-NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)
   [![MySQL](https://img.shields.io/badge/Database-MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
   [![Prisma](https://img.shields.io/badge/ORM-Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+  [![Asaas](https://img.shields.io/badge/Gateway-Asaas-003087?style=for-the-badge)](https://asaas.com/)
 
   <br />
 
   <p align="center">
-    <strong>Plataforma completa de comércio eletrônico e gestão administrativa para moda urbana e streetwear, com fechamento direto via WhatsApp e arquitetura moderna de alta performance.</strong>
+    <strong>Frontend completo para comércio eletrônico de moda com arquitetura reativa em Angular 20, checkout integrado com gateway de pagamentos (PIX e Cartão), cálculo dinâmico de frete via Correios/Melhor Envio, central do cliente com Google OAuth e painel administrativo completo para o lojista.</strong>
   </p>
 
   <p align="center">
     <a href="#-visão-geral">Visão Geral</a> •
     <a href="#-funcionalidades-chave">Funcionalidades</a> •
+    <a href="#-arquitetura-e-pastas">Arquitetura</a> •
     <a href="#-tecnologias">Tecnologias</a> •
-    <a href="#-arquitetura--estrutura">Arquitetura</a> •
     <a href="#-como-executar">Como Executar</a> •
     <a href="#-testes">Testes</a>
   </p>
 
-  <img src="public/images/portfolio-cover.jpg" alt="Lume Showcase Cover" width="100%" />
+  <br />
 
 </div>
 
@@ -35,93 +36,107 @@
 
 ## 📌 Visão Geral
 
-A **Lume** é uma marca conceitual de moda streetwear masculina voltada para jovens que buscam cortes *boxy/oversized*, tecidos *heavyweight* e lançamentos exclusivos (*drops*).
+A **Lume** é uma solução completa de comércio eletrônico desenvolvida para marcas de moda contemporânea que buscam excelência estética, velocidade de carregamento e alta taxa de conversão em dispositivos móveis e desktop.
 
-O projeto foi projetado com uma experiência de compra ágil e humanizada: o cliente explora o catálogo, personaliza tamanhos e variações, monta sua sacola de compras e fecha o pedido diretamente com um consultor via **WhatsApp**, com mensagens automáticas pré-formatadas contendo todos os detalhes do pedido ou dúvidas sobre caimento.
-
-Para o lojista, a plataforma conta com um **Painel Administrativo completo**, permitindo gestão de catálogo, controle de estoque, criação de categorias dinâmicas e upload de fotos com compressão inteligente no navegador.
+A plataforma conecta a experiência do cliente final a um ecossistema robusto de gestão para o lojista, oferecendo fluxos de pagamento transparentes, cálculo automático de frete por CEP, rastreamento de pedidos e customização visual dinâmica.
 
 ---
 
 ## ✨ Funcionalidades Chave
 
 ### 🛍️ Vitrine Pública (Storefront)
-- **Identidade Dark Luxury & Streetwear**: Design minimalista, paleta escura (obsidian/carbon) com contrastes metálicos e tipografia editorial.
-- **Header & Menu Drawer Mobile**: Navegação 100% responsiva com links dinâmicos sincronizados com o banco de dados.
-- **Hero & Manifesto**: Apresentação de marca com fotografia autêntica da cultura urbana brasileira.
-- **Catálogo Inteligente**:
-  - Filtros por categoria, faixa de preço, cores e tamanhos.
-  - Ordenação por novidades, menor preço e maior preço.
-  - Busca em tempo real com debounce.
-- **Página de Produto (PDP)**:
-  - Galeria de fotos interativa.
-  - Seletor de tamanhos e variações.
-  - Botão de compra direta com mensagem contextual para o WhatsApp.
-  - Accordions explicativos sobre tecidos, caimento e processo de finalização.
-- **Sacola de Compras Interativa**:
-  - Atualização reativa de quantidades e subtotais em tempo real.
-  - Campo para observações personalizadas do cliente.
-  - Botão de fechamento padronizado com cantos modernos (8px) e integração direta com a API do WhatsApp.
-- **Canais Diretos de WhatsApp**:
-  - Mensagem contextual para dúvidas sobre caimento e tamanhos na Home.
-  - Mensagem de atendimento geral e catálogo no Rodapé.
-  - Mensagem de checkout com listagem de itens, quantidades e total estimado.
+- **Identidade Visual Dark Luxury:** Layout moderno com foco em alto contraste, tipografia editorial e apresentação imersiva de produtos.
+- **Navegação Inteligente & Responsiva:**
+  - Header adaptativo com menu lateral (drawer) para mobile.
+  - Barra de busca instantânea com suporte a debounce.
+  - Filtros dinâmicos por categoria, preço, tamanho e variações de cor.
+- **Página de Detalhes do Produto (PDP):**
+  - Galeria de imagens com zoom e transições suaves.
+  - Seletor interativo de grade de tamanhos (P, M, G, GG) e cores.
+  - Acordeões informativos sobre composição têxtil, modelagem e cuidados de lavagem.
+  - Botão de compra direta e compartilhamento rápido para WhatsApp.
+- **Sacola de Compras Interativa:**
+  - Cálculo instantâneo de subtotais e quantidades.
+  - Persistência sincronizada com a conta do cliente.
+- **Checkout de Alta Conversão:**
+  - Layout otimizado para celular com botão de pagamento prioritário.
+  - **Cálculo de Frete Dinâmico:** Integração com ViaCEP para preenchimento automático de endereço e cotação de prazos e valores de frete (PAC e SEDEX).
+  - **Pagamentos Integrados (Gateway Asaas):**
+    - **PIX:** Geração instantânea de QR Code dinâmico e código "Copia e Cola" com confirmação automática via Webhook.
+    - **Cartão de Crédito:** Parcelamento em até 12x com validação em tempo real.
+- **Área do Cliente (Central do Usuário):**
+  - Cadastro e login seguro com e-mail ou **Google OAuth 2.0**.
+  - **Botão oficial do Google e ícone estilizados no tema da loja**, adaptando-se às cores ativas da marca.
+  - Histórico de pedidos com linha do tempo de status (Aguardando Pagamento, Pago, Em Separação, Enviado com Código de Rastreio, Entregue).
 
-### ⚙️ Painel Administrativo (Lojista)
-- **Gestão de Produtos**:
-  - Cadastro, edição, inativação e exclusão de peças.
-  - Upload de múltiplas imagens com **compressão automática via Canvas** (redimensionamento para 1200px / 85% de qualidade, evitando payloads pesados).
-  - Variações de cores, tamanhos e controle de estoque por item.
-  - Marcação de produtos em destaque (*highlight*) e lançamentos (*newLaunch*).
-- **Gestão de Categorias**:
-  - Criação e edição de categorias com atualização instantânea nos menus da loja (sem necessidade de reload).
-- **Segurança & Controle de Acesso**:
-  - Autenticação JWT com Guards e controle de papéis (RBAC).
-  - Suporte a payloads de até 50MB no backend e colunas `LONGTEXT` no MySQL para imagens em alta resolução.
+### ⚙️ Painel de Controle Administrativo (ERP do Lojista)
+- **Catálogo de Produtos:**
+  - Cadastro, edição, precificação promocional e controle de estoque por variação.
+  - Upload de imagens em lote com compressão automática via Canvas para máxima performance.
+  - Destaques de vitrine e selos promocionais ("Lançamento", "Mais Vendido").
+- **Categorias Dinâmicas:**
+  - Criação e ordenação de categorias com sincronização instantânea em toda a loja.
+- **Gestão de Pedidos:**
+  - Painel com listagem completa, busca por cliente e atualização de status em 1 clique com dropdown contextualizado na paleta da loja.
+  - Notificações automáticas por e-mail para o cliente a cada mudança de status (Resend API e fallback SMTP).
+- **Gestão de Clientes:**
+  - Base de dados de clientes cadastrados, histórico de compras e métricas de ticket médio.
+- **Configurações Gerais:**
+  - Personalização de frete fixo, frete grátis por valor mínimo, dados de contato e chaves de integração.
 
 ---
 
 ## 🛠️ Tecnologias
 
 ### Frontend
-- **Framework**: [Angular 20](https://angular.dev/) (Standalone Components, Signals & Zoneless Change Detection)
-- **Linguagem**: [TypeScript 5.7](https://www.typescriptlang.org/)
-- **Estilização**: SCSS com Design Tokens e variáveis CSS personalizadas
-- **Roteamento**: Angular Router com Lazy Loading por feature
-- **Testes**: Karma & Jasmine (25 suites de testes unitários automatizados)
+- **Framework:** [Angular 20](https://angular.dev/) (Standalone Components, Signals & Zoneless Architecture)
+- **Linguagem:** [TypeScript 5.7](https://www.typescriptlang.org/)
+- **Estilização:** SCSS modular com Design Tokens e variáveis CSS nativas (`:root`)
+- **Autenticação:** Google Identity Services (GIS) & JWT
+- **Roteamento:** Angular Router com Lazy Loading estruturado por feature
+- **Testes:** Jasmine & Karma
 
-### Backend & Banco de Dados
-- **Framework**: [NestJS 11](https://nestjs.com/) (Arquitetura modular orientada a serviços)
-- **ORM**: [Prisma 6](https://www.prisma.io/)
-- **Banco de Dados**: MySQL 8.0
-- **Segurança**: Passport JWT, bcrypt, class-validator, CORS configurável
+### Backend & Integrações
+- **Framework:** [NestJS 11](https://nestjs.com/)
+- **ORM:** [Prisma 6](https://www.prisma.io/)
+- **Banco de Dados:** MySQL 8.0
+- **Gateway de Pagamento:** [Asaas](https://asaas.com/) (PIX e Cartão)
+- **E-mails Transacionais:** [Resend](https://resend.com/) & Nodemailer SMTP
+- **Logística & CEP:** ViaCEP API
 
 ---
 
-## 📁 Arquitetura & Estrutura do Projeto
+## 📁 Arquitetura e Pastas
 
 ```text
-new-project/
+lume-frontend/
 ├── public/
 │   ├── images/
-│   │   ├── logo.png               # Monograma metálico transparente BA
-│   │   ├── hero-maloqueiro.jpg    # Banner principal da cultura urbana
-│   │   └── portfolio-cover.jpg    # Capa de apresentação 16:9
+│   │   ├── lume-logo.png              # Logo oficial Lume
+│   │   ├── hero-lume.jpg              # Banner principal da vitrine
+│   │   └── products/                  # Imagens de catálogo e produtos
 │   └── favicon.ico
 ├── src/
 │   ├── app/
-│   │   ├── core/                  # Serviços singleton, modelos, guards e interceptors
-│   │   │   ├── config/            # store.config.ts (configuração centralizada da marca)
-│   │   │   ├── models/            # Interfaces TypeScript do domínio
-│   │   │   └── services/          # StoreService, CartService, WhatsappService, SeoService
-│   │   ├── features/              # Módulos e páginas da aplicação
-│   │   │   ├── store/             # Vitrine pública (Home, Catálogo, Produto, Carrinho)
-│   │   │   ├── products/          # Painel Admin: Gestão de Produtos
-│   │   │   └── categories/        # Painel Admin: Gestão de Categorias
-│   │   ├── layouts/               # Layouts estruturais (StoreLayout, MainLayout)
-│   │   └── shared/                # Componentes compartilhados e menus
-│   ├── environments/              # Configurações de ambiente (API URL)
-│   └── styles.scss                # Design tokens globais e reset
+│   │   ├── core/                      # Camada central singleton
+│   │   │   ├── config/                # store.config.ts (configuração central da marca)
+│   │   │   ├── guards/                # AuthGuard, AdminGuard
+│   │   │   ├── interceptors/          # AuthInterceptor (injeção de Bearer Token)
+│   │   │   ├── models/                # Interfaces do domínio (Product, Category, Order, User)
+│   │   │   └── services/              # StoreService, CartService, ShippingService, PaymentService
+│   │   ├── features/                  # Módulos funcionais da aplicação
+│   │   │   ├── store/                 # Vitrine (Home, Catálogo, PDP, Carrinho, Checkout)
+│   │   │   ├── customer-area/         # Central do Cliente e Acompanhamento de Pedidos
+│   │   │   ├── auth/                  # Autenticação (Login, Registro, Google OAuth)
+│   │   │   ├── products/              # Admin: Gestão de Produtos
+│   │   │   ├── categories/            # Admin: Gestão de Categorias
+│   │   │   ├── orders/                # Admin: Gestão de Pedidos
+│   │   │   ├── customers/             # Admin: Base de Clientes
+│   │   │   └── settings/              # Admin: Configurações Gerais
+│   │   ├── layouts/                   # Layouts estruturais (StoreLayout, MainLayout, AuthLayout)
+│   │   └── shared/                    # Componentes reutilizáveis (Header, Footer, Menu, Modais)
+│   ├── environments/                  # Variáveis de ambiente (API URL, Google Client ID)
+│   └── styles.scss                    # Design tokens globais e variáveis de tema
 └── angular.json
 ```
 
@@ -131,73 +146,43 @@ new-project/
 
 ### Pré-requisitos
 - **Node.js**: v18+ ou v20+
-- **MySQL**: v8.0+ em execução
-- **NPM** ou **Yarn**
+- **NPM**
+- **Backend Lume** rodando em `http://localhost:3000`
 
-### 1. Clonar os Repositórios
+### 1. Instalar Dependências
 ```bash
-# Frontend
-git clone https://github.com/joaoPauloDev7/new-project.git
-cd new-project
-
-# Backend (em outro terminal)
-git clone https://github.com/joaoPauloDev7/new-project-backend.git
-cd new-project-backend
+npm install
 ```
 
-### 2. Configurar e Iniciar o Backend
-```bash
-cd new-project-backend
-
-# Instalar dependências
-npm install
-
-# Configurar variáveis no .env
-# DATABASE_URL="mysql://root:senha@localhost:3306/lume_store"
-# JWT_SECRET="sua_chave_secreta"
-# PORT=3000
-
-# Sincronizar o banco de dados
-npx prisma db push
-
-# Iniciar servidor em desenvolvimento
-npm run start:dev
+### 2. Configurar Variáveis de Ambiente
+Verifique o arquivo `src/environments/environment.ts`:
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:3000/api',
+  googleClientId: 'SEU_GOOGLE_CLIENT_ID.apps.googleusercontent.com'
+};
 ```
-> O backend estará acessível em: `http://localhost:3000/api`
 
-### 3. Configurar e Iniciar o Frontend
+### 3. Iniciar Servidor de Desenvolvimento
 ```bash
-cd new-project
-
-# Instalar dependências
-npm install
-
-# Iniciar servidor de desenvolvimento
 ng serve
+# ou
+npm start
 ```
-> O frontend estará acessível em: `http://localhost:4200`
+Acesse no navegador: `http://localhost:4200`
 
 ---
 
-## 🧪 Testes
-
-O projeto conta com testes unitários cobrindo serviços essenciais (carrinho, geração de links e mensagens do WhatsApp, SEO e estado da vitrine):
+## 🧪 Testes Automatizados
 
 ```bash
-# Executar todos os testes unitários (execução única)
+# Executar suíte de testes unitários
 npm test -- --watch=false
 ```
 
 ---
 
-## 📱 Contato & Redes
-
-- **Projeto:** Lume
-- **WhatsApp:** [+55 11 96304-1542](https://wa.me/5511963041542)
-- **Estilo:** Streetwear & Moda Urbana Premium
-
----
-
 <div align="center">
-  <sub>Desenvolvido com foco em alta performance, UX e arquitetura escalável.</sub>
+  <sub>© 2026 Lume Commerce — Todos os direitos reservados.</sub>
 </div>
