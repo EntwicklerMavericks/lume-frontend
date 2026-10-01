@@ -1,18 +1,26 @@
 import { inject, Injectable, PLATFORM_ID, signal, computed } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { CartItem, Product } from '../models/store.models';
+import { AuthService } from './auth.service';
+import { environment } from '../../../environments/environment';
 
 const CART_STORAGE_KEY = 'lume_cart';
 
 /**
- * Serviço do carrinho — gerencia itens, quantidades, persistência via localStorage.
- * SSR-safe: não acessa localStorage durante server-side rendering.
+ * Serviço do carrinho — gerencia itens, quantidades e persistência híbrida:
+ * 1. Offline/Guest: localStorage seguro e reativo via Signals.
+ * 2. Autenticado: sincronização automática com backend /cart na conta do cliente.
  */
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly http = inject(HttpClient);
+  private readonly authService = inject(AuthService);
+  private readonly apiUrl = environment.apiUrl;
+
   private readonly items = signal<CartItem[]>([]);
 
   /** Itens do carrinho (readonly) */
@@ -36,6 +44,9 @@ export class CartService {
 
   constructor() {
     this.loadFromStorage();
+    if (this.authService.isAuthenticated()) {
+      this.syncWithServer();
+    }
   }
 
   /** Adicionar item ao carrinho */
@@ -60,6 +71,18 @@ export class CartService {
     }
 
     this.saveToStorage();
+
+    // Sincroniza com a nuvem se logado
+    if (this.authService.isAuthenticated()) {
+      this.http.post(`${this.apiUrl}/cart/item`, {
+        productId: product.id,
+        quantity,
+        size,
+        color,
+      }).subscribe({
+        error: (err) => console.warn('[CartService] Falha ao sincronizar item na nuvem:', err),
+      });
+    }
   }
 
   /** Remover item do carrinho */
@@ -75,6 +98,17 @@ export class CartService {
       )
     );
     this.saveToStorage();
+
+    // Sincroniza remoção com a nuvem se logado
+    if (this.authService.isAuthenticated()) {
+      const params: any = { productId };
+      if (size) params.size = size;
+      if (color) params.color = color;
+
+      this.http.delete(`${this.apiUrl}/cart/item`, { params }).subscribe({
+        error: (err) => console.warn('[CartService] Falha ao remover item da nuvem:', err),
+      });
+    }
   }
 
   /** Atualizar quantidade de um item */
@@ -98,12 +132,77 @@ export class CartService {
 
     this.items.set(updated);
     this.saveToStorage();
+
+    // Sincroniza atualização com a nuvem se logado
+    if (this.authService.isAuthenticated()) {
+      this.http.put(`${this.apiUrl}/cart/item`, {
+        productId,
+        quantity,
+        size,
+        color,
+      }).subscribe({
+        error: (err) => console.warn('[CartService] Falha ao atualizar quantidade na nuvem:', err),
+      });
+    }
   }
 
   /** Limpar carrinho */
   clearCart(): void {
     this.items.set([]);
     this.saveToStorage();
+
+    if (this.authService.isAuthenticated()) {
+      this.http.delete(`${this.apiUrl}/cart`).subscribe({
+        error: (err) => console.warn('[CartService] Falha ao limpar carrinho na nuvem:', err),
+      });
+    }
+  }
+
+  /**
+   * Sincroniza carrinho local com a conta do cliente no servidor
+   */
+  syncWithServer(): void {
+    if (!this.authService.isAuthenticated()) return;
+
+    const payload = {
+      items: this.items().map((item) => ({
+        productId: item.product.id,
+        quantity: item.quantity,
+        size: item.size,
+        color: item.color,
+      })),
+    };
+
+    this.http.post<any>(`${this.apiUrl}/cart/sync`, payload).subscribe({
+      next: (cloudCart) => {
+        if (cloudCart && cloudCart.items && Array.isArray(cloudCart.items)) {
+          const mapped: CartItem[] = cloudCart.items.map((ci: any) => ({
+            product: {
+              id: ci.product.id,
+              name: ci.product.name,
+              slug: ci.product.slug,
+              sku: ci.product.sku,
+              price: Number(ci.product.price),
+              promotionalPrice: ci.product.promotionalPrice ? Number(ci.product.promotionalPrice) : undefined,
+              images: ci.product.images?.map((img: any) => img.url) || [],
+              category: ci.product.category?.name || 'Geral',
+              gender: ci.product.gender || 'Masculino',
+              stock: ci.product.stock || 0,
+              highlight: ci.product.highlight || false,
+            },
+            quantity: ci.quantity,
+            size: ci.size,
+            color: ci.color,
+          }));
+
+          this.items.set(mapped);
+          this.saveToStorage();
+        }
+      },
+      error: (err) => {
+        console.warn('[CartService] Não foi possível sincronizar com o carrinho na nuvem:', err);
+      },
+    });
   }
 
   /** Carregar do localStorage (SSR-safe) */

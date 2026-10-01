@@ -2,7 +2,13 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role?: string;
+  role?: 'ADMIN' | 'CUSTOMER' | string;
+  avatar?: string | null;
+  phone?: string | null;
+}
+
+export interface GoogleLoginRequest {
+  credential: string;
 }
 
 export interface LoginRequest {

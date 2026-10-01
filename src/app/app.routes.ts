@@ -10,6 +10,8 @@ import { ProductPageComponent } from './features/store/pages/product/product-pag
 import { CartPageComponent } from './features/store/pages/cart/cart-page.component';
 import { CheckoutPageComponent } from './features/store/pages/checkout/checkout-page.component';
 import { OrderConfirmationPageComponent } from './features/store/pages/order-confirmation/order-confirmation-page.component';
+import { CustomerLoginPageComponent } from './features/store/pages/customer-login/customer-login-page.component';
+import { CustomerOrdersPageComponent } from './features/store/pages/customer-orders/customer-orders-page.component';
 
 import { LoginPageComponent } from './features/auth/pages/login-page/login-page.component';
 import { RegisterPageComponent } from './features/auth/pages/register-page/register-page.component';
@@ -24,7 +26,7 @@ import { GalleryPageComponent } from './features/gallery/pages/gallery-page/gall
 import { SettingsPageComponent } from './features/settings/pages/settings-page/settings-page.component';
 import { StockPageComponent } from './features/stock/pages/stock-page/stock-page.component';
 
-import { authGuard } from './core/guards/auth.guard';
+import { adminGuard, customerGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -37,6 +39,8 @@ export const routes: Routes = [
       { path: 'carrinho', component: CartPageComponent },
       { path: 'checkout', component: CheckoutPageComponent },
       { path: 'pedido-confirmado/:id', component: OrderConfirmationPageComponent },
+      { path: 'conta/login', component: CustomerLoginPageComponent },
+      { path: 'conta/pedidos', component: CustomerOrdersPageComponent, canActivate: [customerGuard] },
     ]
   },
   {
@@ -51,7 +55,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: MainLayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [adminGuard],
     children: [
       { path: '', redirectTo: 'products', pathMatch: 'full' },
       { path: 'products', component: ProductsPageComponent },

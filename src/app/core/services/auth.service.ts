@@ -1,4 +1,4 @@
-import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { computed, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
@@ -23,6 +23,24 @@ export class AuthService {
   public currentUser = signal<User | null>(null);
   public token = signal<string | null>(null);
   public isAuth = signal<boolean>(false);
+
+  // Helper computed signals
+  public isAdmin = computed(() => this.currentUser()?.role === 'ADMIN');
+  public isCustomer = computed(() => this.currentUser()?.role === 'CUSTOMER' || (this.isAuth() && this.currentUser()?.role !== 'ADMIN'));
+  public firstName = computed(() => {
+    const name = this.currentUser()?.name;
+    if (!name) return 'Minha Conta';
+    return name.split(' ')[0];
+  });
+  public userInitials = computed(() => {
+    const name = this.currentUser()?.name;
+    if (!name) return 'U';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return parts[0][0].toUpperCase();
+  });
 
   constructor() {
     this.initializeAuthState();
@@ -58,6 +76,15 @@ export class AuthService {
   }
 
   /**
+   * Realiza login ou cadastro transparente com credenciais do Google
+   */
+  loginWithGoogle(credential: string): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.API_URL}/auth/google`, { credential }).pipe(
+      tap((response) => this.saveSession(response))
+    );
+  }
+
+  /**
    * Sends Register request
    */
   register(userData: RegisterRequest): Observable<any> {
@@ -72,11 +99,18 @@ export class AuthService {
   }
 
   /**
-   * Clear auth state and redirect to login
+   * Clear auth state and redirect to login or home
    */
-  logout(): void {
+  logout(redirectUrl?: string): void {
+    const isCustomerSession = this.currentUser()?.role !== 'ADMIN';
     this.clearSession();
-    this.router.navigate(['/login']);
+    if (redirectUrl) {
+      this.router.navigate([redirectUrl]);
+    } else if (isCustomerSession) {
+      this.router.navigate(['/']);
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
   /**

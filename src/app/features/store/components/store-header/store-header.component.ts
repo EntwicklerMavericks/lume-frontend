@@ -20,6 +20,7 @@ export class StoreHeaderComponent {
 
   categories = this.storeService.categories;
   isMobileMenuOpen = signal(false);
+  isAccountMenuOpen = signal(false);
 
   storeConfig = STORE_CONFIG;
   whatsappLink = `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(`Olá! Vim pelo site da ${STORE_CONFIG.name} e gostaria de falar com um consultor.`)}`;
@@ -30,5 +31,19 @@ export class StoreHeaderComponent {
 
   closeMobileMenu() {
     this.isMobileMenuOpen.set(false);
+  }
+
+  toggleAccountMenu() {
+    this.isAccountMenuOpen.update(val => !val);
+  }
+
+  closeAccountMenu() {
+    this.isAccountMenuOpen.set(false);
+  }
+
+  logout() {
+    this.closeAccountMenu();
+    this.closeMobileMenu();
+    this.authService.logout('/');
   }
 }

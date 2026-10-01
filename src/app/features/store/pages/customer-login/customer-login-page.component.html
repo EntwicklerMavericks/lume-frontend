@@ -1,0 +1,201 @@
+<section class="customer-auth-section">
+  <div class="auth-container">
+    <!-- Voltar para loja -->
+    <a routerLink="/" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Voltar para a vitrine</span>
+    </a>
+
+    <!-- Card de Autenticação -->
+    <div class="auth-card">
+      <div class="auth-card-header">
+        <h1 class="auth-title">
+          {{ activeTab() === 'login' ? 'Acesse sua Conta' : 'Crie sua Conta' }}
+        </h1>
+        <p class="auth-subtitle">
+          {{ activeTab() === 'login' 
+            ? 'Acompanhe seus pedidos, código de rastreamento e salve sua sacola.' 
+            : 'Cadastre-se em segundos para salvar seu carrinho e rastrear suas entregas.' }}
+        </p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs" role="tablist">
+        <button 
+          type="button" 
+          role="tab" 
+          [class.active]="activeTab() === 'login'"
+          (click)="setTab('login')"
+        >
+          Já sou cliente
+        </button>
+        <button 
+          type="button" 
+          role="tab" 
+          [class.active]="activeTab() === 'register'"
+          (click)="setTab('register')"
+        >
+          Criar nova conta
+        </button>
+      </div>
+
+      <!-- Alertas -->
+      @if (errorMessage()) {
+        <div class="auth-alert error-alert" role="alert">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+
+      @if (successMessage()) {
+        <div class="auth-alert success-alert" role="alert">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          <span>{{ successMessage() }}</span>
+        </div>
+      }
+
+      <!-- Login Social: Google -->
+      <div class="social-login-area">
+        <button 
+          type="button" 
+          class="google-btn" 
+          (click)="simulateGoogleLogin()"
+          [disabled]="isLoading()"
+        >
+          <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20">
+            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z"/>
+            <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+          </svg>
+          <span>Continuar com o Google</span>
+        </button>
+        <div id="google-btn-container" class="gsi-container"></div>
+      </div>
+
+      <div class="auth-divider">
+        <span>ou com e-mail e senha</span>
+      </div>
+
+      <!-- FORMULÁRIO DE LOGIN -->
+      @if (activeTab() === 'login') {
+        <form (ngSubmit)="onLogin()" class="auth-form">
+          <div class="form-group">
+            <label for="loginEmail">E-mail</label>
+            <input 
+              type="email" 
+              id="loginEmail" 
+              name="loginEmail" 
+              [(ngModel)]="loginEmail" 
+              placeholder="seu@email.com" 
+              autocomplete="email"
+              required 
+            />
+          </div>
+
+          <div class="form-group">
+            <div class="label-row">
+              <label for="loginPassword">Senha</label>
+            </div>
+            <input 
+              type="password" 
+              id="loginPassword" 
+              name="loginPassword" 
+              [(ngModel)]="loginPassword" 
+              placeholder="••••••••" 
+              autocomplete="current-password"
+              required 
+            />
+          </div>
+
+          <button type="submit" class="submit-btn" [disabled]="isLoading()">
+            @if (isLoading()) {
+              <span class="spinner"></span>
+              <span>Entrando...</span>
+            } @else {
+              <span>Entrar na Conta</span>
+            }
+          </button>
+        </form>
+      }
+
+      <!-- FORMULÁRIO DE CADASTRO -->
+      @if (activeTab() === 'register') {
+        <form (ngSubmit)="onRegister()" class="auth-form">
+          <div class="form-group">
+            <label for="registerName">Nome Completo</label>
+            <input 
+              type="text" 
+              id="registerName" 
+              name="registerName" 
+              [(ngModel)]="registerName" 
+              placeholder="Ex: Ana Silva" 
+              autocomplete="name"
+              required 
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="registerEmail">E-mail</label>
+            <input 
+              type="email" 
+              id="registerEmail" 
+              name="registerEmail" 
+              [(ngModel)]="registerEmail" 
+              placeholder="seu@email.com" 
+              autocomplete="email"
+              required 
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="registerPassword">Senha</label>
+              <input 
+                type="password" 
+                id="registerPassword" 
+                name="registerPassword" 
+                [(ngModel)]="registerPassword" 
+                placeholder="Mínimo 6 dígitos" 
+                autocomplete="new-password"
+                required 
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="registerConfirmPassword">Confirmar Senha</label>
+              <input 
+                type="password" 
+                id="registerConfirmPassword" 
+                name="registerConfirmPassword" 
+                [(ngModel)]="registerConfirmPassword" 
+                placeholder="Repita a senha" 
+                autocomplete="new-password"
+                required 
+              />
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn" [disabled]="isLoading()">
+            @if (isLoading()) {
+              <span class="spinner"></span>
+              <span>Criando conta...</span>
+            } @else {
+              <span>Criar Conta e Continuar</span>
+            }
+          </button>
+        </form>
+      }
+    </div>
+  </div>
+</section>

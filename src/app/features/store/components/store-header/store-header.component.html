@@ -60,6 +60,72 @@
         </a>
       }
 
+      <!-- Customer Account Action (Desktop) -->
+      @if (authService.isAuthenticated() && authService.currentUser()?.role !== 'ADMIN') {
+        <div class="account-menu-wrapper">
+          <button 
+            type="button" 
+            class="header-account-btn" 
+            (click)="toggleAccountMenu()" 
+            [attr.aria-expanded]="isAccountMenuOpen()"
+            title="Minha Conta"
+          >
+            @if (authService.currentUser()?.avatar) {
+              <img [src]="authService.currentUser()?.avatar" alt="Avatar" class="header-avatar-img" />
+            } @else {
+              <div class="header-avatar-initials">{{ authService.userInitials() }}</div>
+            }
+            <span class="account-name">{{ authService.firstName() }}</span>
+            <svg class="chevron-icon" [class.rotated]="isAccountMenuOpen()" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+
+          @if (isAccountMenuOpen()) {
+            <div class="account-dropdown-menu">
+              <div class="dropdown-user-info">
+                <strong>{{ authService.currentUser()?.name }}</strong>
+                <span>{{ authService.currentUser()?.email }}</span>
+              </div>
+              <div class="dropdown-divider"></div>
+              <a routerLink="/conta/pedidos" (click)="closeAccountMenu()" class="dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                  <line x1="3" y1="6" x2="21" y2="6"/>
+                  <path d="M16 10a4 4 0 01-8 0"/>
+                </svg>
+                <span>Meus Pedidos</span>
+              </a>
+              <a routerLink="/carrinho" (click)="closeAccountMenu()" class="dropdown-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span>Minha Sacola ({{ cartService.totalItems() }})</span>
+              </a>
+              <div class="dropdown-divider"></div>
+              <button type="button" class="dropdown-item logout-btn" (click)="logout()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                <span>Sair da Conta</span>
+              </button>
+            </div>
+          }
+        </div>
+      } @else if (!authService.isAuthenticated()) {
+        <a routerLink="/conta/login" class="header-login-link" title="Entrar na Minha Conta" (click)="closeMobileMenu()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Entrar</span>
+        </a>
+      }
+
       <!-- Cart Button with luxury bag icon and badge -->
       <a routerLink="/carrinho" class="cart-link" aria-label="Ver sacola de compras" (click)="closeMobileMenu()">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -92,6 +158,34 @@
       </div>
 
       <nav class="mobile-nav">
+        <!-- Card de Conta no Mobile Drawer -->
+        @if (authService.isAuthenticated() && authService.currentUser()?.role !== 'ADMIN') {
+          <div class="mobile-user-card">
+            <div class="user-greeting">
+              <span class="greeting-text">Olá, {{ authService.firstName() }}</span>
+              <span class="greeting-email">{{ authService.currentUser()?.email }}</span>
+            </div>
+            <div class="user-quick-links">
+              <a routerLink="/conta/pedidos" (click)="closeMobileMenu()" class="mobile-orders-link">
+                📦 Meus Pedidos
+              </a>
+              <button type="button" class="mobile-logout-btn" (click)="logout()">
+                Sair
+              </button>
+            </div>
+          </div>
+          <div class="mobile-nav-divider"></div>
+        } @else if (!authService.isAuthenticated()) {
+          <a routerLink="/conta/login" (click)="closeMobileMenu()" class="mobile-login-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Entrar ou Cadastrar</span>
+          </a>
+          <div class="mobile-nav-divider"></div>
+        }
+
         <a routerLink="/" (click)="closeMobileMenu()" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Início</a>
         <a routerLink="/catalogo" (click)="closeMobileMenu()" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Todos os Drops</a>
         @if (categories().length > 0) {
