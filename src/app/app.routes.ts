@@ -37,7 +37,7 @@ export const routes: Routes = [
       { path: 'catalogo', component: CatalogPageComponent },
       { path: 'produto/:id', component: ProductPageComponent },
       { path: 'carrinho', component: CartPageComponent },
-      { path: 'checkout', component: CheckoutPageComponent },
+      { path: 'checkout', component: CheckoutPageComponent, canActivate: [customerGuard] },
       { path: 'pedido-confirmado/:id', component: OrderConfirmationPageComponent },
       { path: 'conta/login', component: CustomerLoginPageComponent },
       { path: 'conta/pedidos', component: CustomerOrdersPageComponent, canActivate: [customerGuard] },

@@ -56,6 +56,7 @@ export interface CheckoutPayload {
   shippingCost?: number;
   shippingMethod?: string;
   customerNotes?: string;
+  userId?: string;
 }
 
 export interface CheckoutResponse {

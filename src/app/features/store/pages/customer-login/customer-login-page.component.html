@@ -11,6 +11,17 @@
 
     <!-- Card de Autenticação -->
     <div class="auth-card">
+      @if (returnUrl.includes('checkout')) {
+        <div class="checkout-notice-banner">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <line x1="2" y1="10" x2="22" y2="10"></line>
+          </svg>
+          <div class="notice-text">
+            <strong>Quase lá!</strong> Acesse ou crie sua conta para finalizar seu pedido com segurança.
+          </div>
+        </div>
+      }
       <div class="auth-card-header">
         <h1 class="auth-title">
           {{ activeTab() === 'login' ? 'Acesse sua Conta' : 'Crie sua Conta' }}

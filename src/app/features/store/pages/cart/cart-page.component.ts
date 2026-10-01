@@ -1,8 +1,9 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../../../core/services/cart.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { WhatsappService } from '../../../../core/services/whatsapp.service';
 import { SeoService } from '../../../../core/services/seo.service';
 import { ShippingOption, ShippingService } from '../../../../core/services/shipping.service';
@@ -18,6 +19,8 @@ import { STORE_CONFIG } from '../../../../core/config/store.config';
 })
 export class CartPageComponent implements OnInit {
   private cartService = inject(CartService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
   private whatsappService = inject(WhatsappService);
   private seoService = inject(SeoService);
   shippingService = inject(ShippingService);
@@ -93,6 +96,15 @@ export class CartPageComponent implements OnInit {
   clearCart() {
     this.cartService.clearCart();
     this.shippingService.clearShipping();
+  }
+
+  goToCheckout(): void {
+    if (this.isEmpty()) return;
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/checkout']);
+    } else {
+      this.router.navigate(['/conta/login'], { queryParams: { returnUrl: '/checkout' } });
+    }
   }
 
   checkoutWhatsApp() {

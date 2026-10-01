@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CartService } from '../../../../core/services/cart.service';
 import { CheckoutService, CheckoutPayload } from '../../../../core/services/checkout.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { SeoService } from '../../../../core/services/seo.service';
 import { STORE_CONFIG } from '../../../../core/config/store.config';
 
@@ -19,6 +20,7 @@ import { ShippingOption, ShippingService } from '../../../../core/services/shipp
 export class CheckoutPageComponent implements OnInit, OnDestroy {
   private cartService = inject(CartService);
   private checkoutService = inject(CheckoutService);
+  private authService = inject(AuthService);
   private seoService = inject(SeoService);
   private router = inject(Router);
   shippingService = inject(ShippingService);
@@ -132,6 +134,13 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     if (this.isEmpty()) {
       this.router.navigate(['/carrinho']);
       return;
+    }
+
+    // Preenche dados do cliente logado automaticamente
+    const user = this.authService.currentUser();
+    if (user) {
+      if (!this.customerName()) this.customerName.set(user.name || '');
+      if (!this.customerEmail()) this.customerEmail.set(user.email || '');
     }
   }
 
@@ -315,6 +324,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
       shippingMethod: this.selectedShipping()?.name || (this.shippingCost() > 0 ? 'Correios' : 'Frete Grátis'),
       paymentMethod: this.paymentMethod(),
       customerNotes: this.customerNotes() || undefined,
+      userId: this.authService.currentUser()?.id || undefined,
     };
 
     if (this.paymentMethod() === 'CREDIT_CARD') {
