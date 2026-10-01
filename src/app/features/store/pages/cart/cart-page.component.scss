@@ -365,7 +365,7 @@
     }
 
     .cs-btn {
-      background: rgba(204, 164, 94, 0.15);
+      background: var(--primary-light, rgba(255, 255, 255, 0.08));
       border: 1px solid var(--primary);
       color: var(--primary);
       font-weight: 600;
@@ -496,11 +496,11 @@
 
       &:hover {
         background: rgba(255, 255, 255, 0.05);
-        border-color: rgba(204, 164, 94, 0.4);
+        border-color: var(--primary);
       }
 
       &.selected {
-        background: rgba(204, 164, 94, 0.08);
+        background: var(--primary-focus, rgba(255, 255, 255, 0.08));
         border-color: var(--primary);
       }
     }
@@ -511,11 +511,13 @@
 .summary-card {
   position: sticky;
   top: 84px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 2.25rem;
-  background: #0E1A33;
-  border: 1px solid rgba(204, 164, 94, 0.2);
-  border-radius: 4px;
+  background: var(--surface, rgba(20, 20, 23, 0.7));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  border-radius: var(--radius-lg, 8px);
+  box-shadow: var(--shadow-md, 0 4px 20px rgba(0, 0, 0, 0.35));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 
   .summary-title {
     font-size: 0.8125rem;
@@ -554,7 +556,7 @@
 
   .summary-divider {
     height: 1px;
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: var(--border-color, rgba(255, 255, 255, 0.08));
     margin: 1.25rem 0;
   }
 
@@ -577,11 +579,11 @@
     align-items: center;
     justify-content: center;
     background: var(--primary-gradient, var(--primary));
-    color: #000000;
+    color: var(--primary-contrast, #000000);
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 4px 16px rgba(204, 164, 94, 0.25);
+    box-shadow: 0 4px 16px var(--primary-focus, rgba(0, 0, 0, 0.25));
     transition: all 0.2s ease;
     font-family: inherit;
 
