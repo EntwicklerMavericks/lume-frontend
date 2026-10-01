@@ -13,6 +13,10 @@
   --secondary-hover: #71717a;
   
   /* Fallback aliases */
+  --primary-color: var(--primary);
+  --bg-color: var(--background);
+  --card-bg: var(--surface);
+  --text-color: var(--text-primary);
   --bg-surface: rgba(20, 20, 23, 0.6);
   --border-subtle: rgba(63, 63, 70, 0.4);
   

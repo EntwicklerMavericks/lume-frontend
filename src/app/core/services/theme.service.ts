@@ -60,6 +60,11 @@ export class ThemeService {
       root.style.setProperty('--text-primary', textPrimary);
       root.style.setProperty('--text-secondary', textSecondary);
       root.style.setProperty('--text-muted', textMuted);
+
+      // Compatibilidade e herança dinâmica para componentes existentes
+      root.style.setProperty('--bg-color', background);
+      root.style.setProperty('--card-bg', surfaceBg);
+      root.style.setProperty('--text-color', textPrimary);
     } else {
       root.style.setProperty('--surface', 'rgba(255, 255, 255, 0.05)');
       root.style.setProperty('--surface-hover', 'rgba(255, 255, 255, 0.09)');
@@ -72,10 +77,14 @@ export class ThemeService {
       root.style.setProperty('--hero-overlay-start', 'rgba(10, 21, 46, 0.4)');
       root.style.setProperty('--hero-overlay-mid', 'rgba(10, 21, 46, 0.72)');
       root.style.setProperty('--hero-overlay-end', 'rgba(10, 21, 46, 0.98)');
+      root.style.setProperty('--bg-color', background);
+      root.style.setProperty('--card-bg', 'rgba(255, 255, 255, 0.05)');
+      root.style.setProperty('--text-color', '#F4F4F5');
     }
 
     // 2. Cor Primária da Marca e Derivadas (Destaques, Botões, Acentos)
     root.style.setProperty('--primary', primary);
+    root.style.setProperty('--primary-color', primary);
 
     if (primaryRgb) {
       const contrast = this.getContrastColor(primaryRgb);

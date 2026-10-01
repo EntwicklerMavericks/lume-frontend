@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  background-color: var(--bg-color, #0a0a0c);
+  background-color: var(--background);
 }
 
 .auth-container {
@@ -19,20 +19,20 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--text-muted, #8e8e93);
+  color: var(--text-secondary);
   font-size: 0.88rem;
   text-decoration: none;
   transition: color 0.2s ease;
   width: fit-content;
 
   &:hover {
-    color: var(--primary-color, #c5a880);
+    color: var(--primary);
   }
 }
 
 .auth-card {
-  background: var(--card-bg, #141418);
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  background: var(--surface);
+  border: 1px solid var(--border-color);
   border-radius: 14px;
   padding: 32px 28px;
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
@@ -49,14 +49,14 @@
   .auth-title {
     font-size: 1.6rem;
     font-weight: 700;
-    color: var(--text-color, #f5f5f7);
+    color: var(--text-primary);
     margin: 0 0 8px;
     letter-spacing: -0.02em;
   }
 
   .auth-subtitle {
     font-size: 0.88rem;
-    color: var(--text-muted, #8e8e93);
+    color: var(--text-secondary);
     margin: 0;
     line-height: 1.45;
   }
@@ -64,11 +64,11 @@
 
 .auth-tabs {
   display: flex;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--surface-hover, rgba(255, 255, 255, 0.04));
   padding: 4px;
   border-radius: 10px;
   margin-bottom: 24px;
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
+  border: 1px solid var(--border-color);
 
   button {
     flex: 1;
@@ -76,16 +76,16 @@
     background: transparent;
     border: none;
     border-radius: 8px;
-    color: var(--text-muted, #8e8e93);
+    color: var(--text-secondary);
     font-size: 0.88rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &.active {
-      background: var(--primary-color, #c5a880);
-      color: #000;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      background: var(--primary);
+      color: var(--primary-contrast);
+      box-shadow: 0 2px 8px var(--primary-glow);
     }
   }
 }
@@ -155,7 +155,7 @@
   align-items: center;
   text-align: center;
   margin: 20px 0;
-  color: var(--text-muted, #71717a);
+  color: var(--text-muted);
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -164,7 +164,7 @@
   &::after {
     content: '';
     flex: 1;
-    border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    border-bottom: 1px solid var(--border-color);
   }
 
   span {
@@ -185,27 +185,27 @@
     label {
       font-size: 0.82rem;
       font-weight: 600;
-      color: var(--text-color, #e4e4e7);
+      color: var(--text-secondary);
       letter-spacing: 0.01em;
     }
 
     input {
       padding: 12px 14px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+      background: var(--surface-hover, rgba(255, 255, 255, 0.03));
+      border: 1px solid var(--border-color);
       border-radius: 8px;
-      color: #fff;
+      color: var(--text-primary);
       font-size: 0.92rem;
       outline: none;
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
       &:focus {
-        border-color: var(--primary-color, #c5a880);
-        box-shadow: 0 0 0 2px rgba(197, 168, 128, 0.2);
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px var(--primary-focus, rgba(255, 255, 255, 0.15));
       }
 
       &::placeholder {
-        color: rgba(255, 255, 255, 0.25);
+        color: var(--text-muted);
       }
     }
   }
@@ -223,8 +223,8 @@
   .submit-btn {
     margin-top: 8px;
     padding: 13px;
-    background: var(--primary-color, #c5a880);
-    color: #000;
+    background: var(--primary);
+    color: var(--primary-contrast);
     border: none;
     border-radius: 8px;
     font-size: 0.95rem;
@@ -234,10 +234,11 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: opacity 0.2s ease, transform 0.1s ease;
+    transition: opacity 0.2s ease, transform 0.1s ease, background 0.2s ease, box-shadow 0.2s ease;
 
     &:hover:not(:disabled) {
-      opacity: 0.92;
+      background: var(--primary-hover);
+      box-shadow: 0 4px 16px var(--primary-glow);
     }
 
     &:active:not(:disabled) {
@@ -255,7 +256,7 @@
   width: 16px;
   height: 16px;
   border: 2px solid rgba(0, 0, 0, 0.2);
-  border-top-color: #000;
+  border-top-color: var(--primary-contrast);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
