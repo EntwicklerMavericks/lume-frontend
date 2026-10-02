@@ -32,6 +32,10 @@ export class CustomerLoginPageComponent implements OnInit, OnDestroy {
   resendCooldown = signal<number>(0);
   private cooldownTimer: any = null;
 
+  // Código de teste/desenvolvimento (quando envio de email externo está restrito)
+  demoCodeHint = signal<string>('');
+  isCheckingEmail = signal<boolean>(false);
+
   // Login form model
   loginEmail = '';
   loginPassword = '';
@@ -79,6 +83,7 @@ export class CustomerLoginPageComponent implements OnInit, OnDestroy {
     }
     this.errorMessage.set('');
     this.successMessage.set('');
+    this.demoCodeHint.set('');
   }
 
   openForgotPassword(): void {
@@ -90,6 +95,27 @@ export class CustomerLoginPageComponent implements OnInit, OnDestroy {
     this.confirmNewPassword = '';
     this.errorMessage.set('');
     this.successMessage.set('');
+    this.demoCodeHint.set('');
+  }
+
+  onCheckEmailBlur(): void {
+    const email = this.forgotEmail.trim().toLowerCase();
+    if (!email || !email.includes('@')) return;
+
+    this.isCheckingEmail.set(true);
+    this.authService.checkEmail(email).subscribe({
+      next: (res) => {
+        this.isCheckingEmail.set(false);
+        if (!res.exists) {
+          this.errorMessage.set('Nenhum usuário cadastrado com este e-mail no sistema. Verifique o endereço digitado.');
+        } else if (this.errorMessage().includes('Nenhum usuário') || this.errorMessage().includes('Nenhuma conta')) {
+          this.errorMessage.set('');
+        }
+      },
+      error: () => {
+        this.isCheckingEmail.set(false);
+      }
+    });
   }
 
   startCooldown(seconds: number = 60): void {
@@ -127,6 +153,7 @@ export class CustomerLoginPageComponent implements OnInit, OnDestroy {
     this.isLoading.set(true);
     this.errorMessage.set('');
     this.successMessage.set('');
+    this.demoCodeHint.set('');
 
     this.authService.forgotPassword(email).subscribe({
       next: (res: any) => {
@@ -138,13 +165,24 @@ export class CustomerLoginPageComponent implements OnInit, OnDestroy {
           }
           return;
         }
+
         this.forgotStep.set('reset');
         this.startCooldown(60);
-        this.successMessage.set(res?.message || 'Código de verificação de 6 dígitos enviado para seu e-mail!');
+
+        // Se houver código retornado para desenvolvimento / vitrine / fallback
+        if (res?.devCode || res?.demoCode) {
+          const code = res.devCode || res.demoCode;
+          this.demoCodeHint.set(code);
+          this.resetCode = code;
+        }
+
+        this.successMessage.set(res?.message || 'Código de verificação de 6 dígitos gerado!');
       },
       error: (err) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err?.error?.message || 'Não foi possível enviar o código. Tente novamente.');
+        this.errorMessage.set(
+          err?.error?.message || 'Nenhuma conta foi encontrada com este e-mail. Verifique o endereço digitado ou crie uma conta.'
+        );
       }
     });
   }

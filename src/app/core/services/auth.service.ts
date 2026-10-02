@@ -92,6 +92,15 @@ export class AuthService {
   }
 
   /**
+   * Verifica se o e-mail existe no banco de dados
+   */
+  checkEmail(email: string): Observable<{ exists: boolean; name?: string }> {
+    return this.http.get<{ exists: boolean; name?: string }>(`${this.API_URL}/auth/check-email`, {
+      params: { email }
+    });
+  }
+
+  /**
    * Envia solicitação de código de 6 dígitos para o e-mail
    */
   forgotPassword(email: string): Observable<any> {

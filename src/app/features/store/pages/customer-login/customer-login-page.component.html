@@ -246,6 +246,7 @@
                 id="forgotEmail" 
                 name="forgotEmail" 
                 [(ngModel)]="forgotEmail" 
+                (blur)="onCheckEmailBlur()"
                 placeholder="seu@email.com" 
                 autocomplete="email"
                 required 
@@ -271,6 +272,13 @@
         <!-- Passo 2: Digitar Código e Nova Senha -->
         @if (forgotStep() === 'reset') {
           <form (ngSubmit)="onResetPassword()" class="auth-form forgot-form">
+            @if (demoCodeHint()) {
+              <div class="demo-code-banner">
+                <span>💡 <strong>Código gerado:</strong></span>
+                <code>{{ demoCodeHint() }}</code>
+              </div>
+            }
+
             <div class="code-info-box">
               <div class="email-badge">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
