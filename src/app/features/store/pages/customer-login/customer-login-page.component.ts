@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { CartService } from '../../../../core/services/cart.service';
+import { STORE_CONFIG } from '../../../../core/config/store.config';
 
 declare const google: any;
 
@@ -249,11 +250,11 @@ export class CustomerLoginPageComponent implements OnInit, OnDestroy {
 
   private renderGoogleButton(): void {
     try {
-      if (typeof google !== 'undefined' && google?.accounts?.id) {
+      if (typeof google !== 'undefined' && google?.accounts?.id && STORE_CONFIG.googleClientId) {
         const btnContainer = document.getElementById('google-btn-container');
         if (btnContainer) {
           google.accounts.id.initialize({
-            client_id: '921837482910-dummygoogleclientid.apps.googleusercontent.com',
+            client_id: STORE_CONFIG.googleClientId,
             callback: (res: any) => this.handleGoogleCredential(res.credential),
           });
           google.accounts.id.renderButton(btnContainer, {
@@ -288,6 +289,12 @@ export class CustomerLoginPageComponent implements OnInit, OnDestroy {
   }
 
   simulateGoogleLogin(): void {
+    // Se o Client ID oficial estiver configurado, abre o popup oficial do Google
+    if (typeof google !== 'undefined' && google?.accounts?.id && STORE_CONFIG.googleClientId) {
+      google.accounts.id.prompt();
+      return;
+    }
+
     this.isLoading.set(true);
     this.errorMessage.set('');
 

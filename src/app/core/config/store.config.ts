@@ -65,4 +65,11 @@ export const STORE_CONFIG = {
 
   /** Mensagem de encerramento do WhatsApp */
   whatsappClosing: 'Gostaria de finalizar meu pedido.',
+
+  /** 
+   * Client ID do Google OAuth 2.0 (Google Cloud Console)
+   * Exemplo: '1234567890-abcdefg12345.apps.googleusercontent.com'
+   * Deixe vazio para usar modo de desenvolvimento/simulação.
+   */
+  googleClientId: '',
 } as const;
