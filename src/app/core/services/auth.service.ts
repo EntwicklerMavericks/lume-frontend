@@ -92,10 +92,24 @@ export class AuthService {
   }
 
   /**
-   * Sends Forgot Password request
+   * Envia solicitação de código de 6 dígitos para o e-mail
    */
   forgotPassword(email: string): Observable<any> {
     return this.http.post<any>(`${this.API_URL}/auth/forgot-password`, { email });
+  }
+
+  /**
+   * Valida o código de 6 dígitos recebido por e-mail
+   */
+  verifyResetCode(email: string, code: string): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/auth/verify-code`, { email, code });
+  }
+
+  /**
+   * Redefine a senha utilizando o código de segurança
+   */
+  resetPassword(data: { email: string; code: string; password: string }): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/auth/reset-password`, data);
   }
 
   /**

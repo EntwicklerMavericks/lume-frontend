@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -14,18 +14,23 @@ declare const google: any;
   templateUrl: './customer-login-page.component.html',
   styleUrls: ['./customer-login-page.component.scss']
 })
-export class CustomerLoginPageComponent implements OnInit {
+export class CustomerLoginPageComponent implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private cartService = inject(CartService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private platformId = inject(PLATFORM_ID);
 
-  activeTab = signal<'login' | 'register'>('login');
+  activeTab = signal<'login' | 'register' | 'forgot'>('login');
+  forgotStep = signal<'request' | 'reset'>('request');
   isLoading = signal<boolean>(false);
   errorMessage = signal<string>('');
   successMessage = signal<string>('');
   returnUrl = '/';
+
+  // Cooldown de reenvio de código (segurança anti-flood)
+  resendCooldown = signal<number>(0);
+  private cooldownTimer: any = null;
 
   // Login form model
   loginEmail = '';
@@ -36,6 +41,12 @@ export class CustomerLoginPageComponent implements OnInit {
   registerEmail = '';
   registerPassword = '';
   registerConfirmPassword = '';
+
+  // Forgot / Reset form model
+  forgotEmail = '';
+  resetCode = '';
+  newPassword = '';
+  confirmNewPassword = '';
 
   ngOnInit(): void {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/conta/pedidos';
@@ -52,17 +63,151 @@ export class CustomerLoginPageComponent implements OnInit {
     }
   }
 
-  setTab(tab: 'login' | 'register'): void {
+  ngOnDestroy(): void {
+    if (this.cooldownTimer) {
+      clearInterval(this.cooldownTimer);
+    }
+  }
+
+  setTab(tab: 'login' | 'register' | 'forgot'): void {
     this.activeTab.set(tab);
+    if (tab === 'forgot') {
+      this.forgotStep.set('request');
+      if (this.loginEmail && !this.forgotEmail) {
+        this.forgotEmail = this.loginEmail;
+      }
+    }
     this.errorMessage.set('');
     this.successMessage.set('');
+  }
+
+  openForgotPassword(): void {
+    this.activeTab.set('forgot');
+    this.forgotStep.set('request');
+    this.forgotEmail = this.loginEmail || '';
+    this.resetCode = '';
+    this.newPassword = '';
+    this.confirmNewPassword = '';
+    this.errorMessage.set('');
+    this.successMessage.set('');
+  }
+
+  startCooldown(seconds: number = 60): void {
+    this.resendCooldown.set(seconds);
+    if (this.cooldownTimer) {
+      clearInterval(this.cooldownTimer);
+    }
+    this.cooldownTimer = setInterval(() => {
+      const current = this.resendCooldown();
+      if (current <= 1) {
+        this.resendCooldown.set(0);
+        clearInterval(this.cooldownTimer);
+        this.cooldownTimer = null;
+      } else {
+        this.resendCooldown.set(current - 1);
+      }
+    }, 1000);
+  }
+
+  onCodeInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let digits = input.value.replace(/\D/g, '');
+    if (digits.length > 6) digits = digits.slice(0, 6);
+    input.value = digits;
+    this.resetCode = digits;
+  }
+
+  onRequestResetCode(): void {
+    const email = this.forgotEmail.trim().toLowerCase();
+    if (!email || !email.includes('@')) {
+      this.errorMessage.set('Informe um e-mail válido para receber o código.');
+      return;
+    }
+
+    this.isLoading.set(true);
+    this.errorMessage.set('');
+    this.successMessage.set('');
+
+    this.authService.forgotPassword(email).subscribe({
+      next: (res: any) => {
+        this.isLoading.set(false);
+        if (res?.cooldown) {
+          this.errorMessage.set(res.message);
+          if (res.remainingSeconds) {
+            this.startCooldown(res.remainingSeconds);
+          }
+          return;
+        }
+        this.forgotStep.set('reset');
+        this.startCooldown(60);
+        this.successMessage.set(res?.message || 'Código de verificação de 6 dígitos enviado para seu e-mail!');
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        this.errorMessage.set(err?.error?.message || 'Não foi possível enviar o código. Tente novamente.');
+      }
+    });
+  }
+
+  onResendCode(): void {
+    if (this.resendCooldown() > 0 || this.isLoading()) return;
+    this.onRequestResetCode();
+  }
+
+  onResetPassword(): void {
+    const cleanCode = this.resetCode.replace(/\D/g, '').trim();
+    if (cleanCode.length !== 6) {
+      this.errorMessage.set('Por favor, informe o código de 6 dígitos recebido por e-mail.');
+      return;
+    }
+
+    if (!this.newPassword || this.newPassword.length < 6) {
+      this.errorMessage.set('A nova senha deve ter no mínimo 6 caracteres.');
+      return;
+    }
+
+    if (this.newPassword !== this.confirmNewPassword) {
+      this.errorMessage.set('As senhas digitadas não coincidem.');
+      return;
+    }
+
+    this.isLoading.set(true);
+    this.errorMessage.set('');
+    this.successMessage.set('');
+
+    this.authService.resetPassword({
+      email: this.forgotEmail.trim().toLowerCase(),
+      code: cleanCode,
+      password: this.newPassword
+    }).subscribe({
+      next: (res: any) => {
+        this.successMessage.set(res?.message || 'Senha alterada com sucesso! Entrando na sua conta...');
+        // Login automático com a nova senha para conveniência e segurança
+        this.authService.login({ email: this.forgotEmail.trim().toLowerCase(), password: this.newPassword }).subscribe({
+          next: () => {
+            this.isLoading.set(false);
+            this.cartService.syncWithServer();
+            this.router.navigateByUrl(this.returnUrl);
+          },
+          error: () => {
+            this.isLoading.set(false);
+            this.activeTab.set('login');
+            this.loginEmail = this.forgotEmail;
+            this.loginPassword = '';
+          }
+        });
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        this.errorMessage.set(err?.error?.message || 'Código inválido ou expirado. Tente novamente.');
+      }
+    });
   }
 
   /**
    * Inicializa o Google Identity Services (GSI)
    */
   private initGoogleAuth(): void {
-    // Carrega o script do Google se ainda não carregado
     if (typeof google === 'undefined' || !google?.accounts?.id) {
       const script = document.createElement('script');
       script.src = 'https://accounts.google.com/gsi/client';
@@ -78,11 +223,9 @@ export class CustomerLoginPageComponent implements OnInit {
   private renderGoogleButton(): void {
     try {
       if (typeof google !== 'undefined' && google?.accounts?.id) {
-        // Tenta renderizar caso exista container
         const btnContainer = document.getElementById('google-btn-container');
         if (btnContainer) {
           google.accounts.id.initialize({
-            // Se o usuário configurar o GOOGLE_CLIENT_ID nas envs ele pode injetar
             client_id: '921837482910-dummygoogleclientid.apps.googleusercontent.com',
             callback: (res: any) => this.handleGoogleCredential(res.credential),
           });
@@ -95,14 +238,11 @@ export class CustomerLoginPageComponent implements OnInit {
           });
         }
       }
-    } catch (e) {
+    } catch (_) {
       // Ignora falhas de inicialização do script externo
     }
   }
 
-  /**
-   * Processa credencial recebida do Google
-   */
   handleGoogleCredential(credential: string): void {
     this.isLoading.set(true);
     this.errorMessage.set('');
@@ -120,14 +260,10 @@ export class CustomerLoginPageComponent implements OnInit {
     });
   }
 
-  /**
-   * Simulação de Login Google para testes rápidos e demonstração
-   */
   simulateGoogleLogin(): void {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    // Cria um token JWT simulado para testes caso o cliente Google ainda não esteja aprovado no console do cliente
     const dummyHeader = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
     const dummyPayload = btoa(JSON.stringify({
       sub: 'google_user_' + Date.now(),
@@ -147,7 +283,6 @@ export class CustomerLoginPageComponent implements OnInit {
         this.router.navigateByUrl(this.returnUrl);
       },
       error: () => {
-        // Se a verificação remota no backend falhar porque precisa do Google online, salva sessão localmente
         this.isLoading.set(false);
         this.errorMessage.set('Para login real com o Google, configure o GOOGLE_CLIENT_ID no arquivo .env.');
       }
@@ -201,7 +336,6 @@ export class CustomerLoginPageComponent implements OnInit {
       password: this.registerPassword
     }).subscribe({
       next: () => {
-        // Realiza login automático em seguida
         this.authService.login({ email: this.registerEmail, password: this.registerPassword }).subscribe({
           next: () => {
             this.isLoading.set(false);

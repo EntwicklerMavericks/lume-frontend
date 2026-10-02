@@ -22,38 +22,49 @@
           </div>
         </div>
       }
+
       <div class="auth-card-header">
         <h1 class="auth-title">
-          {{ activeTab() === 'login' ? 'Acesse sua Conta' : 'Crie sua Conta' }}
+          @if (activeTab() === 'login') { Acesse sua Conta }
+          @else if (activeTab() === 'register') { Crie sua Conta }
+          @else { Recuperação de Senha }
         </h1>
         <p class="auth-subtitle">
-          {{ activeTab() === 'login' 
-            ? 'Acompanhe seus pedidos, código de rastreamento e salve sua sacola.' 
-            : 'Cadastre-se em segundos para salvar seu carrinho e rastrear suas entregas.' }}
+          @if (activeTab() === 'login') {
+            Acompanhe seus pedidos, código de rastreamento e salve sua sacola.
+          } @else if (activeTab() === 'register') {
+            Cadastre-se em segundos para salvar seu carrinho e rastrear suas entregas.
+          } @else if (forgotStep() === 'request') {
+            Informe seu e-mail cadastrado para receber um código de segurança de 6 dígitos.
+          } @else {
+            Insira o código de 6 dígitos enviado por e-mail e defina sua nova senha.
+          }
         </p>
       </div>
 
-      <!-- Tabs -->
-      <div class="auth-tabs" role="tablist">
-        <button 
-          type="button" 
-          role="tab" 
-          [class.active]="activeTab() === 'login'"
-          (click)="setTab('login')"
-        >
-          Já sou cliente
-        </button>
-        <button 
-          type="button" 
-          role="tab" 
-          [class.active]="activeTab() === 'register'"
-          (click)="setTab('register')"
-        >
-          Criar nova conta
-        </button>
-      </div>
+      <!-- Tabs de alternância (Login e Cadastro) -->
+      @if (activeTab() !== 'forgot') {
+        <div class="auth-tabs" role="tablist">
+          <button 
+            type="button" 
+            role="tab" 
+            [class.active]="activeTab() === 'login'"
+            (click)="setTab('login')"
+          >
+            Já sou cliente
+          </button>
+          <button 
+            type="button" 
+            role="tab" 
+            [class.active]="activeTab() === 'register'"
+            (click)="setTab('register')"
+          >
+            Criar nova conta
+          </button>
+        </div>
+      }
 
-      <!-- Alertas -->
+      <!-- Alertas de Feedback -->
       @if (errorMessage()) {
         <div class="auth-alert error-alert" role="alert">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -75,28 +86,30 @@
         </div>
       }
 
-      <!-- Login Social: Google -->
-      <div class="social-login-area">
-        <button 
-          type="button" 
-          class="google-btn" 
-          (click)="simulateGoogleLogin()"
-          [disabled]="isLoading()"
-        >
-          <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20">
-            <path fill="currentColor" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
-            <path fill="currentColor" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z"/>
-            <path fill="currentColor" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
-            <path fill="currentColor" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
-          </svg>
-          <span>Continuar com o Google</span>
-        </button>
-        <div id="google-btn-container" class="gsi-container"></div>
-      </div>
+      <!-- Login Social: Google (somente se não estiver em forgot) -->
+      @if (activeTab() !== 'forgot') {
+        <div class="social-login-area">
+          <button 
+            type="button" 
+            class="google-btn" 
+            (click)="simulateGoogleLogin()"
+            [disabled]="isLoading()"
+          >
+            <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20">
+              <path fill="currentColor" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+              <path fill="currentColor" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z"/>
+              <path fill="currentColor" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+              <path fill="currentColor" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+            </svg>
+            <span>Continuar com o Google</span>
+          </button>
+          <div id="google-btn-container" class="gsi-container"></div>
+        </div>
 
-      <div class="auth-divider">
-        <span>ou com e-mail e senha</span>
-      </div>
+        <div class="auth-divider">
+          <span>ou com e-mail e senha</span>
+        </div>
+      }
 
       <!-- FORMULÁRIO DE LOGIN -->
       @if (activeTab() === 'login') {
@@ -117,6 +130,9 @@
           <div class="form-group">
             <div class="label-row">
               <label for="loginPassword">Senha</label>
+              <button type="button" class="forgot-password-link" (click)="openForgotPassword()">
+                Esqueceu a senha?
+              </button>
             </div>
             <input 
               type="password" 
@@ -207,6 +223,140 @@
           </button>
         </form>
       }
+
+      <!-- FLUXO DE REDEFINIÇÃO DE SENHA (CÓDIGO DE 6 DÍGITOS) -->
+      @if (activeTab() === 'forgot') {
+        <!-- Passo 1: Solicitar Código -->
+        @if (forgotStep() === 'request') {
+          <form (ngSubmit)="onRequestResetCode()" class="auth-form forgot-form">
+            <div class="security-banner">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              <div>
+                <strong>Recuperação Segura</strong>
+                <p>Enviaremos um código temporário de 6 dígitos para confirmar sua identidade.</p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="forgotEmail">E-mail Cadastrado</label>
+              <input 
+                type="email" 
+                id="forgotEmail" 
+                name="forgotEmail" 
+                [(ngModel)]="forgotEmail" 
+                placeholder="seu@email.com" 
+                autocomplete="email"
+                required 
+              />
+              <span class="field-hint">O código de segurança tem validade de 15 minutos.</span>
+            </div>
+
+            <button type="submit" class="submit-btn" [disabled]="isLoading()">
+              @if (isLoading()) {
+                <span class="spinner"></span>
+                <span>Enviando código...</span>
+              } @else {
+                <span>Enviar Código de Verificação</span>
+              }
+            </button>
+
+            <button type="button" class="btn-back-login" (click)="setTab('login')">
+              ← Voltar para o Login
+            </button>
+          </form>
+        }
+
+        <!-- Passo 2: Digitar Código e Nova Senha -->
+        @if (forgotStep() === 'reset') {
+          <form (ngSubmit)="onResetPassword()" class="auth-form forgot-form">
+            <div class="code-info-box">
+              <div class="email-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span>Enviado para <strong>{{ forgotEmail }}</strong></span>
+              </div>
+              <button type="button" class="btn-change-email" (click)="forgotStep.set('request')">
+                Alterar e-mail
+              </button>
+            </div>
+
+            <div class="form-group">
+              <label for="resetCode">Código de Verificação (6 Dígitos) <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="resetCode" 
+                name="resetCode" 
+                [ngModel]="resetCode" 
+                (input)="onCodeInput($event)"
+                placeholder="000000" 
+                maxlength="6"
+                class="code-input"
+                autocomplete="one-time-code"
+                required 
+              />
+              <div class="resend-row">
+                <span class="expiry-hint">⏰ Válido por 15 minutos</span>
+                <button 
+                  type="button" 
+                  class="resend-btn" 
+                  (click)="onResendCode()" 
+                  [disabled]="resendCooldown() > 0 || isLoading()"
+                >
+                  @if (resendCooldown() > 0) {
+                    <span>Reenviar em {{ resendCooldown() }}s</span>
+                  } @else {
+                    <span>Reenviar código</span>
+                  }
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="newPassword">Nova Senha <span class="required">*</span></label>
+              <input 
+                type="password" 
+                id="newPassword" 
+                name="newPassword" 
+                [(ngModel)]="newPassword" 
+                placeholder="Mínimo 6 caracteres" 
+                autocomplete="new-password"
+                required 
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="confirmNewPassword">Confirmar Nova Senha <span class="required">*</span></label>
+              <input 
+                type="password" 
+                id="confirmNewPassword" 
+                name="confirmNewPassword" 
+                [(ngModel)]="confirmNewPassword" 
+                placeholder="Repita a nova senha" 
+                autocomplete="new-password"
+                required 
+              />
+            </div>
+
+            <button type="submit" class="submit-btn" [disabled]="isLoading()">
+              @if (isLoading()) {
+                <span class="spinner"></span>
+                <span>Salvando nova senha...</span>
+              } @else {
+                <span>Redefinir Senha e Entrar</span>
+              }
+            </button>
+
+            <button type="button" class="btn-back-login" (click)="setTab('login')">
+              ← Cancelar e Voltar ao Login
+            </button>
+          </form>
+        }
+      }
+
     </div>
   </div>
 </section>
