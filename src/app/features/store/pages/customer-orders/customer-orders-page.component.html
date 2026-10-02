@@ -14,10 +14,25 @@
         <div class="profile-text">
           <span class="profile-greeting">Olá, {{ authService.firstName() }}</span>
           <span class="profile-email">{{ authService.currentUser()?.email }}</span>
+          @if (authService.currentUser()?.phone) {
+            <span class="profile-phone">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              {{ authService.currentUser()?.phone }}
+            </span>
+          }
         </div>
       </div>
 
       <div class="profile-actions">
+        <button type="button" class="btn-edit-profile" (click)="openProfileModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          <span>Editar Perfil</span>
+        </button>
         <a routerLink="/catalogo" class="btn-shop">Continuar Comprando</a>
         <button type="button" class="btn-logout" (click)="onLogout()">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -251,6 +266,209 @@
             </div>
           }
         </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal Editar Perfil -->
+  @if (isProfileModalOpen()) {
+    <div class="profile-modal-overlay" (click)="closeProfileModal()">
+      <div class="profile-modal" (click)="$event.stopPropagation()">
+        
+        <div class="profile-modal-header">
+          <div class="modal-title-group">
+            <div class="modal-title-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <div>
+              <h3>Editar Meu Perfil</h3>
+              <p>Atualize sua foto, nome e telefone de contato</p>
+            </div>
+          </div>
+          <button type="button" class="close-btn" (click)="closeProfileModal()" aria-label="Fechar modal">×</button>
+        </div>
+
+        <div class="profile-modal-body">
+          <!-- Seção de Foto / Avatar -->
+          <div class="avatar-edit-section">
+            <input 
+              type="file" 
+              #avatarFileInput 
+              (change)="onAvatarFileSelected($event)" 
+              accept="image/png, image/jpeg, image/webp" 
+              style="display: none;" 
+            />
+
+            <div class="avatar-preview-container">
+              @if (editAvatar()) {
+                <img [src]="editAvatar()" alt="Prévia da foto de perfil" class="avatar-preview-img" />
+              } @else {
+                <div class="avatar-preview-placeholder">
+                  {{ authService.userInitials() }}
+                </div>
+              }
+              <button 
+                type="button" 
+                class="avatar-camera-btn" 
+                (click)="avatarFileInput.click()" 
+                title="Carregar foto do dispositivo"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+              </button>
+            </div>
+
+            <div class="avatar-controls">
+              <div class="avatar-controls-tabs">
+                <button 
+                  type="button" 
+                  [class.active]="activeAvatarTab() === 'upload'" 
+                  (click)="activeAvatarTab.set('upload')"
+                >
+                  Do Dispositivo
+                </button>
+                <button 
+                  type="button" 
+                  [class.active]="activeAvatarTab() === 'url'" 
+                  (click)="activeAvatarTab.set('url')"
+                >
+                  Link da Web
+                </button>
+              </div>
+
+              @if (activeAvatarTab() === 'upload') {
+                <div class="avatar-upload-box">
+                  <div class="avatar-btn-row">
+                    <button type="button" class="btn-avatar-action" (click)="avatarFileInput.click()">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                      </svg>
+                      Escolher Imagem
+                    </button>
+                    @if (editAvatar()) {
+                      <button type="button" class="btn-avatar-remove" (click)="removeAvatar()">
+                        Remover Foto
+                      </button>
+                    }
+                  </div>
+                  <span class="avatar-hint">PNG, JPG ou WEBP (máx. 5MB)</span>
+                </div>
+              } @else {
+                <div class="avatar-url-box">
+                  <div class="url-input-group">
+                    <input 
+                      type="url" 
+                      [(ngModel)]="tempAvatarUrl" 
+                      placeholder="https://exemplo.com/minha-foto.jpg" 
+                      class="form-control"
+                    />
+                    <button type="button" class="btn-avatar-action" (click)="applyAvatarUrl()">
+                      Aplicar
+                    </button>
+                  </div>
+                  @if (editAvatar()) {
+                    <button type="button" class="btn-avatar-remove" (click)="removeAvatar()">
+                      Remover Foto
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Formulário -->
+          <div class="profile-fields-form">
+            <div class="form-group">
+              <label for="profileName">Nome Completo <span class="required">*</span></label>
+              <input 
+                id="profileName" 
+                type="text" 
+                [(ngModel)]="editName" 
+                placeholder="Seu nome completo" 
+                class="form-control"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="profilePhone">Telefone / WhatsApp</label>
+              <input 
+                id="profilePhone" 
+                type="text" 
+                [ngModel]="editPhone()" 
+                (input)="onPhoneInput($event)" 
+                placeholder="(11) 99999-9999" 
+                maxlength="15" 
+                class="form-control"
+              />
+              <span class="field-hint">Usado para atualizações e suporte via WhatsApp do seu pedido.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="profileEmail">E-mail Cadastrado</label>
+              <div class="readonly-input-wrapper">
+                <input 
+                  id="profileEmail" 
+                  type="email" 
+                  [value]="authService.currentUser()?.email" 
+                  disabled 
+                  class="form-control disabled"
+                />
+                <span class="lock-badge" title="E-mail principal não editável">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                  Bloqueado
+                </span>
+              </div>
+              <span class="field-hint">O e-mail é a chave de login da sua conta.</span>
+            </div>
+          </div>
+
+          <!-- Mensagens de Feedback -->
+          @if (profileError()) {
+            <div class="profile-alert error">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <span>{{ profileError() }}</span>
+            </div>
+          }
+
+          @if (profileSuccess()) {
+            <div class="profile-alert success">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <span>{{ profileSuccess() }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="profile-modal-footer">
+          <button type="button" class="btn-cancel" (click)="closeProfileModal()" [disabled]="isSavingProfile()">
+            Cancelar
+          </button>
+          <button type="button" class="btn-save" (click)="saveProfile()" [disabled]="isSavingProfile()">
+            @if (isSavingProfile()) {
+              <div class="btn-spinner"></div>
+              <span>Salvando...</span>
+            } @else {
+              <span>Salvar Alterações</span>
+            }
+          </button>
+        </div>
+
       </div>
     </div>
   }

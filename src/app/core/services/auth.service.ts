@@ -99,6 +99,25 @@ export class AuthService {
   }
 
   /**
+   * Atualiza o perfil do usuário logado (nome, telefone, avatar)
+   */
+  updateProfile(profileData: { name?: string; phone?: string | null; avatar?: string | null }): Observable<User> {
+    return this.http.patch<User>(`${this.API_URL}/auth/profile`, profileData).pipe(
+      tap((updatedUser) => {
+        const current = this.currentUser();
+        const merged: User = {
+          ...(current || { id: updatedUser.id, email: updatedUser.email, name: updatedUser.name }),
+          ...updatedUser,
+        };
+        this.currentUser.set(merged);
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.setItem(this.USER_KEY, JSON.stringify(merged));
+        }
+      })
+    );
+  }
+
+  /**
    * Clear auth state and redirect to login or home
    */
   logout(redirectUrl?: string): void {
