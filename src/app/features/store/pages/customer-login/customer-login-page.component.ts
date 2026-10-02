@@ -309,9 +309,9 @@ export class CustomerLoginPageComponent implements OnInit, OnDestroy {
         this.cartService.syncWithServer();
         this.router.navigateByUrl(this.returnUrl);
       },
-      error: () => {
+      error: (err) => {
         this.isLoading.set(false);
-        this.errorMessage.set('Para login real com o Google, configure o GOOGLE_CLIENT_ID no arquivo .env.');
+        this.errorMessage.set(err?.error?.message || 'Falha ao autenticar com o Google. Tente novamente.');
       }
     });
   }
