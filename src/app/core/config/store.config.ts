@@ -71,5 +71,5 @@ export const STORE_CONFIG = {
    * Exemplo: '1234567890-abcdefg12345.apps.googleusercontent.com'
    * Deixe vazio para usar modo de desenvolvimento/simulação.
    */
-  googleClientId: '',
+  googleClientId: '895708281822-itgru31k0glu77niu3s1cbqjiod8rj7c.apps.googleusercontent.com',
 } as const;
