@@ -43,7 +43,7 @@
 
   <!-- Workspace Container next to sidebar -->
   <div class="workspace-container">
-    <app-cabecalho class="workspace-header"></app-cabecalho>
+    <app-cabecalho class="workspace-header" (menuToggle)="toggleMobileDrawer()"></app-cabecalho>
     
     <main class="workspace-content">
       <div class="content-limiter">
@@ -116,37 +116,136 @@
         <span class="bottom-nav-label">Config</span>
       </a>
 
-      <a 
-        routerLink="/" 
-        class="bottom-nav-item"
-        title="Visualizar a loja pública"
-        aria-label="Ver Loja"
-      >
-        <div class="bottom-nav-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <path d="M16 10a4 4 0 0 1-8 0"></path>
-          </svg>
-        </div>
-        <span class="bottom-nav-label">Ver Loja</span>
-      </a>
-
       <button 
         type="button" 
-        class="bottom-nav-item logout-bottom-item" 
-        (click)="onLogout()"
-        aria-label="Sair"
+        class="bottom-nav-item more-bottom-item" 
+        (click)="toggleMobileDrawer()"
+        [class.active]="isMobileDrawerOpen()"
+        aria-label="Mais opções"
       >
         <div class="bottom-nav-icon">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-            <polyline points="16 17 21 12 16 7"></polyline>
-            <line x1="21" y1="12" x2="9" y2="12"></line>
+            <circle cx="12" cy="12" r="1.5"></circle>
+            <circle cx="19" cy="12" r="1.5"></circle>
+            <circle cx="5" cy="12" r="1.5"></circle>
           </svg>
         </div>
-        <span class="bottom-nav-label">Sair</span>
+        <span class="bottom-nav-label">Mais</span>
       </button>
     </nav>
+
+    <!-- Mobile Drawer Overlay & Sidebar with All Menu Options -->
+    @if (isMobileDrawerOpen()) {
+      <div class="mobile-drawer-backdrop" (click)="closeMobileDrawer()"></div>
+      <aside class="mobile-drawer-panel">
+        <div class="drawer-header">
+          <div class="drawer-brand">
+            <img [src]="storeConfig.logoUrl" [alt]="storeConfig.name" class="drawer-logo" />
+            <div class="drawer-brand-text">
+              <span class="drawer-store-name">{{ storeConfig.name }}</span>
+              <span class="drawer-store-tag">Painel Administrativo</span>
+            </div>
+          </div>
+          <button type="button" class="drawer-close-btn" (click)="closeMobileDrawer()" aria-label="Fechar menu">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="drawer-body">
+          <span class="drawer-nav-heading">Gestão da Loja</span>
+          <nav class="drawer-nav">
+            <a 
+              routerLink="/admin/orders" 
+              routerLinkActive="active" 
+              (click)="closeMobileDrawer()" 
+              class="drawer-nav-item"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="drawer-icon">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              </svg>
+              <span>Pedidos</span>
+            </a>
+
+            <a 
+              routerLink="/admin/products" 
+              routerLinkActive="active" 
+              (click)="closeMobileDrawer()" 
+              class="drawer-nav-item"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="drawer-icon">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l-7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+              <span>Produtos</span>
+            </a>
+
+            <a 
+              routerLink="/admin/categories" 
+              routerLinkActive="active" 
+              (click)="closeMobileDrawer()" 
+              class="drawer-nav-item"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="drawer-icon">
+                <line x1="4" y1="6" x2="20" y2="6"></line>
+                <line x1="4" y1="12" x2="20" y2="12"></line>
+                <line x1="4" y1="18" x2="20" y2="18"></line>
+              </svg>
+              <span>Categorias</span>
+            </a>
+
+            <a 
+              routerLink="/admin/settings" 
+              routerLinkActive="active" 
+              (click)="closeMobileDrawer()" 
+              class="drawer-nav-item"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="drawer-icon">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              <span>Configurações</span>
+            </a>
+          </nav>
+
+          <div class="drawer-divider"></div>
+
+          <span class="drawer-nav-heading">Ações</span>
+          <nav class="drawer-nav">
+            <a 
+              routerLink="/" 
+              (click)="closeMobileDrawer()" 
+              class="drawer-nav-item store-link"
+              title="Visualizar a loja pública"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="drawer-icon">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              <span>Ver Loja Pública</span>
+            </a>
+
+            <button 
+              type="button" 
+              (click)="onLogout(); closeMobileDrawer()" 
+              class="drawer-nav-item logout-link"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="drawer-icon">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              <span>Sair do ERP</span>
+            </button>
+          </nav>
+        </div>
+      </aside>
+    }
   </div>
 </div>
