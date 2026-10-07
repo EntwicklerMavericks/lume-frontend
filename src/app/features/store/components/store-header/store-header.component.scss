@@ -376,9 +376,23 @@
         cursor: pointer;
         transition: background 0.15s, color 0.15s;
 
-        &:hover {
-          background: var(--surface-hover);
+        &.admin-dropdown-link {
           color: var(--primary);
+          font-weight: 600;
+          background: rgba(255, 255, 255, 0.03);
+
+          svg {
+            stroke: var(--primary);
+          }
+
+          &:hover {
+            background: var(--primary);
+            color: var(--primary-contrast);
+
+            svg {
+              stroke: var(--primary-contrast);
+            }
+          }
         }
 
         &.logout-btn {
@@ -559,15 +573,23 @@
         .user-quick-links {
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          padding-top: 6px;
+          flex-wrap: wrap;
+          gap: 10px;
+          padding-top: 8px;
           border-top: 1px solid var(--border-color);
 
           .mobile-orders-link {
-            font-size: 0.84rem;
+            font-size: 0.82rem;
             color: var(--text-primary);
             font-weight: 600;
             text-decoration: none;
+
+            &.admin-highlight {
+              color: var(--primary);
+              width: 100%;
+              padding-bottom: 4px;
+              border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+            }
 
             &:hover {
               color: var(--primary);
@@ -582,6 +604,7 @@
             font-weight: 600;
             cursor: pointer;
             padding: 2px 6px;
+            margin-left: auto;
           }
         }
       }

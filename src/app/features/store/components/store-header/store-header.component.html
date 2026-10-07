@@ -47,21 +47,8 @@
         <span>WhatsApp</span>
       </a>
 
-      <!-- Admin Dashboard Link (when authenticated as ADMIN) -->
-      @if (authService.isAuthenticated() && authService.currentUser()?.role === 'ADMIN') {
-        <a routerLink="/admin/products" class="header-admin-link" title="Painel Administrativo" (click)="closeMobileMenu()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="7" height="7"/>
-            <rect x="14" y="3" width="7" height="7"/>
-            <rect x="14" y="14" width="7" height="7"/>
-            <rect x="3" y="14" width="7" height="7"/>
-          </svg>
-          <span>Painel</span>
-        </a>
-      }
-
-      <!-- Customer Account Action (Desktop) -->
-      @if (authService.isAuthenticated() && authService.currentUser()?.role !== 'ADMIN') {
+      <!-- Customer & Admin Account Action (Unified) -->
+      @if (authService.isAuthenticated()) {
         <div class="account-menu-wrapper">
           <button 
             type="button" 
@@ -88,6 +75,20 @@
                 <span>{{ authService.currentUser()?.email }}</span>
               </div>
               <div class="dropdown-divider"></div>
+
+              @if (authService.currentUser()?.role === 'ADMIN') {
+                <a routerLink="/admin/products" (click)="closeAccountMenu()" class="dropdown-item admin-dropdown-link">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"/>
+                    <rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/>
+                    <rect x="3" y="14" width="7" height="7"/>
+                  </svg>
+                  <span>Painel Administrativo</span>
+                </a>
+                <div class="dropdown-divider"></div>
+              }
+
               <a routerLink="/conta/pedidos" [queryParams]="{ editar: 'true' }" (click)="closeAccountMenu()" class="dropdown-item">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -123,7 +124,7 @@
             </div>
           }
         </div>
-      } @else if (!authService.isAuthenticated()) {
+      } @else {
         <a routerLink="/conta/login" class="header-login-link" title="Entrar na Minha Conta" (click)="closeMobileMenu()">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -166,13 +167,18 @@
 
       <nav class="mobile-nav">
         <!-- Card de Conta no Mobile Drawer -->
-        @if (authService.isAuthenticated() && authService.currentUser()?.role !== 'ADMIN') {
+        @if (authService.isAuthenticated()) {
           <div class="mobile-user-card">
             <div class="user-greeting">
               <span class="greeting-text">Olá, {{ authService.firstName() }}</span>
               <span class="greeting-email">{{ authService.currentUser()?.email }}</span>
             </div>
             <div class="user-quick-links">
+              @if (authService.currentUser()?.role === 'ADMIN') {
+                <a routerLink="/admin/products" (click)="closeMobileMenu()" class="mobile-orders-link admin-highlight">
+                  ⚙️ Painel Administrativo
+                </a>
+              }
               <a routerLink="/conta/pedidos" [queryParams]="{ editar: 'true' }" (click)="closeMobileMenu()" class="mobile-orders-link">
                 ✏️ Editar Perfil
               </a>
@@ -185,7 +191,7 @@
             </div>
           </div>
           <div class="mobile-nav-divider"></div>
-        } @else if (!authService.isAuthenticated()) {
+        } @else {
           <a routerLink="/conta/login" (click)="closeMobileMenu()" class="mobile-login-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -214,12 +220,6 @@
             <span class="mobile-cart-badge">{{ cartService.totalItems() }} itens</span>
           }
         </a>
-        @if (authService.isAuthenticated() && authService.currentUser()?.role === 'ADMIN') {
-          <div class="mobile-nav-divider"></div>
-          <a routerLink="/admin/products" (click)="closeMobileMenu()" class="mobile-admin-link">
-            ⚙️ Painel Administrativo
-          </a>
-        }
       </nav>
 
       <div class="mobile-drawer-footer">
