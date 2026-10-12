@@ -229,6 +229,8 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    min-width: 0;
+    width: 100%;
 
     label {
       font-size: 0.82rem;
@@ -270,6 +272,9 @@
     }
 
     input {
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
       padding: 12px 14px;
       background: var(--surface-hover, rgba(255, 255, 255, 0.03));
       border: 1px solid var(--border-color);
@@ -457,8 +462,9 @@
 
   .form-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 12px;
+    width: 100%;
 
     @media (max-width: 480px) {
       grid-template-columns: 1fr;
