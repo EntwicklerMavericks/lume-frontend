@@ -173,6 +173,26 @@
         text-decoration: underline;
       }
     }
+
+    .footer-credits {
+      margin-top: 0.85rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      opacity: 0.85;
+
+      .footer-credits-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: opacity 0.2s ease, text-shadow 0.2s ease;
+
+        &:hover {
+          opacity: 1;
+          text-decoration: underline;
+          text-shadow: 0 0 8px var(--primary-glow, rgba(212, 175, 55, 0.4));
+        }
+      }
+    }
   }
 }
 
