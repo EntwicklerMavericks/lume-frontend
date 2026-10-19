@@ -24,12 +24,12 @@
 .forgot-link {
   font-size: 0.75rem;
   color: var(--text-secondary);
-  font-weight: 400;
+  font-weight: 500;
   transition: color var(--transition-fast);
   text-decoration: none;
   
   &:hover {
-    color: var(--text-primary);
+    color: var(--primary);
   }
 }
 
@@ -43,14 +43,14 @@
   }
   
   .signup-link {
-    color: var(--text-primary);
+    color: var(--primary);
     font-weight: 600;
     margin-left: 0.25rem;
     transition: opacity var(--transition-fast);
     text-decoration: none;
     
     &:hover {
-      opacity: 0.8;
+      opacity: 0.85;
       text-decoration: underline;
     }
   }

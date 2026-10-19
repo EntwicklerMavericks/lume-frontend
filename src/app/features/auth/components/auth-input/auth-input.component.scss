@@ -39,7 +39,7 @@
   font-family: inherit;
   font-size: 0.875rem;
   color: var(--text-primary);
-  background-color: var(--surface);
+  background-color: var(--surface-hover, rgba(255, 255, 255, 0.04));
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   outline: none;
@@ -59,22 +59,22 @@
   
   &:focus {
     background-color: var(--surface-hover);
-    border-color: var(--border-focus);
-    box-shadow: 0 0 0 1px var(--border-focus);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--primary-focus, rgba(204, 164, 94, 0.2));
   }
   
   &.has-error {
     border-color: var(--error);
-    background-color: rgba(244, 63, 94, 0.02);
+    background-color: rgba(244, 63, 94, 0.04);
     
     &:focus {
-      box-shadow: 0 0 0 1px var(--error);
+      box-shadow: 0 0 0 2px var(--error-border);
     }
   }
 }
 
 .input-container:focus-within .input-icon {
-  color: var(--text-primary);
+  color: var(--primary);
 }
 
 .visibility-toggle {

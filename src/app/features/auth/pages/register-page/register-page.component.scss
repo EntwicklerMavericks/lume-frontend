@@ -88,14 +88,14 @@
   }
   
   .login-link {
-    color: var(--text-primary);
+    color: var(--primary);
     font-weight: 600;
     margin-left: 0.25rem;
     transition: opacity var(--transition-fast);
     text-decoration: none;
     
     &:hover {
-      opacity: 0.8;
+      opacity: 0.85;
       text-decoration: underline;
     }
   }

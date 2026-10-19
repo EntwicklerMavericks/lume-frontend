@@ -1,21 +1,11 @@
 .auth-layout-container {
-  /* Scope CSS variable overrides locally for the dark premium theme */
-  --background: #09090b;
-  --surface: rgba(18, 18, 20, 0.45);
-  --surface-hover: rgba(22, 22, 26, 0.65);
-  --text-primary: #f4f4f5;
-  --text-secondary: #a1a1aa;
-  --text-muted: #52525b;
-  --border-color: rgba(63, 63, 70, 0.4);
-  --border-hover: rgba(82, 82, 91, 0.6);
-  
   --error: #f43f5e;
-  --error-bg: rgba(244, 63, 94, 0.05);
-  --error-border: rgba(244, 63, 94, 0.2);
+  --error-bg: rgba(244, 63, 94, 0.08);
+  --error-border: rgba(244, 63, 94, 0.25);
   
   --success: #10b981;
-  --success-bg: rgba(16, 185, 129, 0.05);
-  --success-border: rgba(16, 185, 129, 0.2);
+  --success-bg: rgba(16, 185, 129, 0.08);
+  --success-border: rgba(16, 185, 129, 0.25);
 
   background-color: var(--background);
   color: var(--text-primary);
@@ -31,7 +21,7 @@
   -webkit-font-smoothing: antialiased;
 }
 
-/* Background Glowing spheres */
+/* Background Glowing spheres using brand primary accents */
 .glow-sphere {
   position: absolute;
   border-radius: 50%;
@@ -41,17 +31,17 @@
 }
 
 .glow-sphere-1 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, rgba(168, 85, 247, 0) 70%);
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, var(--primary-glow, rgba(204, 164, 94, 0.2)) 0%, rgba(0, 0, 0, 0) 70%);
   top: -150px;
   left: -150px;
 }
 
 .glow-sphere-2 {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(251, 146, 60, 0.03) 0%, rgba(251, 146, 60, 0) 70%);
+  width: 650px;
+  height: 650px;
+  background: radial-gradient(circle, var(--primary-light, rgba(204, 164, 94, 0.12)) 0%, rgba(0, 0, 0, 0) 70%);
   bottom: -200px;
   right: -150px;
 }
@@ -61,8 +51,8 @@
   position: absolute;
   inset: 0;
   background-image: 
-    radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 0),
-    radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 0);
+    radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0),
+    radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 0);
   background-size: 48px 48px;
   background-position: 0 0, 24px 24px;
   pointer-events: none;
@@ -74,4 +64,34 @@
   width: 100%;
   max-width: 440px;
   z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.back-to-store-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+  font-weight: 500;
+  text-decoration: none;
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+
+  svg {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    color: var(--primary);
+    background: rgba(255, 255, 255, 0.04);
+
+    svg {
+      transform: translateX(-3px);
+    }
+  }
 }
